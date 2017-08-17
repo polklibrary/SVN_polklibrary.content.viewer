@@ -1,0 +1,12 @@
+plone.api
+setuptools
+z3c.jbot
+plone.formwidget.autocomplete
+plone.app.vocabularies
+requests==2.9.1
+BeautifulSoup==3.2.1
+
+[test]
+plone.app.testing
+plone.app.contenttypes
+plone.app.robotframework[debug]

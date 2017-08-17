@@ -1,0 +1,67 @@
+
+#importer > *{
+    margin-bottom: 25px;
+    position: relative;
+}
+
+#importer form{
+    background-color: #333;
+    border: 1px solid #ccc;
+    padding: 10px 20px;
+}
+#importer form div {
+    margin: 5px 0 10px;
+}
+
+#importer form label {
+    color: white;
+    margin-left: 20px;
+}
+#importer form input[type="file"] {
+    color: white;
+}
+
+#processing {
+    display: none;
+    filter: hue-rotate(250deg);
+    height: 60px;
+    position: absolute;
+}
+
+#importer .help{
+    background-color: #333;
+    border: 1px solid #ccc;
+    padding: 10px 20px;
+}
+
+#importer .help h3 {
+    display: block;
+    margin: 5px 0px 10px 0px;
+    padding: 0;
+}
+
+#importer .help div {
+    margin: 5px 0px;
+}
+
+#importer .help div.example {
+    font-style: italic;
+}
+
+#error {
+    background-color: #945353;
+    border: 1px solid #821515;
+    margin-bottom: 10px;
+    padding: 5px 10px;
+}
+
+
+#output {
+    background-color: #111;
+    border: 1px solid #aaa;
+    color: green;
+    padding: 5px 10px;
+}
+#output > * {
+    display: block;
+}
