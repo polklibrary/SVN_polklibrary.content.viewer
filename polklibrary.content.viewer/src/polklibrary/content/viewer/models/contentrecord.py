@@ -180,7 +180,7 @@ class IContentRecord(model.Schema):
     model.fieldset(
         'statset',
         label=u'Stats', 
-        fields=['likes'],
+        fields=['likes', 'visits'],
     )
     
     likes = schema.Int(

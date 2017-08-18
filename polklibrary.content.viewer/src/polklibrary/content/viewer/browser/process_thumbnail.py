@@ -8,13 +8,16 @@ import requests, re, json
 
 from polklibrary.content.viewer.utility import ResourceEnhancer, ALEXANDER_STREET_NAME, KANOPY_NAME, FILMSONDEMAND_NAME
 from BeautifulSoup import BeautifulSoup
+import logging
 
+logger = logging.getLogger("Plone")
 
 class ThumbnailProcess(BrowserView):
 
     
     
     def __call__(self):
+        loginfo = ''
         alsoProvides(self.request, IDisableCSRFProtection)
         title = ''
         error_msg = ''    
@@ -24,7 +27,7 @@ class ThumbnailProcess(BrowserView):
         if recheck == '1':
             brains = catalog.unrestrictedSearchResults(portal_type='polklibrary.content.viewer.models.contentrecord', image_url = '++resource++polklibrary.content.viewer/missing-thumb.png') # bypass security
         else:
-            brains = catalog.unrestrictedSearchResults(portal_type='polklibrary.content.viewer.models.contentrecord', image_url=None) # bypass security
+            brains = catalog.unrestrictedSearchResults(portal_type='polklibrary.content.viewer.models.contentrecord', image_url=None)
 
         if brains:
             brain = brains[0]
@@ -47,13 +50,13 @@ class ThumbnailProcess(BrowserView):
                     elif enchanced_data['name'] == FILMSONDEMAND_NAME:
                         thumburl = self.get_fod_thumbnail_url(html)
                         
-                    print "Thumbnail: " + thumburl
+                    loginfo += " -- Thumbnail: " + thumburl
                     #return; # stop execution for testing
                     
                     if thumburl:
                         reqthumb = requests.get(thumburl, verify=False)
                         binary = reqthumb.content
-                        print "BINARY: " + str(len(binary))
+                        loginfo += " -- BINARY: " + str(len(binary))
                         if len(binary) > 5000:
                             obj.image = NamedBlobImage(data=reqthumb.content, filename=u'thumb.jpg')
                             obj.image_url = '/@@download/image/thumb.jpg'
@@ -61,11 +64,11 @@ class ThumbnailProcess(BrowserView):
                             obj.image_url = '++resource++polklibrary.content.viewer/missing-thumb.png'
                     else:
                         obj.image_url = '++resource++polklibrary.content.viewer/missing-thumb.png'
-                        
+                                
                         
             except Exception as e:
                 error_msg = '!! ERROR: ' + str(e) + ' - ' + brains[0].getPath()
-                 
+             
             try:
                 if brain.review_state != 'published' and obj.image != None:
                     with api.env.adopt_roles(roles=['Manager']):
@@ -75,9 +78,11 @@ class ThumbnailProcess(BrowserView):
                 error_msg = '!! ERROR: ' + str(e) + ' - ' + brains[0].getPath()
                     
             # Reindex catalog    
-            obj.reindexObject()
+            #obj.reindexObject()
+            catalog.reindexObject(obj)
                 
                 
+        logger.info(loginfo)
         return 'Processed Thumbnail: ' + title + ' Remaining: ' + str((len(brains)-1)) + '  INFO: ' + error_msg
 
         
