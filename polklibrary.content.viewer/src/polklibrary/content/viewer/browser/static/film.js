@@ -39,22 +39,25 @@ var Scroll = {
             }
         );
         
-        
+        // Tap or Mouse
         $('.pat-scroll .scroll-right').click(function(){
             Scroll.GoRight(this);
         });
-        
         $('.pat-scroll .scroll-left').click(function(){
             Scroll.GoLeft(this);
         });
         
-        $('.pat-scroll .scrollbox').swipeleft(function(){
-            Scroll.GoLeft(this);
+        // Swipes
+        $('.pat-scroll .scrollbox').swipe(function(event, direction, distance, duration, fingerCount, fingerData){
+            if (direction == 'left')
+                Scroll.GoLeft(this);
+            else
+                Scroll.GoRight(this);
+            
         });
-        
-        $('.pat-scroll .scroll-left').swiperight(function(){
-            Scroll.GoRight(this);
-        });
+        // $('.pat-scroll .scrollbox').swipe(function(){
+            // Scroll.GoRight(this);
+        // });
         
     },
     

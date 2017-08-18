@@ -31,7 +31,7 @@ class CollectionObject:
     
     
 
-def AdvancedCollectionQuery(collection, limit=10000, sort_by='created'):
+def AdvancedCollectionQuery(collection, limit=10000, sort_by='created', sort_direction='ascending'):
 
     try:
         catalog = api.portal.get_tool(name='portal_catalog')
@@ -136,12 +136,17 @@ def AdvancedCollectionQuery(collection, limit=10000, sort_by='created'):
 
 
         # Sort them
+        if sort_direction.lower() == 'ascending':
+            reverse=False
+        else:
+            reverse=True
+            
         results = list(results)
         if sort_by == 'random':
             random.seed(datetime.datetime.today().day)
             random.shuffle(results)
         else:
-            results = sorted(results, key=lambda x: x[sort_by])
+            results = sorted(results, key=lambda x: x[sort_by], reverse=reverse)
         
         # Set and limit them
         try:
@@ -188,7 +193,7 @@ def AndFilter(listone, listtwo):
     return results.values()
 
 
-def RelatedContent(label, type, query, url, limit=1000, sort_by='created', show_query=True):
+def RelatedContent(label, type, query, url, limit=1000, sort_by='created', sort_direction='descending', show_query=True):
     subject_query = ()
     associated_query = ()
     geography_query = ()
@@ -217,7 +222,7 @@ def RelatedContent(label, type, query, url, limit=1000, sort_by='created', show_
             genre=genre_query
         )
     
-        return AdvancedCollectionQuery(fc, limit=limit, sort_by=sort_by)
+        return AdvancedCollectionQuery(fc, limit=limit, sort_by=sort_by, sort_direction=sort_direction)
     return CollectionObject(title + ': Nothing available', url + '/browse', [])
 
     
@@ -234,7 +239,7 @@ class BrowseView(BrowserView):
     def get_collection(self):
         type = self.request.form.get('type', None)
         query = self.request.form.get('query', None)
-        return RelatedContent("Browsing",type,query,self.portal.absolute_url(), limit=10000, sort_by='created')
+        return RelatedContent("Browsing",type,query,self.portal.absolute_url(), limit=10000, sort_by='created', sort_direction='descending')
             
     
     @property
@@ -296,7 +301,7 @@ class CollectionView(BrowserView):
         return self.template()
         
     def get_collection(self):
-        return AdvancedCollectionQuery(self.context, limit=self.context.limit, sort_by=self.context.sort_type)
+        return AdvancedCollectionQuery(self.context, limit=self.context.limit, sort_by=self.context.sort_type, sort_direction=self.context.sort_direction)
                 
     def get_image(self):
         return '++resource++polklibrary.content.viewer/missing-thumb.png'
@@ -319,4 +324,4 @@ class ShareView(CollectionView):
         return self.template()
         
     def get_collection(self):
-        return AdvancedCollectionQuery(self.context, limit=10, sort_by=self.context.sort_type)
+        return AdvancedCollectionQuery(self.context, limit=10, sort_by=self.context.sort_type, sort_direction=self.context.sort_direction)

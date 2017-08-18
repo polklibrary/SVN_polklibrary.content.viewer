@@ -36,6 +36,10 @@ modes = SimpleVocabulary([
     SimpleTerm(value=u'Title', title=u'Title'),
 ])
 
+directional = SimpleVocabulary([
+    SimpleTerm(value=u'ascending', title=u'Ascending'),
+    SimpleTerm(value=u'descending', title=u'Descending'),
+])
 
 class ICollection(model.Schema):
 
@@ -71,7 +75,7 @@ class ICollection(model.Schema):
     model.fieldset(
         'query',
         label=u'Query', 
-        fields=['query_logic', 'subject_heading', 'associated_entity', 'geography', 'genre', 'sort_type'],
+        fields=['query_logic', 'subject_heading', 'associated_entity', 'geography', 'genre', 'sort_type', 'sort_direction'],
     )
     
     query_logic = schema.TextLine(
@@ -159,6 +163,12 @@ class ICollection(model.Schema):
             required=False,
             source=modes,
         )
-
+        
+    sort_direction = schema.Choice(
+            title=u"Sort Direction",
+            default=u"ascending",
+            required=False,
+            source=directional,
+        )
         
 

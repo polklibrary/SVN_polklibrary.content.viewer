@@ -12,6 +12,7 @@
 <body>
 
 	<metal:block fill-slot="javascript_head_slot">
+        <script type="text/javascript" src="${view/portal/absolute_url}/++resource++polklibrary.content.viewer/jquery.mobile.js"></script>   
         <script type="text/javascript" src="${view/portal/absolute_url}/++resource++polklibrary.content.viewer/film.js"></script>
 	</metal:block>
     
@@ -58,14 +59,6 @@
                 
                 <div class="info col-40">
                 
-                    <tal:block condition="context/runtime">
-                    <h4>Runtime</h4>
-                    <div id="runtime">
-                        ${context/runtime}
-                    </div>
-                    </tal:block>
-                    
-                    
                     <tal:block condition="context/Description">
                     <h4>Description</h4>
                     <div id="description" class="pat-showmore" data-len="255">
@@ -73,6 +66,12 @@
                     </div>
                     </tal:block>
                     
+                    <tal:block condition="context/runtime">
+                    <h4>Runtime</h4>
+                    <div id="runtime">
+                        ${context/runtime}
+                    </div>
+                    </tal:block>
                     
                     <tal:block condition="view/enhanced_data/name">
                     <h4>Direct Link</h4>

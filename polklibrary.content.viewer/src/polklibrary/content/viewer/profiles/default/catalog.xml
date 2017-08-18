@@ -7,6 +7,8 @@
     <column value="runtime"/>
     <column value="creator"/>
     <column value="date_of_publication"/>
+    <column value="sort_direction"/>
+    <column value="sort_by"/>
     
     <index name="image_url" meta_type="FieldIndex">
         <indexed_attr value="image_url"/>

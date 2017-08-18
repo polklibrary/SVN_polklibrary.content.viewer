@@ -33,7 +33,7 @@ class GroupList(BrowserView):
         
         collections = []
         for brain in brains:
-            collections.append(AdvancedCollectionQuery(brain, limit=10))
+            collections.append(AdvancedCollectionQuery(brain, limit=10, sort_by=brain.sort_type, sort_direction=brain.sort_direction))
     
         return collections
         
