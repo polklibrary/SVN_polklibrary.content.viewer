@@ -50,7 +50,7 @@
     height: 400px;
 }
 .pat-scroll .collection .scrollbox {
-    transition: right 100ms ease-in;
+    transition: left 750ms linear;
     left: 0px;
     position: absolute;
     width: 10000px;

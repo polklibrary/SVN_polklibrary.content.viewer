@@ -24,7 +24,10 @@ var ShowMore = {
     
 }
 
+
 var Scroll = {
+
+    ImageSpace : 210, // 200px record image + 10px margin
 
     Pattern : function() {
         $('.pat-scroll .collection').hover(
@@ -36,36 +39,77 @@ var Scroll = {
             }
         );
         
+        
         $('.pat-scroll .scroll-right').click(function(){
-            var scrollbox = $(this).parent().find('.scrollbox');
-            var left = parseInt($(scrollbox).css('left').replace('px',''));
-            var max_distance = parseInt($(scrollbox).attr('data-items')) * 210; // 200px record image + 10px margin
-            
-            if (-max_distance < left-800)
-                $(scrollbox).animate({
-                    left: "-=800px"
-                }, 500, function() {
-                    // Animation complete.
-                });
-            
-            
+            Scroll.GoRight(this);
         });
         
         $('.pat-scroll .scroll-left').click(function(){
-            var scrollbox = $(this).parent().find('.scrollbox');
-            var left = parseInt($(scrollbox).css('left').replace('px',''));
-
-            if (left+800 <= 0) {
-                $(scrollbox).animate({
-                    left: "+=800px"
-                }, 500, function() {
-                    // Animation complete.
-                });
-            }
-            
+            Scroll.GoLeft(this);
         });
-    }
+        
+        $('.pat-scroll .scrollbox').swipeleft(function(){
+            Scroll.GoLeft(this);
+        });
+        
+        $('.pat-scroll .scroll-left').swiperight(function(){
+            Scroll.GoRight(this);
+        });
+        
+    },
+    
+    GetScrollDistance : function(){
+        var scroll_distance = $('.collection').width();
+        var distance = 0;
+        
+        if (this.ImageSpace >= scroll_distance)
+            distance = this.ImageSpace;
+        else if (this.ImageSpace*2 >= scroll_distance)
+            distance =  this.ImageSpace*2;
+        else if (this.ImageSpace*3 >= scroll_distance)
+            distance =  this.ImageSpace*3;
+        else if (this.ImageSpace*4 >= scroll_distance)
+            distance =  this.ImageSpace*4;
+        else if (this.ImageSpace*5 >= scroll_distance)
+            distance =  this.ImageSpace*5;
+        else if (this.ImageSpace*6 >= scroll_distance)
+            distance =  this.ImageSpace*6;
+        else if (this.ImageSpace*7 >= scroll_distance)
+            distance =  this.ImageSpace*7;
+        else if (this.ImageSpace*8 >= scroll_distance)
+            distance =  this.ImageSpace*8;
+        else
+            distance =  this.ImageSpace*9;
+            
+        return distance - this.ImageSpace; // back up one
+        
+    },
+    
+    
+    GoRight : function(element){
+        var scrollbox = $(element).parent().find('.scrollbox');
+        var left = parseInt($(scrollbox).css('left').replace('px',''));
+        var max_distance = (parseInt($(scrollbox).attr('data-items')) * Scroll.ImageSpace) + Scroll.ImageSpace; // +  "View More"
+        var scroll_distance = Scroll.GetScrollDistance();
+        
+        if (-max_distance < left-scroll_distance)
+            $(scrollbox).css({'left': (left - scroll_distance) + "px"});
+    },
+    
+    GoLeft : function(element){
+        var scrollbox = $(element).parent().find('.scrollbox');
+        var left = parseInt($(scrollbox).css('left').replace('px',''));
+        var scroll_distance = Scroll.GetScrollDistance();
+
+        if (left+scroll_distance <= 0) 
+            $(scrollbox).css({'left': (left + scroll_distance) + "px"});
+    },
+
+    
+    
+    
 }
+
 
 
 var Overlay = {
