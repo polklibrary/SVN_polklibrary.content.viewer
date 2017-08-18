@@ -51,9 +51,9 @@
             <form method="post" enctype="multipart/form-data">
                 <div>
                     <select name="form.container.type">
-                        <option value="boardgame">Boardgame</option>
-                        <option value="book">Book</option>
-                        <option value="dvd">DVD</option>
+                        <option value="boardgames">Boardgame</option>
+                        <option value="books">Book</option>
+                        <option value="dvds">DVD</option>
                         <option selected="true" value="streams">Streams</option>
                     </select>
                     <label for="file-upload" > Upload: </label>
