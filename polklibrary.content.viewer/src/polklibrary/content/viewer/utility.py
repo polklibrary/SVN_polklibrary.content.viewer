@@ -34,14 +34,13 @@ def ResourceEnhancer(id, title):
         
     elif FILMSONDEMAND_TARGET in id.lower():
         data['name'] = FILMSONDEMAND_NAME
-        data['base_url'] = 'https://www.remote.uwosh.edu/login?url=http://fod.infobase.com/PortalPlaylists.aspx?wID=240117&xtid=' + data['id']
-        data['embed'] = '<iframe frameborder="0" scrolling="no" width="700" height="450" src="https://www.remote.uwosh.edu/login?url=https://fod.infobase.com/OnDemandEmbed.aspx?token=' + data['id'] + '&wID=240117&plt=FOD&loid=0&w=700&h=420&fWidth=700&fHeight=420" allowfullscreen >&nbsp;</iframe>'
+        data['base_url'] = 'https://www.remote.uwosh.edu/login?url=http://fod.infobase.com/PortalPlaylists.aspx?wID=102638&xtid=' + data['id']
+        data['embed'] = '<iframe frameborder="0" scrolling="no" width="700" height="450" src="https://www.remote.uwosh.edu/login?url=https://fod.infobase.com/OnDemandEmbed.aspx?token=' + data['id'] + '&wID=102638&plt=FOD&loid=0&w=700&h=420&fWidth=700&fHeight=420" allowfullscreen >&nbsp;</iframe>'
             
     elif ALMA_TARGET in id.lower():
         data['name'] = ALMA_NAME
         data['base_url'] = 'https://uw-primo.hosted.exlibrisgroup.com/primo-explore/fulldisplay?docid=' + data['id'] + '&context=L&vid=OSH&search_scope=OSH_ALL&tab=default_tab&lang=en_US'
         data['embed'] = ''
-        #https://fod.infobase.com/OnDemandEmbed.aspx?token=38153&wID=240117&plt=FOD&loid=0&w=640&h=480&fWidth=660&fHeight=530
         
     return data
     
