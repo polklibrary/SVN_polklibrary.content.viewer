@@ -48,13 +48,19 @@ var Scroll = {
         });
         
         // Swipes
-        $('.pat-scroll .scrollbox').swipe(function(event, direction, distance, duration, fingerCount, fingerData){
-            if (direction == 'left')
-                Scroll.GoLeft(this);
-            else
-                Scroll.GoRight(this);
-            
+        $('.pat-scroll .collection').on('flick', function(e) {
+            if ('horizontal' == e.orientation) {
+                if (1 == e.direction) {
+                    Scroll.GoLeft(this);
+                }
+                else {
+                    Scroll.GoRight(this);
+                }
+            }
         });
+                    
+        
+        
         // $('.pat-scroll .scrollbox').swipe(function(){
             // Scroll.GoRight(this);
         // });
