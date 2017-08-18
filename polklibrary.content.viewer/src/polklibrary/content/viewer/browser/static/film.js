@@ -159,7 +159,7 @@ var Overlay = {
     PushRight: 425,
     
     Pattern : function(){
-        
+    
         $('.pat-overlay').hover(
             function(e){
                 clearTimeout(Overlay.Thread);
@@ -201,9 +201,6 @@ var Overlay = {
                 Overlay.Hide();
             }
         );
-        
-        
-        
     },
 
     Set : function(element){

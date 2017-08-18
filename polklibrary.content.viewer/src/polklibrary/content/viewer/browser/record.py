@@ -16,6 +16,7 @@ class RecordView(BrowserView):
     
     def __call__(self):
         redirect = self.request.form.get('url', self.portal.absolute_url())
+        
         if not self.is_oncampus():
             return self.request.response.redirect('http://www.remote.uwosh.edu/login?url=' + redirect)
         

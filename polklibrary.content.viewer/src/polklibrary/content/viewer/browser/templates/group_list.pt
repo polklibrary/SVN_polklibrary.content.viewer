@@ -62,7 +62,7 @@
             </div>
                     
             
-            <div id="overlay">
+            <div id="overlay" class="hide-1080">
                 <div class="title"> </div>
                 <div class="description pat-showmore" data-len="255"> </div>
                 <div class="runtime">
