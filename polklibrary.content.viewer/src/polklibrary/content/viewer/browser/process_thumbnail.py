@@ -8,7 +8,7 @@ import requests, re, json
 
 from polklibrary.content.viewer.utility import ResourceEnhancer, ALEXANDER_STREET_NAME, KANOPY_NAME, FILMSONDEMAND_NAME
 from BeautifulSoup import BeautifulSoup
-import logging
+import logging,transaction
 
 logger = logging.getLogger("Plone")
 
@@ -25,7 +25,7 @@ class ThumbnailProcess(BrowserView):
         
         recheck = self.request.form.get('recheck', '0')
         if recheck == '1':
-            brains = catalog.unrestrictedSearchResults(portal_type='polklibrary.content.viewer.models.contentrecord', image_url = '++resource++polklibrary.content.viewer/missing-thumb.png') # bypass security
+            brains = catalog.unrestrictedSearchResults(portal_type='polklibrary.content.viewer.models.contentrecord', image_url = '/++resource++polklibrary.content.viewer/missing-thumb.png') # bypass security
         else:
             brains = catalog.unrestrictedSearchResults(portal_type='polklibrary.content.viewer.models.contentrecord', image_url=None)
 
@@ -61,9 +61,10 @@ class ThumbnailProcess(BrowserView):
                             obj.image = NamedBlobImage(data=reqthumb.content, filename=u'thumb.jpg')
                             obj.image_url = '/@@download/image/thumb.jpg'
                         else:
-                            obj.image_url = '++resource++polklibrary.content.viewer/missing-thumb.png'
+                            obj.image_url = '/++resource++polklibrary.content.viewer/missing-thumb.png'
                     else:
-                        obj.image_url = '++resource++polklibrary.content.viewer/missing-thumb.png'
+                        obj.image_url = '/++resource++polklibrary.content.viewer/missing-thumb.png'
+                        
                                 
                         
             except Exception as e:
@@ -78,8 +79,10 @@ class ThumbnailProcess(BrowserView):
                 error_msg = '!! ERROR: ' + str(e) + ' - ' + brains[0].getPath()
                     
             # Reindex catalog    
-            #obj.reindexObject()
-            catalog.reindexObject(obj)
+            transaction.commit()
+            #obj.reindexObject(idxs=["image_url"])
+            obj.reindexObject()
+            #catalog.reindexObject(obj)
                 
                 
         logger.info(loginfo)
