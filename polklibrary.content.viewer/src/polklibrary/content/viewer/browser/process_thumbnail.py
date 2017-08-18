@@ -19,7 +19,7 @@ class ThumbnailProcess(BrowserView):
     def __call__(self):
         loginfo = ''
         alsoProvides(self.request, IDisableCSRFProtection)
-        title = ''
+        title = 'No results'
         error_msg = ''    
         catalog = api.portal.get_tool(name='portal_catalog')
         
@@ -31,8 +31,10 @@ class ThumbnailProcess(BrowserView):
 
         if brains:
             brain = brains[0]
-            obj = self.portal.unrestrictedTraverse(brain.getPath()) # bypass security
+            with api.env.adopt_roles(roles=['Manager']):
+                obj = brain.getObject()
             title = obj.Title()
+            
             try:
                 # Get Thumbnail
                 if obj.image == None:
@@ -79,9 +81,10 @@ class ThumbnailProcess(BrowserView):
                 error_msg = '!! ERROR: ' + str(e) + ' - ' + brains[0].getPath()
                     
             # Reindex catalog    
-            transaction.commit()
             #obj.reindexObject(idxs=["image_url"])
-            obj.reindexObject()
+            
+            with api.env.adopt_roles(roles=['Manager']):
+                obj.reindexObject()
             #catalog.reindexObject(obj)
                 
                 
