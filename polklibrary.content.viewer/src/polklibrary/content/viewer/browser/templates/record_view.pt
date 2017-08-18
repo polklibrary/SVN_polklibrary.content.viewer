@@ -30,31 +30,31 @@
             
             <div class="column">
             
-            
                 <div class="col-60">
-                    <div class="player" 
-                         tal:condition="view/enhanced_data/embed" 
-                         tal:content="structure view/enhanced_data/embed">
+                    <div class="column-outer">
+                        <div class="pat-player" 
+                             tal:condition="view/enhanced_data/embed" 
+                             tal:content="structure view/enhanced_data/embed">
+                        </div>
+                        <a class="link" 
+                           href="${view/enhanced_data/base_url}"
+                           tal:condition="not: view/enhanced_data/embed">
+                            <img tal:condition="context/image" src="${context/absolute_url}/@@download/image/thumb.jpg" alt="Thumbnail" />
+                            <img tal:condition="not: context/image" src="${context/image_url}" alt="Missing Thumbnail" />
+                             
+                        </a>
+                        <div class="clear"></div>
+                        
+                        <div class="add-to-list logged-in-visible">
+                            <label>Your Playlist: </label> <span class="pat-film-list" data-id="${context/getId}" />
+                        </div>
+                        
+                        <div class="like logged-in-visible">
+                            <label>${context/likes} </label> <a href="${context/absolute_url}?like=1"></a>
+                        </div>
+                        
                     </div>
-                    <a class="link" 
-                       href="${view/enhanced_data/base_url}"
-                       tal:condition="not: view/enhanced_data/embed">
-                        <img tal:condition="context/image" src="${context/absolute_url}/@@download/image/thumb.jpg" alt="Thumbnail" />
-                        <img tal:condition="not: context/image" src="${context/image_url}" alt="Missing Thumbnail" />
-                         
-                    </a>
-                    <div class="clear"></div>
-                    
-                    <div class="add-to-list logged-in-visible">
-                        <label>Your Playlist: </label> <span class="pat-film-list" data-id="${context/getId}" />
-                    </div>
-                    
-                    <div class="like logged-in-visible">
-                        <label>${context/likes} </label> <a href="${context/absolute_url}?like=1"></a>
-                    </div>
-                    
-                    
-                    <div class="clear"></div>
+                        
                 </div>
                 
                 <div class="info col-40">
@@ -73,17 +73,6 @@
                     </div>
                     </tal:block>
                     
-                    <tal:block condition="view/enhanced_data/name">
-                    <h4>Direct Link</h4>
-                    <div>
-                        <a class="slink" href="${view/enhanced_data/base_url}" target="_blank">
-                            <img src="++resource++polklibrary.content.viewer/link.png" alt="Link" /> 
-                            ${view/enhanced_data/base_url} 
-                        </a>
-                    </div>
-                    </tal:block>
-                    
-                    
                     <tal:block condition="context/creator">
                     <h4>Creator</h4>
                     <div id="creator">
@@ -91,14 +80,6 @@
                     </div>
                     </tal:block>
                     
-                    <tal:block condition="context/date_of_publication">
-                    <h4>Date of Publication</h4>
-                    <div id="date_of_publication">
-                        ${context/date_of_publication}
-                    </div>
-                    </tal:block>
-                                 
-                                 
                     <tal:block condition="context/series_title">
                     <h4>Series</h4>
                     <ul>
@@ -146,10 +127,27 @@
                     </ul>
                     </tal:block>
                     
+                    <tal:block condition="context/date_of_publication">
+                    <h4>Date of Publication</h4>
+                    <div id="date_of_publication">
+                        ${context/date_of_publication}
+                    </div>
+                    </tal:block>
+                                 
                     <tal:block condition="view/enhanced_data/name">
                     <h4>Database</h4>
                     <div>
                         ${view/enhanced_data/name}
+                    </div>
+                    </tal:block>
+                    
+                    <tal:block condition="view/enhanced_data/name">
+                    <h4>Direct Link</h4>
+                    <div>
+                        <a class="slink" href="${view/enhanced_data/base_url}" target="_blank">
+                            <img src="++resource++polklibrary.content.viewer/link.png" alt="Link" /> 
+                            ${view/enhanced_data/base_url} 
+                        </a>
                     </div>
                     </tal:block>
                     

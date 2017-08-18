@@ -25,17 +25,17 @@ def ResourceEnhancer(id, title):
     if ALEXANDER_STREET_TARGET in id.lower():
         data['name'] = ALEXANDER_STREET_NAME
         data['base_url'] = 'https://www.remote.uwosh.edu/login?url=https://search.alexanderstreet.com/view/work/' + data['id']
-        data['embed'] = '<iframe src="https://www.remote.uwosh.edu/login?url=https://search.alexanderstreet.com/embed/token/' + data['id'] + '" frameborder="0" width="700" height="450" allowfullscreen scrolling="no"></iframe>'
+        data['embed'] = '<iframe src="https://www.remote.uwosh.edu/login?url=https://search.alexanderstreet.com/embed/token/' + data['id'] + '" frameborder="0" allowfullscreen scrolling="no"></iframe>'
         
     elif KANOPY_TARGET in id.lower():
         data['name'] = KANOPY_NAME
         data['base_url'] = 'https://uwosh.kanopystreaming.com/embed/' + data['id']
-        data['embed'] = '<iframe width="700" height="450" src="https://uwosh.kanopystreaming.com/embed/' + data['id'] + '" frameborder="0" allowfullscreen webkitallowfullscreen mozallowfullscreen scrolling="no"></iframe>'
+        data['embed'] = '<iframe src="https://uwosh.kanopystreaming.com/embed/' + data['id'] + '" frameborder="0" allowfullscreen webkitallowfullscreen mozallowfullscreen scrolling="no"></iframe>'
         
     elif FILMSONDEMAND_TARGET in id.lower():
         data['name'] = FILMSONDEMAND_NAME
         data['base_url'] = 'https://www.remote.uwosh.edu/login?url=http://fod.infobase.com/PortalPlaylists.aspx?wID=102638&xtid=' + data['id']
-        data['embed'] = '<iframe frameborder="0" scrolling="no" width="700" height="450" src="https://www.remote.uwosh.edu/login?url=https://fod.infobase.com/OnDemandEmbed.aspx?token=' + data['id'] + '&wID=102638&plt=FOD&loid=0&w=700&h=420&fWidth=700&fHeight=420" allowfullscreen >&nbsp;</iframe>'
+        data['embed'] = '<iframe frameborder="0" scrolling="no" src="https://www.remote.uwosh.edu/login?url=https://fod.infobase.com/OnDemandEmbed.aspx?token=' + data['id'] + '&wID=102638&plt=FOD&loid=0&w={WIDTH}&h={HEIGHT}&fWidth={WIDTH}&fHeight={HEIGHT}" allowfullscreen >&nbsp;</iframe>'
             
     elif ALMA_TARGET in id.lower():
         data['name'] = ALMA_NAME

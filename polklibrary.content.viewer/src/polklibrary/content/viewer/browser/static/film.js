@@ -24,6 +24,33 @@ var ShowMore = {
     
 }
 
+var Player = {
+    
+    Pattern : function(){
+        var player = $('.pat-player');
+        if (player.length > 0)
+        {
+            var width = $(player).width();
+            var scaledheight = $(player).height() - 30;
+            
+            // Set proper height based off width
+            var h = Math.floor(width/3);
+            var height = (h*2) + 25; // +25 for padding
+            $(player).css('height', height+'px');
+            var scaledheight = height - 30;
+            
+            
+            var src = $(player).find('iframe').attr('src');
+            src = src.replace(new RegExp('{WIDTH}', 'g'), width);
+            src = src.replace(new RegExp('{HEIGHT}', 'g'), scaledheight);
+             $(player).find('iframe').attr('src', src);
+            
+             $(player).find('iframe').show();
+        }
+    }
+    
+}
+
 
 var Scroll = {
 
@@ -41,30 +68,22 @@ var Scroll = {
         
         // Tap or Mouse
         $('.pat-scroll .scroll-right').click(function(){
-            Scroll.GoRight(this);
+            Scroll.GoRight($(this).parent().find('.scrollbox'));
         });
         $('.pat-scroll .scroll-left').click(function(){
-            Scroll.GoLeft(this);
+            Scroll.GoLeft($(this).parent().find('.scrollbox'));
         });
         
         // Swipes
         $('.pat-scroll .collection').on('flick', function(e) {
-            if ('horizontal' == e.orientation) {
-                if (1 == e.direction) {
-                    Scroll.GoLeft(this);
-                }
-                else {
-                    Scroll.GoRight(this);
-                }
+            if (1 == e.direction) {
+                Scroll.GoLeft($(this).find('.scrollbox'));
+            }
+            else {
+                Scroll.GoRight($(this).find('.scrollbox'));
             }
         });
-                    
-        
-        
-        // $('.pat-scroll .scrollbox').swipe(function(){
-            // Scroll.GoRight(this);
-        // });
-        
+                
     },
     
     GetScrollDistance : function(){
@@ -95,21 +114,32 @@ var Scroll = {
     },
     
     
-    GoRight : function(element){
-        var scrollbox = $(element).parent().find('.scrollbox');
+    GoRight : function(scrollbox){
+        //var scrollbox = $(element).parent().find('.scrollbox');
         var left = parseInt($(scrollbox).css('left').replace('px',''));
         var max_distance = (parseInt($(scrollbox).attr('data-items')) * Scroll.ImageSpace) + Scroll.ImageSpace; // +  "View More"
         var scroll_distance = Scroll.GetScrollDistance();
+        
+        if(scroll_distance < 600)
+            $(scrollbox).addClass('fast');
+        else
+            $(scrollbox).removeClass('fast');
+        
         
         if (-max_distance < left-scroll_distance)
             $(scrollbox).css({'left': (left - scroll_distance) + "px"});
     },
     
-    GoLeft : function(element){
-        var scrollbox = $(element).parent().find('.scrollbox');
+    GoLeft : function(scrollbox){
+        //var scrollbox = $(element).parent().find('.scrollbox');
         var left = parseInt($(scrollbox).css('left').replace('px',''));
         var scroll_distance = Scroll.GetScrollDistance();
 
+        if(scroll_distance < 600)
+            $(scrollbox).addClass('fast');
+        else
+            $(scrollbox).removeClass('fast');
+        
         if (left+scroll_distance <= 0) 
             $(scrollbox).css({'left': (left + scroll_distance) + "px"});
     },
@@ -315,5 +345,6 @@ $(document).ready(function(){
     Overlay.Pattern();
     ShowMore.Pattern();
     Share.Pattern();
+    Player.Pattern();
 });
 
