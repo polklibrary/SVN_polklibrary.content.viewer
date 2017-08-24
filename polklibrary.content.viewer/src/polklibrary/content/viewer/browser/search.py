@@ -38,8 +38,8 @@ class Search(BrowserView):
                 sort_order=sort_order
             )
             
-            return CollectionObject("Results", self.portal.absolute_url() + '/find', brains)
-        return CollectionObject("Results", self.portal.absolute_url() + '/find', [])
+            return CollectionObject("Results Found", self.portal.absolute_url() + '/find', brains)
+        return CollectionObject("Results Found", self.portal.absolute_url() + '/find', [])
         
     @property
     def portal(self):

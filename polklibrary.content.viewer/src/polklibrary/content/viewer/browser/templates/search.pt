@@ -27,14 +27,12 @@
                 <div class="col-30">
                     <input placeholder="Search here" type="text" name="form.query" tal:attributes="value python:request.form.get('form.query','')" />
                 </div>
-                <div class="col-10">
+                <div class="col-30">
+                    <label>Sort by: </label>
                     <select name="form.sort">
                         <option value="sortable_title" tal:attributes="selected python:request.form.get('form.sort','')=='sortable_title'">Title</option>
                         <option value="created" tal:attributes="selected python:request.form.get('form.sort','')=='created'">Add Date</option>
                     </select>
-                </div>
-                
-                <div class="col-10">                    
                     <select name="form.sort.direction">
                         <option value="ascending" tal:attributes="selected python:request.form.get('form.sort.direction','')=='ascending'">Ascending</option>
                         <option value="descending" tal:attributes="selected python:request.form.get('form.sort.direction','')=='descending'">Descending</option>
@@ -50,7 +48,7 @@
             <div class="collection column" tal:define="container view/get_collection" tal:condition="container/items">
                 
                 <h2 class="vm">
-                    <a href="${container/url}">${container/title}</a> 
+                    <a href="${container/url}"><span tal:replace="python: len(container.items)" /> ${container/title} </a> 
                 </h2>
             
                 <a  tal:repeat="item container/items" 
