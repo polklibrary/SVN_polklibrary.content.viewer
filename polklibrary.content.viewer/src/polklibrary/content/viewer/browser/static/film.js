@@ -24,6 +24,42 @@ var ShowMore = {
     
 }
 
+var Images = {
+
+    Threshold : 0,
+    
+    Pattern : function(){
+        setInterval(function(){
+            Images.Process();
+        }, 1000);
+    },
+    
+    Process : function(){
+        $('.pat-images:not([style]').each(function(){
+            if(Images.IsOnScreen(this)){
+                var style = $(this).attr('data-style');
+                $(this).attr('style', style);
+            }
+        });
+    },
+    
+    IsOnScreen : function(element){  
+        var wt = $(window).scrollTop(),
+            wb = wt + $(window).height(),
+            wl = $(window).scrollLeft()
+            wr = wl + $(window).width(),
+            
+            et = $(element).offset().top,
+            eb = et + $(element).height(),
+            el = $(element).offset().left,
+            er = el + $(element).width();
+            
+            
+        return eb >= wt - Images.Threshold && et <= wb + Images.Threshold && er >= wl - Images.Threshold && el <= wr + Images.Threshold;
+    },
+
+}
+
 var Player = {
     
     Pattern : function(){
@@ -54,7 +90,7 @@ var Player = {
 
 var Scroll = {
 
-    ImageSpace : 210, // 200px record image + 10px margin
+    ImageSpace : 160, // 150px record image + 10px margin
 
     Pattern : function() {
         $('.pat-scroll .collection').hover(
@@ -75,14 +111,21 @@ var Scroll = {
         });
         
         // Swipes
-        $('.pat-scroll .collection').on('flick', function(e) {
-            if (1 == e.direction) {
-                Scroll.GoLeft($(this).find('.scrollbox'));
-            }
-            else {
-                Scroll.GoRight($(this).find('.scrollbox'));
-            }
+        $('.pat-scroll .collection').on( "swiperight", function(){
+            Scroll.GoLeft($(this).find('.scrollbox'));
         });
+        $('.pat-scroll .collection').on( "swipeleft", function(){
+            Scroll.GoRight($(this).find('.scrollbox'));
+        });
+        
+        // $('.pat-scroll .collection').on('flick', function(e) {
+            // if (1 == e.direction) {
+                // Scroll.GoLeft($(this).find('.scrollbox'));
+            // }
+            // else {
+                // Scroll.GoRight($(this).find('.scrollbox'));
+            // }
+        // });
                 
     },
     
@@ -155,7 +198,7 @@ var Overlay = {
     
     Thread: null,
     Width: 400,
-    PushLeft: 200,
+    PushLeft: 160,
     PushRight: 425,
     
     Pattern : function(){
@@ -343,5 +386,6 @@ $(document).ready(function(){
     ShowMore.Pattern();
     Share.Pattern();
     Player.Pattern();
+    Images.Pattern();
 });
 

@@ -75,15 +75,33 @@ class ICollection(model.Schema):
     model.fieldset(
         'query',
         label=u'Query', 
-        fields=['query_logic', 'subject_heading', 'associated_entity', 'geography', 'genre', 'sort_type', 'sort_direction'],
+        fields=['query_logic', 'series_title', 'subject_heading', 'associated_entity', 'geography', 'genre', 'sort_type', 'sort_direction'],
     )
     
     query_logic = schema.TextLine(
             title=u"Query Logic",
-            description=u"Left to right logic, no parentheses allowed. Select OR or AND in subject_heading[OR|AND] to combine terms. Example: subject_heading[OR] OR associated_entity[OR] OR geography[OR] OR genre[OR]",
-            default=u"subject_heading[OR] OR associated_entity[OR] OR geography[OR] OR genre[OR]",
+            description=u"Left to right logic, no parentheses allowed. Select OR or AND in subject_heading[OR|AND] to combine terms. Example: series_title[OR] OR subject_heading[OR] OR associated_entity[OR] OR geography[OR] OR genre[OR]",
+            default=u"series_title[OR] OR subject_heading[OR] OR associated_entity[OR] OR geography[OR] OR genre[OR]",
             required=True,
         )
+    
+    series_title = schema.Tuple(
+        title=u'Series Title',
+        required=False,
+        value_type=schema.TextLine(),
+        missing_value=(),
+    )
+    directives.widget(
+        'series_title',
+        AjaxSelectFieldWidget,
+        vocabulary='polklibrary.content.viewer.vocabularies.SeriesTitleVocabularyFactory'
+    )
+    directives.read_permission(series_title='cmf.AddPortalContent')
+    directives.write_permission(series_title='cmf.AddPortalContent')
+    directives.omitted('series_title')
+    directives.no_omit(IEditForm, 'series_title')
+    directives.no_omit(IAddForm, 'series_title')
+    
     
     subject_heading = schema.Tuple(
         title=u'Subject Heading',

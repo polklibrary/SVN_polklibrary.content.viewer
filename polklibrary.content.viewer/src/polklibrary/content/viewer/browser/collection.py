@@ -9,10 +9,20 @@ import random, time, re, datetime, operator
 
 class FakeCollection:
     
-    def __init__(self, url, title, query='subject_heading[OR] OR associated_entity[OR] OR geography[OR] OR genre[OR]', subject_heading=(), associated_entity=(), geography=(), genre=()):
+    def __init__(self, 
+                 url, 
+                 title, 
+                 query='series_title[OR] OR subject_heading[OR] OR associated_entity[OR] OR geography[OR] OR genre[OR]', 
+                 series_title=(),
+                 subject_heading=(), 
+                 associated_entity=(), 
+                 geography=(), 
+                 genre=()):
+                 
         self.url = url
         self.Title = title
         self.query_logic = query
+        self.series_title = series_title
         self.subject_heading = subject_heading
         self.associated_entity = associated_entity
         self.geography = geography
@@ -37,14 +47,17 @@ def AdvancedCollectionQuery(collection, limit=10000, sort_by='created', sort_dir
         catalog = api.portal.get_tool(name='portal_catalog')
                 
         results = None
-        if collection.subject_heading or collection.associated_entity or collection.geography or collection.genre: # IF SET, LIMIT RESULTS
+        if collection.series_title or collection.subject_heading or collection.associated_entity or collection.geography or collection.genre: # IF SET, LIMIT RESULTS
         
             query = re.sub( '\s+', ' ', collection.query_logic.lower()).strip()
+            series_andor = 'or'
             subject_andor = 'or'
             associated_entity_andor = 'or'
             geography_andor = 'or'
             genre_andor = 'or'
             
+            if 'series_title[and]' in query:
+                series_andor = 'and'
             if 'subject_heading[and]' in query:
                 subject_andor = 'and'
             if 'associated_entity[and]' in query:
@@ -54,6 +67,16 @@ def AdvancedCollectionQuery(collection, limit=10000, sort_by='created', sort_dir
             if 'genre[and]' in query:
                 genre_andor = 'and'
                 
+                
+            series_title_brains = catalog.searchResults(
+                portal_type='polklibrary.content.viewer.models.contentrecord',
+                review_state='published',
+                series_title={
+                    "query": collection.series_title,
+                    "operator" : series_andor,
+                },
+            )
+            
             subject_heading_brains = catalog.searchResults(
                 portal_type='polklibrary.content.viewer.models.contentrecord',
                 review_state='published',
@@ -95,7 +118,9 @@ def AdvancedCollectionQuery(collection, limit=10000, sort_by='created', sort_dir
             result_op = ''
 
             # Set First Result
-            if 'subject_heading' in query_parts[0]:
+            if 'series_title' in query_parts[0]:
+                results = series_title_brains
+            elif 'subject_heading' in query_parts[0]:
                 results = subject_heading_brains
             elif 'associated_entity' in query_parts[0]:
                 results = associated_entity_brains
@@ -103,6 +128,8 @@ def AdvancedCollectionQuery(collection, limit=10000, sort_by='created', sort_dir
                 results = geography_brains
             elif 'genre' in query_parts[0]:
                 results = genre_brains
+                
+                
             
             # Skip First Result and Start Merging Queries, Second result should be 'or' or 'and'
             for q in query_parts[1:]:
@@ -113,7 +140,9 @@ def AdvancedCollectionQuery(collection, limit=10000, sort_by='created', sort_dir
                     result_op = 'or'
                 else:
                     result = None
-                    if 'subject_heading' in cq:
+                    if 'series_title' in cq:
+                        result = series_title_brains
+                    elif 'subject_heading' in cq:
                         result = subject_heading_brains
                     elif 'associated_entity' in cq:
                         result = associated_entity_brains
@@ -126,6 +155,8 @@ def AdvancedCollectionQuery(collection, limit=10000, sort_by='created', sort_dir
                         results = AndFilter(results, result)
                     else: # or
                         results = OrFilter(results, result)
+        
+        
         
         else:  # GET ALL RESULTS
         
@@ -193,37 +224,48 @@ def AndFilter(listone, listtwo):
     return results.values()
 
 
-def RelatedContent(label, type, query, url, limit=1000, sort_by='created', sort_direction='descending', show_query=True):
+def RelatedContent(label, data, url, limit=1000, sort_by='created', sort_direction='descending', show_query=True):
     subject_query = ()
     associated_query = ()
     geography_query = ()
     genre_query = ()
+    series_query = ()
+
+    subject_data = data.get('subject_heading', ())
+    associated_data = data.get('associated_entity', ())
+    geography_data = data.get('geography', ())
+    genre_data = data.get('genre', ())
+    series_data = data.get('series_title', ())
     
-    if type and query:
-        if type.lower() == 'subject_heading':
-            subject_query = tuple(query.split(','))
-        if type.lower() == 'associated_entity':
-            associated_query = tuple(query.split(','))
-        if type.lower() == 'geography':
-            geography_query = tuple(query.split(','))
-        if type.lower() == 'genre':
-            genre_query = tuple(query.split(','))
+    if subject_data:
+        subject_query = tuple(subject_data.split(','))
+    if associated_data:
+        associated_query = tuple(associated_data.split(','))
+    if geography_data:
+        geography_query = tuple(geography_data.split(','))
+    if genre_data:
+        genre_query = tuple(genre_data.split(','))
+    if series_data:
+        series_query = tuple(series_data.split(','))
+
     
-        title = label
-        if show_query:
-            title = label + ': ' + ', '.join([t.capitalize() for t in query.split(',')])
-        
-        fc = FakeCollection(
-            url,
-            title,
-            subject_heading=subject_query,
-            associated_entity=associated_query,
-            geography=geography_query,
-            genre=genre_query
-        )
+    title = label
+    if show_query:
+        query = subject_query + associated_query + geography_query + genre_query + series_query
+        title = label  + ': ' + ', '.join([t.capitalize() for t in query])
     
-        return AdvancedCollectionQuery(fc, limit=limit, sort_by=sort_by, sort_direction=sort_direction)
-    return CollectionObject(title + ': Nothing available', url + '/browse', [])
+    fc = FakeCollection(
+        url,
+        title,
+        series_title=series_query,
+        subject_heading=subject_query,
+        associated_entity=associated_query,
+        geography=geography_query,
+        genre=genre_query
+    )
+
+    return AdvancedCollectionQuery(fc, limit=limit, sort_by=sort_by, sort_direction=sort_direction)
+    #return CollectionObject(title + ': Nothing available', url + '/browse', [])
 
     
     
@@ -237,11 +279,8 @@ class BrowseView(BrowserView):
         return self.template()
         
     def get_collection(self):
-        type = self.request.form.get('type', None)
-        query = self.request.form.get('query', None)
-        return RelatedContent("Browsing",type,query,self.portal.absolute_url(), limit=10000, sort_by='created', sort_direction='descending')
+        return RelatedContent("Browsing", self.request.form, self.portal.absolute_url(), limit=10000, sort_by='created', sort_direction='descending')
             
-    
     @property
     def portal(self):
         return api.portal.get()
@@ -325,3 +364,4 @@ class ShareView(CollectionView):
         
     def get_collection(self):
         return AdvancedCollectionQuery(self.context, limit=10, sort_by=self.context.sort_type, sort_direction=self.context.sort_direction)
+        

@@ -5,7 +5,7 @@
 	  lang="en">
 <head>
         <script type="text/javascript" src="${view/portal/absolute_url}/++plone++static/components/jquery/dist/jquery.min.js"></script>
-        <script type="text/javascript" src="${view/portal/absolute_url}/++resource++polklibrary.content.viewer/jquery.mobile.js"></script>   
+        <script type="text/javascript" src="${view/portal/absolute_url}/++resource++polklibrary.content.viewer/jquery.mobile.custom.min.js"></script>  
         <script type="text/javascript" src="${view/portal/absolute_url}/++resource++polklibrary.content.viewer/film.js"></script>
                 
         <link type="text/css" rel="stylesheet" href="${view/portal/absolute_url}/++resource++polklibrary.content.viewer/base.css" />

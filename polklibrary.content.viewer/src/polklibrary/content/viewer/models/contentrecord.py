@@ -3,6 +3,7 @@ from plone.autoform import directives
 from plone.autoform.interfaces import IFormFieldProvider
 from plone.namedfile.field import NamedBlobImage
 from plone.supermodel import model
+from plone.indexer.decorator import indexer
 
 from z3c.form.interfaces import IAddForm
 from z3c.form.interfaces import IEditForm
@@ -58,7 +59,15 @@ class IContentRecord(model.Schema):
             title=u"Date of Publication",
             required=False,
         )  
-
+        
+        
+    # --- Categorization FieldSet ---
+    model.fieldset(
+        'categorizing',
+        label=u'Categorization', 
+        fields=['series_title', 'subject_heading', 'associated_entity', 'geography', 'genre'],
+    )
+    
     series_title = schema.Tuple(
         title=u'Series Title',
         required=False,
@@ -76,13 +85,6 @@ class IContentRecord(model.Schema):
     directives.no_omit(IEditForm, 'series_title')
     directives.no_omit(IAddForm, 'series_title')
         
-        
-    # --- Categorization FieldSet ---
-    model.fieldset(
-        'categorizing',
-        label=u'Categorization', 
-        fields=['subject_heading', 'associated_entity', 'geography', 'genre'],
-    )
         
     subject_heading = schema.Tuple(
         title=u'Subject Heading',
@@ -194,7 +196,31 @@ class IContentRecord(model.Schema):
         )
         
         
+@indexer(IContentRecord)
+def make_searchable(object, **kwargs):
+    #import re
+    #portal_transforms = api.portal.get_tool(name='portal_transforms')
+    #data = portal_transforms.convertTo('text/plain', object.body.output, mimetype='text/structured')
+    #text = data.getData()
+    #urls = re.findall('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', object.body.output)
+    data = []
+    
+    try:
+        data += object.title.lower().split(' ')
+        data += object.description.lower().split(' ')
+        data += [object.content_type.lower()]
+        data += [object.creator.lower()]
+        data += [object.date_of_publication.lower()]
+        data += [ x.lower() for x in list(object.series_title)]
+        data += [ x.lower() for x in list(object.subject_heading)]
+        data += [ x.lower() for x in list(object.associated_entity)]
+        data += [ x.lower() for x in list(object.geography)]
+        data += [ x.lower() for x in list(object.genre)]
+    except:
+        print "Error on reindex of content record"
+        return []
         
+    return data
         
         
         

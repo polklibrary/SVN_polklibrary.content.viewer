@@ -12,7 +12,7 @@
 <body>
 
 	<metal:block fill-slot="javascript_head_slot">
-        <script type="text/javascript" src="${view/portal/absolute_url}/++resource++polklibrary.content.viewer/jquery.mobile.js"></script>   
+        <script type="text/javascript" src="${view/portal/absolute_url}/++resource++polklibrary.content.viewer/jquery.mobile.custom.min.js"></script>
         <script type="text/javascript" src="${view/portal/absolute_url}/++resource++polklibrary.content.viewer/film.js"></script>
 	</metal:block>
     
@@ -83,7 +83,9 @@
                     <tal:block condition="context/series_title">
                     <h4>Series</h4>
                     <ul>
-                        <li class="caps" tal:repeat="item context/series_title">${item}</li>
+                        <li class="caps" tal:repeat="item context/series_title">
+                            <a href="${view/portal/absolute_url}/browse?series_title=${item}">${item}</a>
+                        </li>
                     </ul>
                     </tal:block>
                     
@@ -92,7 +94,7 @@
                     <h4>Subjects</h4>
                     <ul>
                         <li class="caps" tal:repeat="item context/subject_heading">
-                            <a href="${view/portal/absolute_url}/browse?type=subject_heading&query=${item}">${item}</a>
+                            <a href="${view/portal/absolute_url}/browse?subject_heading=${item}">${item}</a>
                         </li>
                     </ul>
                     </tal:block>
@@ -102,7 +104,7 @@
                     <h4>Associated Entity</h4>
                     <ul>
                         <li class="caps" tal:repeat="item context/associated_entity">
-                            <a href="${view/portal/absolute_url}/browse?type=associated_entity&query=${item}">${item}</a>
+                            <a href="${view/portal/absolute_url}/browse?associated_entity=${item}">${item}</a>
                         </li>
                     </ul>
                     </tal:block>
@@ -112,7 +114,7 @@
                     <h4>Geography</h4>
                     <ul>
                         <li class="caps" tal:repeat="item context/geography">
-                            <a href="${view/portal/absolute_url}/browse?type=geography&query=${item}">${item}</a>
+                            <a href="${view/portal/absolute_url}/browse?geography=${item}">${item}</a>
                         </li>
                     </ul>
                     </tal:block>
@@ -122,7 +124,7 @@
                     <h4>Genre</h4>
                     <ul>
                         <li class="caps" tal:repeat="item context/genre">
-                            <a href="${view/portal/absolute_url}/browse?type=genre&query=${item}">${item}</a>
+                            <a href="${view/portal/absolute_url}/browse?genre=${item}">${item}</a>
                         </li>
                     </ul>
                     </tal:block>
@@ -159,12 +161,11 @@
 
             <div class="column">
             
-                <div class="pat-scroll">
+                <div class="pat-scroll no-select">
                     <div class="collection" 
                         tal:define="datapack view/get_related;
-                                    type python:datapack[0];
-                                    query python:datapack[1];
-                                    container python:datapack[2];
+                                    suburl python:datapack[0];
+                                    container python:datapack[1];
                     ">
                         
                         <h2><a href="${container/url}">${container/title}</a></h2>
@@ -190,7 +191,7 @@
                             </a>
                             
                             <a class="item" 
-                               href="${view/portal/absolute_url}/browse?type=${type}&query=${query}" 
+                               href="${view/portal/absolute_url}/browse?${suburl}" 
                                style="background-image: url(), url(${container/url}/++resource++polklibrary.content.viewer/view-more.jpg)"
                             >
                             </a>

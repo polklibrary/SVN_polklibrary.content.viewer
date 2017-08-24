@@ -33,6 +33,13 @@
         class=".collection.BrowseView"
         permission="zope2.View"
         />
+            
+    <browser:page
+        for="Products.CMFCore.interfaces.ISiteRoot"
+        name="find"
+        class=".search.Search"
+        permission="zope2.View"
+        />
         
     <browser:page
         for="polklibrary.content.viewer.models.contentrecord.IContentRecord"

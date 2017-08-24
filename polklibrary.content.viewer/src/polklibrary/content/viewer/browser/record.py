@@ -47,11 +47,23 @@ class RecordView(BrowserView):
         
     def get_related(self):
         type = 'subject_heading'
-        query_list = list(self.context.subject_heading)
+        subject_headings = list(self.context.subject_heading)
         random.seed(datetime.datetime.today().day)
-        random.shuffle(query_list)
-        query = ','.join(query_list[:2])
-        return type,query,RelatedContent("Similar Films", type, query, self.portal.absolute_url(), limit=15, sort_by='random', show_query=False)
+        random.shuffle(subject_headings)
+        subject_heading = ','.join(subject_headings[:2])
+        series_title = ','.join(self.context.series_title)
+        print "Orig: " + str(self.context.series_title)
+        print "COMMA: " + series_title
+        data = {
+            'series_title' : series_title,
+            'subject_heading' : subject_heading,
+        }
+        
+        suburl = 'subject_heading=' + subject_heading + '&series_title=' + series_title
+        related = RelatedContent("Similar Films", data, self.portal.absolute_url(), limit=15, sort_by='random', show_query=False)
+        related.items = filter(lambda x: x.getId != self.context.getId(), related.items)
+        
+        return suburl,related
         
         
     @property

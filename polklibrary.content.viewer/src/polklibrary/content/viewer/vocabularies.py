@@ -107,7 +107,7 @@ class KeywordsVocabulary(object):
         
 # Set all factory hooks and permissions
 SeriesTitleVocabularyFactory = KeywordsVocabulary('series_title')
-_permissions['polklibrary.content.viewer.vocabularies.SubjectHeadingVocabularyFactory'] = 'View'
+_permissions['polklibrary.content.viewer.vocabularies.SeriesTitleVocabularyFactory'] = 'View'
 
 SubjectHeadingVocabularyFactory = KeywordsVocabulary('subject_heading')
 _permissions['polklibrary.content.viewer.vocabularies.SubjectHeadingVocabularyFactory'] = 'View'

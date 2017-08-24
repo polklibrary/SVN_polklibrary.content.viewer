@@ -7,7 +7,7 @@
 <body>
 
 	<metal:block fill-slot="javascript_head_slot">
-        <script type="text/javascript" src="${view/portal/absolute_url}/++resource++polklibrary.content.viewer/jquery.mobile.js"></script>   
+        <script type="text/javascript" src="${view/portal/absolute_url}/++resource++polklibrary.content.viewer/jquery.mobile.custom.min.js"></script>   
         <script type="text/javascript" src="${view/portal/absolute_url}/++resource++polklibrary.content.viewer/film.js"></script>        
 	</metal:block>
     
@@ -21,7 +21,7 @@
     
 	<metal:content-core fill-slot="content-core">
 
-        <div class="pat-scroll group-list">
+        <div class="pat-scroll group-list no-select">
         
             <div class="collection" tal:repeat="container view/get_collections">
                 
@@ -31,12 +31,12 @@
                 </div>
                 <div class="scrollbox" tal:attributes="data-items python:len(container.items)">
                     <a  tal:repeat="item container/items" 
-                        class="item ${item/content_type} pat-overlay"
+                        class="item ${item/content_type} pat-overlay pat-images"
                         data-overlay-title="${item/Title}"
                         data-overlay-description=" ${item/Description}"
                         data-overlay-runtime="${item/runtime}"
                         href="${item/getURL}" 
-                        style="background-image: url(${item/getURL}/++resource++polklibrary.content.viewer/${item/content_type}.png), url(${item/getURL}/${item/image_url});"
+                        data-style="background-image: url(${item/getURL}/++resource++polklibrary.content.viewer/${item/content_type}.png), url(${item/getURL}/${item/image_url});"
                     >    
                         
                         <div class="add-to-list suppress-add-to-list">

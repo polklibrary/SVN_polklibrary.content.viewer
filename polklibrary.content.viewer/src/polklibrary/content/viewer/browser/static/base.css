@@ -4,10 +4,25 @@
 .slink img { height: 10px; }
 .relative { position: relative; }
 
+.no-select, .no-select * {
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome and Opera */
+}
+
+
+
+
 .collection {}
 .collection a.item {
+    background-color: #333;
+    background-image:url(++resource++polklibrary.content.viewer/loading.png), url();
     background-position: top left, center center;
-    background-size: 30%, auto 280px;
+    background-size: 30%, auto 230px;
     background-repeat: no-repeat, repeat;
     display: inline-block;
     margin: 10px 5px;
@@ -15,8 +30,8 @@
     text-decoration: none !important;
     transition: all 100ms ease-in;
     transform: scale(1);   
-    height: 275px;
-    width: 200px;
+    height: 225px;
+    width: 150px;
     z-index: 1;
 }
 .collection  a.item:hover {
@@ -30,7 +45,7 @@
     bottom: 0px;
     color: #eee;
     font-family: sans-serif;
-    font-size: 15px;
+    font-size: 12px;
     font-weight: bold;
     overflow: hidden;
     padding: 2px 10px;
@@ -47,7 +62,7 @@
     width: 100%;
     overflow-x: hidden;
     overflow-y: hidden;
-    height: 400px;
+    height: 325px;
 }
 .pat-scroll .collection .scrollbox {
     transition: left 750ms linear;
@@ -64,7 +79,7 @@
     background-color: rgba(100,100,100,0.4);
     cursor: pointer;
     display: none;
-    height: 300px;
+    height: 255px;
     left: 0px;
     position: absolute;
     top: 60px;
@@ -89,7 +104,7 @@
     background-color: rgba(100,100,100,0.4);
     cursor: pointer;
     display: none;
-    height: 300px;
+    height: 255px;
     right: 0px;
     position: absolute;
     top: 60px;
