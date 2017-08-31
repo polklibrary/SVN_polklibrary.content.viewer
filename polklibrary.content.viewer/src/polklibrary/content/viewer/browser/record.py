@@ -1,4 +1,5 @@
 from plone import api
+from plone.memoize import ram
 from Products.Five import BrowserView
 from zope.interface import alsoProvides
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
@@ -7,12 +8,14 @@ from plone.protect.interfaces import IDisableCSRFProtection
 from polklibrary.content.viewer.browser.collection import RelatedContent
 from polklibrary.content.viewer.utility import ResourceEnhancer
 
-import random, datetime
+import random, datetime, time
 
 class RecordView(BrowserView):
 
     template = ViewPageTemplateFile("templates/record_view.pt")
     enhanced_data = {}
+    
+    totals = {}
     
     def __call__(self):
         redirect = self.request.form.get('url', self.portal.absolute_url())
@@ -29,9 +32,16 @@ class RecordView(BrowserView):
         self.context.visits += 1 
         self.context.reindexObject()
             
+        self.totals = self.Totals() # heavily cached
+        
+            
         self.enhanced_data = ResourceEnhancer(self.context.id,self.context.title)
         return self.template()
 
+        
+    def get_totals(self, type, name):
+        return self.totals[type][name]
+        
         
     def is_oncampus(self):
         dev_restriction = '10.0.2.2'
@@ -50,10 +60,8 @@ class RecordView(BrowserView):
         subject_headings = list(self.context.subject_heading)
         random.seed(datetime.datetime.today().day)
         random.shuffle(subject_headings)
-        subject_heading = ','.join(subject_headings[:2])
-        series_title = ','.join(self.context.series_title)
-        print "Orig: " + str(self.context.series_title)
-        print "COMMA: " + series_title
+        subject_heading = '|'.join(subject_headings[:2])
+        series_title = '|'.join(self.context.series_title)
         data = {
             'series_title' : series_title,
             'subject_heading' : subject_heading,
@@ -65,6 +73,34 @@ class RecordView(BrowserView):
         
         return suburl,related
         
+        
+        
+    @ram.cache(lambda *args: time.time() // (60 * 60 * 24))
+    def Totals(self): 
+        print "Running Totals"
+        data = {
+            'series_title' : {},
+            'subject_heading' : {},
+            'associated_entity' : {},
+            'geography' : {},
+            'genre' : {},
+        }
+        
+        catalog = api.portal.get_tool(name='portal_catalog')
+        
+        for key,value in data.items():
+            index = catalog._catalog.indexes[key]
+            
+            for k in index.uniqueValues():
+            
+                t = index._index.get(k)
+                if type(t) is not int:
+                    data[key][k] = len(t)
+                else:
+                    data[key][k] = 1
+        
+        return data
+            
         
     @property
     def portal(self):

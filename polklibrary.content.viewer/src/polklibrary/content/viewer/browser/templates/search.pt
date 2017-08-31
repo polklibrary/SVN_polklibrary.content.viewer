@@ -42,6 +42,9 @@
                 <div class="col-10">   
                     <input type="submit" name="form.submit" value="Search" />
                 </div>
+                <div class="col-10 option-manager">   
+                    <input type="submit" name="form.csv.submit" value="Download CSV" />
+                </div>
                 <div class="clear"></div>
             </form>
             

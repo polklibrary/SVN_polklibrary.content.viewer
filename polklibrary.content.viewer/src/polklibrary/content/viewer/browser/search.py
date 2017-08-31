@@ -4,6 +4,7 @@ from Products.Five import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from zope.component import getUtility, getMultiAdapter
 from zope.container.interfaces import INameChooser
+from polklibrary.content.viewer.utility import BrainsToCSV
 import random, time, re
 
 from polklibrary.content.viewer.browser.collection import CollectionObject
@@ -13,7 +14,11 @@ class Search(BrowserView):
 
     template = ViewPageTemplateFile("templates/search.pt")
     
-    def __call__(self):
+    def __call__(self):        
+        if self.request.form.get('form.csv.submit', None):
+            self.request.response.setHeader("Content-Disposition", "attachment;filename=collection.csv")
+            return BrainsToCSV(self.get_collection().items)
+            
         return self.template()
     
         

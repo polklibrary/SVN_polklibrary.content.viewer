@@ -1,5 +1,9 @@
+from plone import api
+from plone.memoize import ram
 from plone.i18n.normalizer import idnormalizer
-import re
+from StringIO import StringIO
+from unidecode import unidecode
+import re, time
 
 # used elsewhere to target
 ALEXANDER_STREET_NAME = 'Alexander Street'
@@ -57,4 +61,85 @@ def CleanID(id):
         return id
         
         
+def remove_non_ascii(text):
+    return unidecode(text)
+
+def BrainsToCSV(brains):
+    output = StringIO()
+    #filmID,content_type,creator,title,date_of_publication,runtime,series_title,summary,associated_entity,geography,subject,genre
+    output.write('filmID,content_type,creator,title,date_of_publication,runtime,series_title,summary,associated_entity,geography,subject,genre,image_url\n')
     
+    for brain in brains:
+    
+        output.write(brain.getId)
+        output.write(',')
+        output.write(brain.content_type)
+        output.write(',"')
+        output.write(remove_non_ascii(brain.creator))
+        output.write('","')
+        output.write(remove_non_ascii(brain.Title))
+        output.write('","')
+        output.write(brain.date_of_publication)
+        output.write('","')
+        output.write(brain.runtime)
+        output.write('","')
+        output.write(str([ str(remove_non_ascii(x)) for x in brain.series_title]))
+        output.write('","')
+        output.write(remove_non_ascii(brain.Description))
+        output.write('","')
+        output.write(str([ str(remove_non_ascii(x)) for x in brain.associated_entity]))
+        output.write('","')
+        output.write(str([ str(remove_non_ascii(x)) for x in brain.geography]))
+        output.write('","')
+        output.write(str([ str(remove_non_ascii(x)) for x in brain.subject]))
+        output.write('","')
+        output.write(str([ str(remove_non_ascii(x)) for x in brain.genre]))
+        output.write('","')
+        output.write(brain.image_url)
+        output.write('"\n')
+
+    contents = output.getvalue()
+    output.close()
+    return contents
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        

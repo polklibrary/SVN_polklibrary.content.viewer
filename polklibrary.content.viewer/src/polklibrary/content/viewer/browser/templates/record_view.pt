@@ -84,7 +84,7 @@
                     <h4>Series</h4>
                     <ul>
                         <li class="caps" tal:repeat="item context/series_title">
-                            <a href="${view/portal/absolute_url}/browse?series_title=${item}">${item}</a>
+                            <a href="${view/portal/absolute_url}/browse?series_title=${item}">${item} (<span tal:replace="python: view.get_totals('series_title', item)" />)</a>
                         </li>
                     </ul>
                     </tal:block>
@@ -94,17 +94,17 @@
                     <h4>Subjects</h4>
                     <ul>
                         <li class="caps" tal:repeat="item context/subject_heading">
-                            <a href="${view/portal/absolute_url}/browse?subject_heading=${item}">${item}</a>
+                            <a href="${view/portal/absolute_url}/browse?subject_heading=${item}">${item} (<span tal:replace="python: view.get_totals('subject_heading', item)" />)</a>
                         </li>
                     </ul>
                     </tal:block>
                     
                     
                     <tal:block condition="context/associated_entity">
-                    <h4>Associated Entity</h4>
+                    <h4>Contributor</h4>
                     <ul>
                         <li class="caps" tal:repeat="item context/associated_entity">
-                            <a href="${view/portal/absolute_url}/browse?associated_entity=${item}">${item}</a>
+                            <a href="${view/portal/absolute_url}/browse?associated_entity=${item}">${item}  (<span tal:replace="python: view.get_totals('associated_entity', item)" />)</a>
                         </li>
                     </ul>
                     </tal:block>
@@ -114,7 +114,7 @@
                     <h4>Geography</h4>
                     <ul>
                         <li class="caps" tal:repeat="item context/geography">
-                            <a href="${view/portal/absolute_url}/browse?geography=${item}">${item}</a>
+                            <a href="${view/portal/absolute_url}/browse?geography=${item}">${item}  (<span tal:replace="python: view.get_totals('geography', item)" />)</a>
                         </li>
                     </ul>
                     </tal:block>
@@ -124,7 +124,7 @@
                     <h4>Genre</h4>
                     <ul>
                         <li class="caps" tal:repeat="item context/genre">
-                            <a href="${view/portal/absolute_url}/browse?genre=${item}">${item}</a>
+                            <a href="${view/portal/absolute_url}/browse?genre=${item}">${item} (<span tal:replace="python: view.get_totals('genre', item)" />)</a>
                         </li>
                     </ul>
                     </tal:block>

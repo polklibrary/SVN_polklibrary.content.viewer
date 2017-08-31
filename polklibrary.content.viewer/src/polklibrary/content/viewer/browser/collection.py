@@ -4,6 +4,7 @@ from Products.Five import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from zope.component import getUtility, getMultiAdapter
 from zope.container.interfaces import INameChooser
+from polklibrary.content.viewer.utility import BrainsToCSV
 import random, time, re, datetime, operator
 
 
@@ -238,15 +239,15 @@ def RelatedContent(label, data, url, limit=1000, sort_by='created', sort_directi
     series_data = data.get('series_title', ())
     
     if subject_data:
-        subject_query = tuple(subject_data.split(','))
+        subject_query = tuple(subject_data.split('|'))
     if associated_data:
-        associated_query = tuple(associated_data.split(','))
+        associated_query = tuple(associated_data.split('|'))
     if geography_data:
-        geography_query = tuple(geography_data.split(','))
+        geography_query = tuple(geography_data.split('|'))
     if genre_data:
-        genre_query = tuple(genre_data.split(','))
+        genre_query = tuple(genre_data.split('|'))
     if series_data:
-        series_query = tuple(series_data.split(','))
+        series_query = tuple(series_data.split('|'))
 
     
     title = label
@@ -276,6 +277,9 @@ class BrowseView(BrowserView):
     template = ViewPageTemplateFile("templates/collection.pt")
     
     def __call__(self):
+        if self.request.form.get('csv', None):
+            self.request.response.setHeader("Content-Disposition", "attachment;filename=collection.csv")
+            return BrainsToCSV(self.get_collection().items)
         return self.template()
         
     def get_collection(self):
@@ -293,6 +297,9 @@ class UserListView(BrowserView):
     template = ViewPageTemplateFile("templates/collection.pt")
     
     def __call__(self):
+        if self.request.form.get('csv', None):
+            self.request.response.setHeader("Content-Disposition", "attachment;filename=collection.csv")
+            return BrainsToCSV(self.get_collection().items)
         return self.template()
         
     def get_collection(self):
@@ -337,6 +344,9 @@ class CollectionView(BrowserView):
     template = ViewPageTemplateFile("templates/collection.pt")
     
     def __call__(self):
+        if self.request.form.get('csv', None):
+            self.request.response.setHeader("Content-Disposition", "attachment;filename=collection.csv")
+            return BrainsToCSV(self.get_collection().items)
         return self.template()
         
     def get_collection(self):

@@ -43,6 +43,8 @@ class IContentRecord(model.Schema):
             title=u"Content Type",
             source=content_types,
             required=False,
+            default='stream',
+            missing_value='stream',
         )
 
     creator = schema.TextLine(

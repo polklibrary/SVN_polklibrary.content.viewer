@@ -103,7 +103,7 @@ class ImporterView(BrowserView):
         entry = entry.strip()
         
         if entry.startswith('[') and entry.endswith(']'): # it is a list
-            items = ast.literal_eval(entry)
+            items = ast.literal_eval(entry.replace(' ; ',',').replace('; ',','))
         else: # it is a string
             items = entry.split(self.SUBDELIMITER)
             
