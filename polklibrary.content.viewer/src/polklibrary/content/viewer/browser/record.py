@@ -40,8 +40,10 @@ class RecordView(BrowserView):
 
         
     def get_totals(self, type, name):
-        return self.totals[type][name]
-        
+        try:
+            return self.totals.get(type).get(name, 1)
+        except:
+            return 1
         
     def is_oncampus(self):
         dev_restriction = '10.0.2.2'
@@ -75,9 +77,8 @@ class RecordView(BrowserView):
         
         
         
-    @ram.cache(lambda *args: time.time() // (60 * 60 * 24))
+    @ram.cache(lambda *args: time.time() // (60 * 60 * 24 * 7)) # 1 week
     def Totals(self): 
-        print "Running Totals"
         data = {
             'series_title' : {},
             'subject_heading' : {},
