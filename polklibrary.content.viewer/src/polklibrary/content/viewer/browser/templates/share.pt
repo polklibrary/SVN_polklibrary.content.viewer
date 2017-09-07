@@ -32,7 +32,7 @@
 </head>
 <body data-portal-url="${view/portal/absolute_url}">
 
-    <div class="pat-scroll">
+    <div class="pat-scroll no-select">
         <div class="collection" tal:define="container view/get_collection">
             
             <h2><a href="${container/url}">${container/title}</a></h2>
