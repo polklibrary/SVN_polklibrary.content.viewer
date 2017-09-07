@@ -35,7 +35,7 @@
     <div class="pat-scroll no-select">
         <div class="collection" tal:define="container view/get_collection">
             
-            <h2><a href="${container/url}">${container/title}</a></h2>
+            <h2><a href="${container/url}" target="_parent">${container/title}</a></h2>
             <div class="scroll-left">
                 <div class="arr-left"></div>
             </div>
@@ -46,6 +46,7 @@
                     data-overlay-description=" ${item/Description}"
                     data-overlay-runtime="${item/runtime}"
                     href="${item/getURL}" 
+                    target="_parent"
                     style="background-image: url(${item/getURL}/++resource++polklibrary.content.viewer/${item/content_type}.png), url(${item/getURL}/${item/image_url});"
                 >    
                     
@@ -57,6 +58,7 @@
                 <a class="item" 
                    href="${container/url}" 
                    style="background-image: url(), url(${container/url}/++resource++polklibrary.content.viewer/view-more.jpg)"
+                    target="_parent"
                 >
                 </a>
                 
@@ -70,7 +72,6 @@
         
         <div id="overlay">
             <div class="title"> </div>
-            <div class="description pat-showmore" data-len="255"> </div>
             <div class="runtime">
                 <label>Runtime: </label>
                 <span></span>
