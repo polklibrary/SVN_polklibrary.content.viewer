@@ -39,7 +39,7 @@ class ThumbnailProcess(BrowserView):
                     enchanced_data = ResourceEnhancer(obj.id,obj.title)
                     
                     # add plugin option?
-                    req = requests.get(enchanced_data['base_url'], verify=False)
+                    req = requests.get(enchanced_data['base_url'], verify=False, timeout=15)
                     html = req.text
                     
                     thumburl = ''
@@ -54,7 +54,7 @@ class ThumbnailProcess(BrowserView):
                     #return; # stop execution for testing
                     
                     if thumburl:
-                        reqthumb = requests.get(thumburl, verify=False)
+                        reqthumb = requests.get(thumburl, verify=False, timeout=15)
                         binary = reqthumb.content
                         loginfo += " -- BINARY: " + str(len(binary))
                         if len(binary) > 5000:
