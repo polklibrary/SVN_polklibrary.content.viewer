@@ -9,6 +9,7 @@
         <script type="text/javascript" src="${view/portal/absolute_url}/++resource++polklibrary.content.viewer/film.js"></script>
                 
         <link type="text/css" rel="stylesheet" href="${view/portal/absolute_url}/++resource++polklibrary.content.viewer/base.css" />
+        <link type="text/css" rel="stylesheet" href="${view/portal/absolute_url}/++theme++polkpicks/css/share.css" />
         <style>
             html {
                 background-color: transparent;
