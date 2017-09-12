@@ -32,6 +32,7 @@ class ThumbnailProcess(BrowserView):
             with api.env.adopt_roles(roles=['Manager']):
                 obj = brain.getObject()
             title = obj.Title()
+            obj.image_url = '/++resource++polklibrary.content.viewer/missing-thumb.png'
             
             try:
                 # Get Thumbnail

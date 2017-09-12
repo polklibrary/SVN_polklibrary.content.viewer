@@ -31,6 +31,7 @@ src/polklibrary/content/viewer/browser/group_list.py
 src/polklibrary/content/viewer/browser/importer.py
 src/polklibrary/content/viewer/browser/process_thumbnail.py
 src/polklibrary/content/viewer/browser/record.py
+src/polklibrary/content/viewer/browser/search.py
 src/polklibrary/content/viewer/browser/ws_add_to_list.py
 src/polklibrary/content/viewer/browser/ws_get_browse_list.py
 src/polklibrary/content/viewer/browser/overrides/.gitkeep
@@ -40,11 +41,15 @@ src/polklibrary/content/viewer/browser/static/base.css
 src/polklibrary/content/viewer/browser/static/book.png
 src/polklibrary/content/viewer/browser/static/check.png
 src/polklibrary/content/viewer/browser/static/dvd.png
+src/polklibrary/content/viewer/browser/static/file.png
 src/polklibrary/content/viewer/browser/static/film.js
 src/polklibrary/content/viewer/browser/static/game.png
 src/polklibrary/content/viewer/browser/static/internal.css
+src/polklibrary/content/viewer/browser/static/jquery.mobile.custom.min.js
+src/polklibrary/content/viewer/browser/static/jquery.mobile.js
 src/polklibrary/content/viewer/browser/static/like.png
 src/polklibrary/content/viewer/browser/static/link.png
+src/polklibrary/content/viewer/browser/static/loading.png
 src/polklibrary/content/viewer/browser/static/missing-thumb.png
 src/polklibrary/content/viewer/browser/static/playerloading.png
 src/polklibrary/content/viewer/browser/static/processing.gif
@@ -56,6 +61,7 @@ src/polklibrary/content/viewer/browser/templates/collection.pt
 src/polklibrary/content/viewer/browser/templates/group_list.pt
 src/polklibrary/content/viewer/browser/templates/importer.pt
 src/polklibrary/content/viewer/browser/templates/record_view.pt
+src/polklibrary/content/viewer/browser/templates/search.pt
 src/polklibrary/content/viewer/browser/templates/share.pt
 src/polklibrary/content/viewer/locales/polklibrary.content.viewer.pot
 src/polklibrary/content/viewer/locales/update.sh
