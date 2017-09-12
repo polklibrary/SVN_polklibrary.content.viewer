@@ -50,6 +50,7 @@ setup(
         'plone.app.vocabularies',
         'requests==2.9.1',
         'BeautifulSoup==3.2.1',
+        'ftfy==4.4.3',  # must be run by ./pip install ftfy==4.4.3
     ],
     extras_require={
         'test': [

@@ -5,13 +5,21 @@ from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from zope.component import getUtility, getMultiAdapter
 from zope.container.interfaces import INameChooser
 import csv, StringIO, re, ast, json
-import pprint
+import pprint, ftfy
+
+
+def unicode_csv_reader(utf8_data, delimiter=',', quotechar='"', dialect=csv.excel):
+    csv_reader = csv.reader(utf8_data, delimiter=delimiter, quotechar=quotechar, dialect=dialect)
+    for row in csv_reader:
+        yield [unicode(cell, 'utf-8') for cell in row]
+        
+
 
 class ImporterView(BrowserView):
 
     template = ViewPageTemplateFile("templates/importer.pt")
     
-    SUBDELIMITER = ';'
+    SUBDELIMITER = u';'
     required_add_update_headings = ['filmID', 
                                     'creator', 
                                     'title', 
@@ -52,10 +60,13 @@ class ImporterView(BrowserView):
         return self.template()
 
         
+
+        
     def handle_add_update(self):
         keys = []
         io = StringIO.StringIO(self.file.read())
-        reader = csv.reader(io, delimiter=',', quotechar='"', dialect=csv.excel_tab)
+        #reader = csv.reader(io, delimiter=',', quotechar='"', dialect=csv.excel)
+        reader = unicode_csv_reader(io, delimiter=',', quotechar='"', dialect=csv.excel)
         for row in reader:
             if not keys:
                 for key in row:
@@ -77,50 +88,56 @@ class ImporterView(BrowserView):
     
     def purify_record(self, entry):
         entry['filmID'] = self.universal_string_cleanup(entry['filmID'])
-        entry['creator'] = self.universal_string_cleanup(entry['creator'], cleanup_regex='[\.]$')
+        entry['creator'] = self.universal_string_cleanup(entry['creator'], cleanup_regex=u'[\.]$')
         
-        entry['title'] = entry['title'].replace('[electronic resource]', '').split('/')[0]
-        entry['title'] = entry['title'].replace(' : ',': ').replace(' :', ': ')
-        entry['title'] = self.universal_string_cleanup(entry['title'], cleanup_regex='[\.\:]$')   
+        #entry['title'] = entry['title'].replace(u'[electronic resource]', u'').split(u'/')[0]
+        #entry['title'] = entry['title'].replace(u' : ',u': ').replace(u' :', u': ')
+        entry['title'] = self.universal_string_cleanup(entry['title'], cleanup_regex=u'[\.\:]$')   
         
         entry['date_of_publication'] = self.universal_string_cleanup(entry['date_of_publication'])
         entry['runtime'] = self.universal_string_cleanup(entry['runtime'])
         entry['summary'] = self.universal_string_cleanup(entry['summary'])
         entry['content_type'] = self.universal_string_cleanup(entry['content_type'])
         
-        entry['series_title'] = self.universal_list_to_tuple_cleanup(entry['series_title'], cleanup_regex='[\.]$')
-        entry['associated_entity'] = self.universal_list_to_tuple_cleanup(entry['associated_entity'], cleanup_regex='[\.\,]$')
-        entry['geography'] = self.universal_list_to_tuple_cleanup(entry['geography'], cleanup_regex='[\.]$')
+        entry['series_title'] = self.universal_list_to_tuple_cleanup(entry['series_title'], cleanup_regex=u'[\.]$')
+        entry['associated_entity'] = self.universal_list_to_tuple_cleanup(entry['associated_entity'], cleanup_regex=u'[\.\,]$')
+        entry['geography'] = self.universal_list_to_tuple_cleanup(entry['geography'], cleanup_regex=u'[\.]$')
         
         
-        entry['subject'] = self.universal_list_to_tuple_cleanup(entry['subject'], cleanup_regex='[\.]$')
+        entry['subject'] = self.universal_list_to_tuple_cleanup(entry['subject'], cleanup_regex=u'[\.]$')
         
-        entry['genre'] = self.universal_list_to_tuple_cleanup(entry['genre'], cleanup_regex='[\.]$')
+        entry['genre'] = self.universal_list_to_tuple_cleanup(entry['genre'], cleanup_regex=u'[\.]$')
         
         return entry
     
-    def universal_list_to_tuple_cleanup(self, entry, cleanup_regex='', cleanup_replace=''):
+    def universal_list_to_tuple_cleanup(self, entry, cleanup_regex=u'', cleanup_replace=u''):
         entry = entry.strip()
         
-        if entry.startswith('[') and entry.endswith(']'): # it is a list
-            items = ast.literal_eval(entry.replace(' ; ',',').replace('; ',','))
+        if entry.startswith(u'[') and entry.endswith(u']'): # it is a list
+            items = ast.literal_eval(entry.replace(u' ; ',u',').replace(u'; ',u','))
         else: # it is a string
             items = entry.split(self.SUBDELIMITER)
             
         cleaned_items = set()
         for item in items:
-            if item and item.lower() != 'none':
+            if item and item.lower() != u'none':
                 cleaned_items.add(self.universal_string_cleanup(item, cleanup_regex, cleanup_replace))
         return tuple(cleaned_items)
         
-    def universal_string_cleanup(self, entry, cleanup_regex='', cleanup_replace=''):
+    def universal_string_cleanup(self, entry, cleanup_regex=u'', cleanup_replace=u''):
         entry = entry.strip()
         regex = re.compile(cleanup_regex)
-        return unicode(regex.sub(cleanup_replace, entry), errors='replace')
+        try:
+            if type(entry) != unicode:
+                entry = entry.decode('utf-8')
+            return ftfy.fix_text(regex.sub(cleanup_replace, entry))
+        except Exception as e:
+            print "ERROR: " + str(e) + ' ' + entry
+            return regex.sub(cleanup_replace, entry)
     
     def clean_empty(self, text):
-        if text == '' or text.lower() == 'none' or text.lower() == '[none]':
-            return ''
+        if text == u'' or text.lower() == u'none' or text.lower() == u'[none]':
+            return u''
         return text
     
     def process_create_or_update(self, entry):

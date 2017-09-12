@@ -5,6 +5,7 @@ plone.formwidget.autocomplete
 plone.app.vocabularies
 requests==2.9.1
 BeautifulSoup==3.2.1
+ftfy==4.4.3
 
 [test]
 plone.app.testing
