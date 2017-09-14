@@ -382,8 +382,8 @@ $(document).ready(function(){
         Films.Pattern();
     });
     Scroll.Pattern();
-    Overlay.Pattern();
     ShowMore.Pattern();
+    Overlay.Pattern();
     Share.Pattern();
     Player.Pattern();
     Images.Pattern();

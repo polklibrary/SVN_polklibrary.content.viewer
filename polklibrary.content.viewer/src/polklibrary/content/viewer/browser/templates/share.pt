@@ -7,6 +7,13 @@
         <script type="text/javascript" src="${view/portal/absolute_url}/++plone++static/components/jquery/dist/jquery.min.js"></script>
         <script type="text/javascript" src="${view/portal/absolute_url}/++resource++polklibrary.content.viewer/jquery.mobile.custom.min.js"></script>  
         <script type="text/javascript" src="${view/portal/absolute_url}/++resource++polklibrary.content.viewer/film.js"></script>
+        <script type="text/javascript">
+            Scroll.ImageSpace = 85;
+            Overlay.Width = 400;
+            Overlay.PushLeft = 85;
+            Overlay.PushRight = 425;
+        </script>
+        
                 
         <link type="text/css" rel="stylesheet" href="${view/portal/absolute_url}/++resource++polklibrary.content.viewer/base.css" />
         <link type="text/css" rel="stylesheet" href="${view/portal/absolute_url}/++theme++polkpicks/css/share.css" />
@@ -22,11 +29,24 @@
                 padding: 0;
             }
             h2 {
-                
+                margin: 10px 0 0px 0;
             }
             a { color: #111; text-decoration: none; }
             a:hover { color: #111; text-decoration: none; }
             .hide { display: none }
+            
+            
+            .collection a.item {
+                background-size: 60%, auto 125px;
+                height: 125px;
+                width: 75px;
+            }
+            .scroll-left, .scroll-right {
+                height: 145px;
+                top: 35px;
+            }
+            
+            
         </style>
     
 </head>
@@ -50,7 +70,7 @@
                     style="background-image: url(${item/getURL}/++resource++polklibrary.content.viewer/${item/content_type}.png), url(${item/getURL}/${item/image_url});"
                 >    
                     
-                    <div class="title">
+                    <div class="title hide">
                         ${item/Title}
                     </div>
                 </a>
@@ -72,6 +92,7 @@
         
         <div id="overlay">
             <div class="title"> </div>
+            <div class="description pat-showmore" data-len="140"> </div>
             <div class="runtime">
                 <label>Runtime: </label>
                 <span></span>

@@ -290,6 +290,19 @@ span.pat-film-list[data-added="1"] {
 
 
 
+.pat-showmore .showmore {
+    display: none;
+}
+
+.pat-showmore .showmore-toggle {
+    font-weight: bold;
+    margin: 0 5px;
+}
+
+.pat-showmore .showmore-toggle:hover {
+    color: #fec425;
+    cursor: pointer;
+}
 
 
 

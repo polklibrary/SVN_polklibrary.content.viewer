@@ -42,7 +42,7 @@ class CollectionObject:
     
     
 
-def AdvancedCollectionQuery(collection, limit=10000, sort_by='created', sort_direction='ascending'):
+def AdvancedCollectionQuery(collection, limit=500, sort_by='created', sort_direction='ascending'):
 
     try:
         catalog = api.portal.get_tool(name='portal_catalog')
@@ -225,7 +225,7 @@ def AndFilter(listone, listtwo):
     return results.values()
 
 
-def RelatedContent(label, data, url, limit=1000, sort_by='created', sort_direction='descending', show_query=True):
+def RelatedContent(label, data, url, limit=500, sort_by='created', sort_direction='descending', show_query=True):
     subject_query = ()
     associated_query = ()
     geography_query = ()
@@ -283,7 +283,7 @@ class BrowseView(BrowserView):
         return self.template()
         
     def get_collection(self):
-        return RelatedContent("Browsing", self.request.form, self.portal.absolute_url(), limit=10000, sort_by='created', sort_direction='descending')
+        return RelatedContent("Browsing", self.request.form, self.portal.absolute_url(), limit=500, sort_by='created', sort_direction='descending')
             
     @property
     def portal(self):
@@ -373,5 +373,5 @@ class ShareView(CollectionView):
         return self.template()
         
     def get_collection(self):
-        return AdvancedCollectionQuery(self.context, limit=10, sort_by=self.context.sort_type, sort_direction=self.context.sort_direction)
+        return AdvancedCollectionQuery(self.context, limit=25, sort_by=self.context.sort_type, sort_direction=self.context.sort_direction)
         
