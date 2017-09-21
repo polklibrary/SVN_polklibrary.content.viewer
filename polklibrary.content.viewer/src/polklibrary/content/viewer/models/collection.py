@@ -61,7 +61,7 @@ class ICollection(model.Schema):
           
     limit = schema.Int(
             title=u"Limit size of collection",
-            default=10000,
+            default=250,
             required=False,
         )
           

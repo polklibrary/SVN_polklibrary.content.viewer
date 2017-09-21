@@ -35,14 +35,31 @@ class FakeCollection:
 
 class CollectionObject:
     
-    def __init__(self, title, url, items):
+    def __init__(self, title, url, items, total, start, limit):
         self.title = title
-        self.url = url
+        self.url = url.split('start=')[0].rstrip('&').rstrip('?')
         self.items = items
+        self.total = total
+        self.start = start
+        self.limit = limit
     
+        delimiter = '?'
+        if '?' in self.url:
+            delimiter = '&'
+    
+        index = 1
+        self.pages = []
+        for i in range(0, total, limit):
+            self.pages.append({
+                'purl' :  self.url + delimiter + 'start=' + str(i) + '&limit=' + str(limit),
+                'start' : i,
+                'limit' : limit,
+                'number' : index,
+            })
+            index+=1
     
 
-def AdvancedCollectionQuery(collection, limit=500, sort_by='created', sort_direction='ascending'):
+def AdvancedCollectionQuery(collection, limit=10, start=0, sort_by='created', sort_direction='ascending'):
 
     try:
         catalog = api.portal.get_tool(name='portal_catalog')
@@ -186,11 +203,11 @@ def AdvancedCollectionQuery(collection, limit=500, sort_by='created', sort_direc
         except:
             url = collection.absolute_url()
         
-        return CollectionObject(collection.Title, url, results[0:limit])
+        return CollectionObject(collection.Title, url, results[start:start+limit], len(results), start, limit)
     except Exception as e:
         print "AdvancedCollectionQuery ERROR: " + str(e)
         
-    return CollectionObject(collection.Title, collection.absolute_url(), []) # catch all
+    return CollectionObject(collection.Title, collection.absolute_url(), [], 0, 0, 0) # catch all
 
     
 
@@ -225,7 +242,7 @@ def AndFilter(listone, listtwo):
     return results.values()
 
 
-def RelatedContent(label, data, url, limit=500, sort_by='created', sort_direction='descending', show_query=True):
+def RelatedContent(label, data, url, limit=10, start=0, sort_by='created', sort_direction='descending', show_query=True):
     subject_query = ()
     associated_query = ()
     geography_query = ()
@@ -265,8 +282,7 @@ def RelatedContent(label, data, url, limit=500, sort_by='created', sort_directio
         genre=genre_query
     )
 
-    return AdvancedCollectionQuery(fc, limit=limit, sort_by=sort_by, sort_direction=sort_direction)
-    #return CollectionObject(title + ': Nothing available', url + '/browse', [])
+    return AdvancedCollectionQuery(fc, limit=limit, start=start, sort_by=sort_by, sort_direction=sort_direction)
 
     
     
@@ -283,7 +299,10 @@ class BrowseView(BrowserView):
         return self.template()
         
     def get_collection(self):
-        return RelatedContent("Browsing", self.request.form, self.portal.absolute_url(), limit=500, sort_by='created', sort_direction='descending')
+        start = int(self.request.form.get("start", 0))
+        limit = int(self.request.form.get("limit", 20))
+        
+        return RelatedContent("Browsing", self.request.form, self.request['URL'] + '?' + self.request["QUERY_STRING"], limit=limit, start=start, sort_by='created', sort_direction='descending')
             
     @property
     def portal(self):
@@ -304,9 +323,13 @@ class UserListView(BrowserView):
         
     def get_collection(self):
         if api.user.is_anonymous():
-            return CollectionObject("No User", self.portal.absolute_url() + '/playlist', []) # catch all
+            return CollectionObject("No User", self.portal.absolute_url() + '/playlist', [], 0, 0, 0) # catch all
             
         else:
+            
+            start = int(self.request.form.get("start", 0))
+            limit = int(self.request.form.get("limit", 250))
+            
             user = api.user.get_current()
             films = user.saved_films.split('|')
             films.pop()
@@ -319,8 +342,8 @@ class UserListView(BrowserView):
                     "operator" : 'or',
                 },
             )
-            
-            return CollectionObject("Your Playlist", self.portal.absolute_url() + '/playlist', brains)
+            #results[start:start+limit], len(results), start, limit
+            return CollectionObject("Your Playlist", self.portal.absolute_url() + '/playlist', brains[start:start+limit], len(brains), start, limit)
         
                 
     def get_image(self):
@@ -350,7 +373,9 @@ class CollectionView(BrowserView):
         return self.template()
         
     def get_collection(self):
-        return AdvancedCollectionQuery(self.context, limit=self.context.limit, sort_by=self.context.sort_type, sort_direction=self.context.sort_direction)
+        start = int(self.request.form.get("start", 0))
+        limit = int(self.request.form.get("limit", self.context.limit))
+        return AdvancedCollectionQuery(self.context, limit=limit, start=start, sort_by=self.context.sort_type, sort_direction=self.context.sort_direction)
                 
     def get_image(self):
         return '++resource++polklibrary.content.viewer/missing-thumb.png'

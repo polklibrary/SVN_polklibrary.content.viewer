@@ -365,3 +365,16 @@ span.pat-film-list[data-added="1"] {
     width: 99%;
 }
 
+
+
+.pagination{
+    font-size: 16px;
+    padding-top: 30px;
+    text-align: center;
+}
+.pagination a[data-page-current="True"] {
+    font-weight: bold;
+    text-decoration: underline !important;
+}
+
+

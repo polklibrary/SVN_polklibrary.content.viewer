@@ -17,7 +17,7 @@ class GroupList(BrowserView):
     def __call__(self):
         return self.template()
 
-        
+    # Cache later?
     def get_collections(self):
     
         catalog = api.portal.get_tool(name='portal_catalog')
@@ -30,10 +30,9 @@ class GroupList(BrowserView):
             },
         )
         
-        
         collections = []
         for brain in brains:
-            collections.append(AdvancedCollectionQuery(brain, limit=10, sort_by=brain.sort_type, sort_direction=brain.sort_direction))
+            collections.append(AdvancedCollectionQuery(brain, limit=15, start=0, sort_by=brain.sort_type, sort_direction=brain.sort_direction))
     
         return collections
         
