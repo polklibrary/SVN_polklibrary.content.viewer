@@ -10,6 +10,34 @@ from polklibrary.content.viewer.utility import ResourceEnhancer
 
 import random, datetime, time
 
+
+@ram.cache(lambda *args: time.time() // (60 * 60 * 24 * 7)) # 1 week
+def FacetTotals(context): 
+    data = {
+        'series_title' : {},
+        'subject_heading' : {},
+        'associated_entity' : {},
+        'geography' : {},
+        'genre' : {},
+    }
+    
+    catalog = api.portal.get_tool(name='portal_catalog')
+    
+    for key,value in data.items():
+        index = catalog._catalog.indexes[key]
+        
+        for k in index.uniqueValues():
+        
+            t = index._index.get(k)
+            if type(t) is not int:
+                data[key][k] = len(t)
+            else:
+                data[key][k] = 1
+    
+    return data
+
+
+
 class RecordView(BrowserView):
 
     template = ViewPageTemplateFile("templates/record_view.pt")
@@ -32,7 +60,7 @@ class RecordView(BrowserView):
         self.context.visits += 1 
         self.context.reindexObject()
             
-        self.totals = self.Totals() # heavily cached
+        self.totals = FacetTotals(self.context) # heavily cached
         
             
         self.enhanced_data = ResourceEnhancer(self.context.id,self.context.title)

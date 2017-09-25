@@ -23,6 +23,8 @@ class Search(BrowserView):
     
         
     def get_collection(self):
+        start = int(self.request.form.get("start", 0))
+        limit = int(self.request.form.get("limit", 250))
         sort_on = self.request.form.get('form.sort','sortable_title')
         sort_order = self.request.form.get('form.sort.direction','ascending')
         
@@ -43,8 +45,8 @@ class Search(BrowserView):
                 sort_order=sort_order
             )
             
-            return CollectionObject("Results Found", self.portal.absolute_url() + '/find', brains)
-        return CollectionObject("Results Found", self.portal.absolute_url() + '/find', [])
+            return CollectionObject("Results Found", self.portal.absolute_url() + '/find', brains[start:start+limit], len(brains), start, limit)
+        return CollectionObject("Results Found", self.portal.absolute_url() + '/find', [], 0, start, limit)
         
     @property
     def portal(self):

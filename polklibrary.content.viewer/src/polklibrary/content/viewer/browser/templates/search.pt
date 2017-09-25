@@ -71,6 +71,14 @@
                     </div>
                 </a>
                 
+                <div class="pagination" tal:condition="python: container.total > container.limit" >
+                    ${container/total} Results: 
+                    <tal:block repeat="page container/pages">
+                        <a tal:attributes="data-page-current python: str(page['start']) == request.form.get('start', '0')"
+                           href="${page/purl}">${page/number}</a>
+                    </tal:block>
+                </div>
+            
                 <div id="overlay">
                     <div class="title"> </div>
                     <div class="description pat-showmore" data-len="255"> </div>
