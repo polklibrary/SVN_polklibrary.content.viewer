@@ -22,7 +22,7 @@
 	<metal:content-core fill-slot="content-core">
 
         <div id="find">
-            <form method="post" class="column">
+            <form method="get" class="column">
            
                 <div class="col-30">
                     <input placeholder="Search here" type="text" name="form.query" tal:attributes="value python:request.form.get('form.query','')" />
