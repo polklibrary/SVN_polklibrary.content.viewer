@@ -20,11 +20,11 @@ class RecordView(BrowserView):
     totals = {}
     
     def __call__(self):
-        redirect = self.request.form.get('url', self.portal.absolute_url())
+        redirect = self.request.form.get('url', self.context.absolute_url())
         
         if not self.is_oncampus():
-            if api.user.is_anonymous():
-                return self.request.response.redirect('http://www.uwosh.edu/streaming-videos/login?came_from=' + redirect)
+            #if api.user.is_anonymous():
+            #    return self.request.response.redirect('http://www.uwosh.edu/streaming-videos/login?came_from=' + redirect)
             return self.request.response.redirect('http://www.remote.uwosh.edu/login?url=' + redirect)
             #return self.request.response.redirect('http://www.uwosh.edu/streaming-videos/login?came_from=' + redirect)
             
