@@ -3,7 +3,7 @@ from plone.memoize import ram
 from plone.i18n.normalizer import idnormalizer
 from StringIO import StringIO
 from unidecode import unidecode
-import re, time
+import re, time, ftfy, csv
 
 # used elsewhere to target
 ALEXANDER_STREET_NAME = 'Alexander Street'
@@ -61,46 +61,93 @@ def CleanID(id):
         return id
         
         
+def escape_reserved(text):
+    if text:
+        return text.replace(u'"', u'\\\\"')
+    return text
+        
+        
 def remove_non_ascii(text):
-    return unidecode(text)
+    if text and type(text) != unicode:
+        return text.decode('utf-8') #unidecode(text)
+    elif text:
+        return text
+    return u''
+    
+    
+def to_unicode(text):
+    if text:
+        return ftfy.fix_text(str(text).decode('utf-8')) #unidecode(text)
+    return u''
 
 def BrainsToCSV(brains):
     output = StringIO()
+    
+    writer = csv.writer(output, delimiter=',', quotechar='"', quoting=csv.QUOTE_ALL)
+    
     #filmID,content_type,creator,title,date_of_publication,runtime,series_title,summary,associated_entity,geography,subject,genre
-    output.write('filmID,content_type,creator,title,date_of_publication,runtime,series_title,summary,associated_entity,geography,subject,genre,image_url\n')
+    writer.writerow(['filmID','content_type','creator','title','date_of_publication','runtime','series_title','summary','associated_entity','geography','subject','genre'])
     
     for brain in brains:
-    
-        output.write(brain.getId)
-        output.write(',')
-        output.write(brain.content_type)
-        output.write(',"')
-        output.write(remove_non_ascii(brain.creator))
-        output.write('","')
-        output.write(remove_non_ascii(brain.Title))
-        output.write('","')
-        output.write(brain.date_of_publication)
-        output.write('","')
-        output.write(brain.runtime)
-        output.write('","')
-        output.write(str([ str(remove_non_ascii(x)) for x in brain.series_title]))
-        output.write('","')
-        output.write(remove_non_ascii(brain.Description))
-        output.write('","')
-        output.write(str([ str(remove_non_ascii(x)) for x in brain.associated_entity]))
-        output.write('","')
-        output.write(str([ str(remove_non_ascii(x)) for x in brain.geography]))
-        output.write('","')
-        output.write(str([ str(remove_non_ascii(x)) for x in brain.subject]))
-        output.write('","')
-        output.write(str([ str(remove_non_ascii(x)) for x in brain.genre]))
-        output.write('","')
-        output.write(brain.image_url)
-        output.write('"\n')
-
+        row = []
+        row.append(brain.getId)
+        row.append(brain.content_type)
+        row.append(brain.creator)
+        row.append(brain.Title)
+        row.append(brain.date_of_publication)
+        row.append(brain.runtime)
+        row.append(to_unicode([ remove_non_ascii(x) for x in brain.series_title]))
+        row.append(brain.Description)
+        row.append(to_unicode([ remove_non_ascii(x) for x in brain.associated_entity]))
+        row.append(to_unicode([ remove_non_ascii(x) for x in brain.geography]))
+        row.append(to_unicode([ remove_non_ascii(x) for x in brain.subject]))
+        row.append(to_unicode([ remove_non_ascii(x) for x in brain.genre]))
+        writer.writerow(row)
+        
     contents = output.getvalue()
     output.close()
     return contents
+        
+    
+    
+# def BrainsToCSV(brains):
+    # output = StringIO()
+    # #filmID,content_type,creator,title,date_of_publication,runtime,series_title,summary,associated_entity,geography,subject,genre
+    # output.write('filmID,content_type,creator,title,date_of_publication,runtime,series_title,summary,associated_entity,geography,subject,genre,image_url\n')
+    
+    # for brain in brains:
+    
+        # output.write(u'"')
+        # output.write(brain.getId)
+        # output.write(u'","')
+        # output.write(brain.content_type)
+        # output.write(u'","')
+        # output.write(escape_reserved(remove_non_ascii(brain.creator)))
+        # output.write(u'","')
+        # output.write(escape_reserved(remove_non_ascii(brain.Title)))
+        # output.write(u'","')
+        # output.write(escape_reserved(brain.date_of_publication))
+        # output.write(u'","')
+        # output.write(escape_reserved(brain.runtime))
+        # output.write(u'","')
+        # output.write(to_unicode([ remove_non_ascii(x) for x in brain.series_title]))
+        # output.write(u'","')
+        # output.write(escape_reserved(remove_non_ascii(brain.Description)))
+        # output.write(u'","')
+        # output.write(to_unicode([ remove_non_ascii(x) for x in brain.associated_entity]))
+        # output.write(u'","')
+        # output.write(to_unicode([ remove_non_ascii(x) for x in brain.geography]))
+        # output.write(u'","')
+        # output.write(to_unicode([ remove_non_ascii(x) for x in brain.subject]))
+        # output.write(u'","')
+        # output.write(to_unicode([ remove_non_ascii(x) for x in brain.genre]))
+        # output.write(u'","')
+        # output.write(brain.image_url)
+        # output.write(u'"\n')
+
+    # contents = output.getvalue()
+    # output.close()
+    # return contents
         
         
         

@@ -70,6 +70,13 @@
         />
         
     <browser:page
+        for="polklibrary.content.viewer.models.tag_cache.ITagCache"
+        name="cache_view"
+        class=".cache.CacheView"
+        permission="cmf.ManagePortal"
+        />
+        
+    <browser:page
         for="*"
         name="getBrowseList"
         class=".ws_get_browse_list.WSView"

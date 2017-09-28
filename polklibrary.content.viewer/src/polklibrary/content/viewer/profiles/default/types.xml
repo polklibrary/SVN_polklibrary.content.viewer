@@ -3,4 +3,5 @@
   <object name="polklibrary.content.viewer.models.collection" meta_type="Dexterity FTI"/>
   <object name="polklibrary.content.viewer.models.group_list" meta_type="Dexterity FTI"/>
   <object name="polklibrary.content.viewer.models.contentrecord" meta_type="Dexterity FTI"/>
+  <object name="polklibrary.content.viewer.models.tag_cache" meta_type="Dexterity FTI"/>
 </object>

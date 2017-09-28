@@ -11,32 +11,6 @@ from polklibrary.content.viewer.utility import ResourceEnhancer
 import random, datetime, time
 
 
-@ram.cache(lambda *args: time.time() // (60 * 60 * 24 * 7)) # 1 week
-def FacetTotals(context): 
-    data = {
-        'series_title' : {},
-        'subject_heading' : {},
-        'associated_entity' : {},
-        'geography' : {},
-        'genre' : {},
-    }
-    
-    catalog = api.portal.get_tool(name='portal_catalog')
-    
-    for key,value in data.items():
-        index = catalog._catalog.indexes[key]
-        
-        for k in index.uniqueValues():
-        
-            t = index._index.get(k)
-            if type(t) is not int:
-                data[key][k] = len(t)
-            else:
-                data[key][k] = 1
-    
-    return data
-
-
 
 class RecordView(BrowserView):
 
@@ -49,8 +23,9 @@ class RecordView(BrowserView):
         redirect = self.request.form.get('url', self.portal.absolute_url())
         
         if not self.is_oncampus():
-            return self.request.response.redirect('http://www.remote.uwosh.edu/login?url=' + redirect)
-        
+            #return self.request.response.redirect('http://www.remote.uwosh.edu/login?url=' + redirect)
+            return self.request.response.redirect('http://www.uwosh.edu/streaming-videos/login?came_from=' + redirect)
+            
         alsoProvides(self.request, IDisableCSRFProtection)
         
         like = self.request.form.get('like', None)
@@ -60,17 +35,32 @@ class RecordView(BrowserView):
         self.context.visits += 1 
         self.context.reindexObject()
             
-        self.totals = FacetTotals(self.context) # heavily cached
+        self.load_facet_totals()
         
             
         self.enhanced_data = ResourceEnhancer(self.context.id,self.context.title)
         return self.template()
 
         
+    def load_facet_totals(self):
+        catalog = api.portal.get_tool(name='portal_catalog')
+        brains = catalog.searchResults(
+            portal_type='polklibrary.content.viewer.models.tag_cache',
+            review_state='published'
+        )
+        
+        if brains:
+            obj = brains[0].getObject()
+            self.totals = obj.cache
+        else:
+            self.totals = {}
+            
+        
+        
     def get_totals(self, type, name):
         try:
             return self.totals.get(type).get(name, 1)
-        except:
+        except Exception as e:
             return 1
         
     def is_oncampus(self):
