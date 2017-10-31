@@ -21,17 +21,18 @@ class GroupList(BrowserView):
     def get_collections(self):
     
         catalog = api.portal.get_tool(name='portal_catalog')
-        brains = catalog.searchResults(
-            portal_type='polklibrary.content.viewer.models.collection',
-            review_state='published',
-            id={
-                "query": self.context.collections,
-                "operator" : 'or',
-            },
-        )
+        ordered_brains = []
+        for collection in self.context.collections:
+            brains = catalog.searchResults(
+                portal_type='polklibrary.content.viewer.models.collection',
+                review_state='published',
+                id=collection,
+            )
+            if brains:
+                ordered_brains.append(brains[0])
         
         collections = []
-        for brain in brains:
+        for brain in ordered_brains:
             collections.append(AdvancedCollectionQuery(brain, limit=15, start=0, sort_by=brain.sort_type, sort_direction=brain.sort_direction))
     
         return collections

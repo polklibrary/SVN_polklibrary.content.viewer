@@ -4,7 +4,7 @@ from Products.Five import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from zope.component import getUtility, getMultiAdapter
 from zope.container.interfaces import INameChooser
-from polklibrary.content.viewer.utility import BrainsToCSV
+from polklibrary.content.viewer.utility import BrainsToCSV, text_to_tuple
 import random, time, re, datetime, operator
 
 
@@ -18,7 +18,8 @@ class FakeCollection:
                  subject_heading=(), 
                  associated_entity=(), 
                  geography=(), 
-                 genre=()):
+                 genre=(),
+                 by_id=""):
                  
         self.url = url
         self.Title = title
@@ -27,7 +28,8 @@ class FakeCollection:
         self.subject_heading = subject_heading
         self.associated_entity = associated_entity
         self.geography = geography
-        self.genre = genre
+        self.genre = genre        
+        self.by_id = text_to_tuple(by_id)
         
     def absolute_url(self):
         return self.url
@@ -49,14 +51,15 @@ class CollectionObject:
     
         index = 1
         self.pages = []
-        for i in range(0, total, limit):
-            self.pages.append({
-                'purl' :  self.url + delimiter + 'start=' + str(i) + '&limit=' + str(limit),
-                'start' : i,
-                'limit' : limit,
-                'number' : index,
-            })
-            index+=1
+        if total > 0:
+            for i in range(0, total, limit):
+                self.pages.append({
+                    'purl' :  self.url + delimiter + 'start=' + str(i) + '&limit=' + str(limit),
+                    'start' : i,
+                    'limit' : limit,
+                    'number' : index,
+                })
+                index+=1
     
 
 def AdvancedCollectionQuery(collection, limit=10, start=0, sort_by='created', sort_direction='ascending'):
@@ -65,15 +68,18 @@ def AdvancedCollectionQuery(collection, limit=10, start=0, sort_by='created', so
         catalog = api.portal.get_tool(name='portal_catalog')
                 
         results = None
-        if collection.series_title or collection.subject_heading or collection.associated_entity or collection.geography or collection.genre: # IF SET, LIMIT RESULTS
+        if collection.by_id or collection.series_title or collection.subject_heading or collection.associated_entity or collection.geography or collection.genre: # IF SET, LIMIT RESULTS
         
             query = re.sub( '\s+', ' ', collection.query_logic.lower()).strip()
+            byid_andor = 'or'
             series_andor = 'or'
             subject_andor = 'or'
             associated_entity_andor = 'or'
             geography_andor = 'or'
             genre_andor = 'or'
             
+            if 'by_id[and]' in query:
+                byid_andor = 'and'
             if 'series_title[and]' in query:
                 series_andor = 'and'
             if 'subject_heading[and]' in query:
@@ -85,6 +91,15 @@ def AdvancedCollectionQuery(collection, limit=10, start=0, sort_by='created', so
             if 'genre[and]' in query:
                 genre_andor = 'and'
                 
+                
+            byid_brains = catalog.searchResults(
+                portal_type='polklibrary.content.viewer.models.contentrecord',
+                review_state='published',
+                id={
+                    "query":  text_to_tuple(collection.by_id),
+                    "operator" : 'or',
+                },
+            )
                 
             series_title_brains = catalog.searchResults(
                 portal_type='polklibrary.content.viewer.models.contentrecord',
@@ -136,7 +151,9 @@ def AdvancedCollectionQuery(collection, limit=10, start=0, sort_by='created', so
             result_op = ''
 
             # Set First Result
-            if 'series_title' in query_parts[0]:
+            if 'by_id' in query_parts[0]:
+                results = byid_brains
+            elif 'series_title' in query_parts[0]:
                 results = series_title_brains
             elif 'subject_heading' in query_parts[0]:
                 results = subject_heading_brains
@@ -158,7 +175,9 @@ def AdvancedCollectionQuery(collection, limit=10, start=0, sort_by='created', so
                     result_op = 'or'
                 else:
                     result = None
-                    if 'series_title' in cq:
+                    if 'by_id' in cq:
+                        result = byid_brains
+                    elif 'series_title' in cq:
                         result = series_title_brains
                     elif 'subject_heading' in cq:
                         result = subject_heading_brains

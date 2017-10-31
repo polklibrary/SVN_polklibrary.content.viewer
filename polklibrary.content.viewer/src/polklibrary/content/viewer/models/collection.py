@@ -75,14 +75,20 @@ class ICollection(model.Schema):
     model.fieldset(
         'query',
         label=u'Query', 
-        fields=['query_logic', 'series_title', 'subject_heading', 'associated_entity', 'geography', 'genre', 'sort_type', 'sort_direction'],
+        fields=['query_logic', 'by_id', 'series_title', 'subject_heading', 'associated_entity', 'geography', 'genre', 'sort_type', 'sort_direction'],
     )
     
     query_logic = schema.TextLine(
             title=u"Query Logic",
-            description=u"Left to right logic, no parentheses allowed. Select OR or AND in subject_heading[OR|AND] to combine terms. Example: series_title[OR] OR subject_heading[OR] OR associated_entity[OR] OR geography[OR] OR genre[OR]",
+            description=u"Left to right logic, no parentheses allowed. Select OR or AND in subject_heading[OR|AND] to combine terms. Example: by_id[OR] OR series_title[OR] OR subject_heading[OR] OR associated_entity[OR] OR geography[OR] OR genre[OR]",
             default=u"series_title[OR] OR subject_heading[OR] OR associated_entity[OR] OR geography[OR] OR genre[OR]",
             required=True,
+        )
+
+    by_id = schema.Text(
+            title=u"List of ID's to include",
+            required=False,
+            missing_value=u"",
         )
     
     series_title = schema.Tuple(

@@ -25,6 +25,7 @@ src/polklibrary/content/viewer/testing.py
 src/polklibrary/content/viewer/utility.py
 src/polklibrary/content/viewer/vocabularies.py
 src/polklibrary/content/viewer/browser/__init__.py
+src/polklibrary/content/viewer/browser/cache.py
 src/polklibrary/content/viewer/browser/collection.py
 src/polklibrary/content/viewer/browser/configure.zcml
 src/polklibrary/content/viewer/browser/group_list.py
@@ -57,6 +58,7 @@ src/polklibrary/content/viewer/browser/static/remove.png
 src/polklibrary/content/viewer/browser/static/share.png
 src/polklibrary/content/viewer/browser/static/stream.png
 src/polklibrary/content/viewer/browser/static/view-more.jpg
+src/polklibrary/content/viewer/browser/templates/cache.pt
 src/polklibrary/content/viewer/browser/templates/collection.pt
 src/polklibrary/content/viewer/browser/templates/group_list.pt
 src/polklibrary/content/viewer/browser/templates/importer.pt
@@ -70,6 +72,7 @@ src/polklibrary/content/viewer/models/collection.py
 src/polklibrary/content/viewer/models/configure.zcml
 src/polklibrary/content/viewer/models/contentrecord.py
 src/polklibrary/content/viewer/models/group_list.py
+src/polklibrary/content/viewer/models/tag_cache.py
 src/polklibrary/content/viewer/profiles/default/browserlayer.xml
 src/polklibrary/content/viewer/profiles/default/catalog.xml
 src/polklibrary/content/viewer/profiles/default/metadata.xml
@@ -79,6 +82,7 @@ src/polklibrary/content/viewer/profiles/default/types/polklibrary.content.viewer
 src/polklibrary/content/viewer/profiles/default/types/polklibrary.content.viewer.models.content.xml
 src/polklibrary/content/viewer/profiles/default/types/polklibrary.content.viewer.models.contentrecord.xml
 src/polklibrary/content/viewer/profiles/default/types/polklibrary.content.viewer.models.group_list.xml
+src/polklibrary/content/viewer/profiles/default/types/polklibrary.content.viewer.models.tag_cache.xml
 src/polklibrary/content/viewer/profiles/uninstall/browserlayer.xml
 src/polklibrary/content/viewer/profiles/uninstall/polklibrarycontentviewer_uninstall.txt
 src/polklibrary/content/viewer/tests/__init__.py

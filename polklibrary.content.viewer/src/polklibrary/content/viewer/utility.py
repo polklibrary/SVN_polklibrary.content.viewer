@@ -110,48 +110,11 @@ def BrainsToCSV(brains):
         
     
     
-# def BrainsToCSV(brains):
-    # output = StringIO()
-    # #filmID,content_type,creator,title,date_of_publication,runtime,series_title,summary,associated_entity,geography,subject,genre
-    # output.write('filmID,content_type,creator,title,date_of_publication,runtime,series_title,summary,associated_entity,geography,subject,genre,image_url\n')
-    
-    # for brain in brains:
-    
-        # output.write(u'"')
-        # output.write(brain.getId)
-        # output.write(u'","')
-        # output.write(brain.content_type)
-        # output.write(u'","')
-        # output.write(escape_reserved(remove_non_ascii(brain.creator)))
-        # output.write(u'","')
-        # output.write(escape_reserved(remove_non_ascii(brain.Title)))
-        # output.write(u'","')
-        # output.write(escape_reserved(brain.date_of_publication))
-        # output.write(u'","')
-        # output.write(escape_reserved(brain.runtime))
-        # output.write(u'","')
-        # output.write(to_unicode([ remove_non_ascii(x) for x in brain.series_title]))
-        # output.write(u'","')
-        # output.write(escape_reserved(remove_non_ascii(brain.Description)))
-        # output.write(u'","')
-        # output.write(to_unicode([ remove_non_ascii(x) for x in brain.associated_entity]))
-        # output.write(u'","')
-        # output.write(to_unicode([ remove_non_ascii(x) for x in brain.geography]))
-        # output.write(u'","')
-        # output.write(to_unicode([ remove_non_ascii(x) for x in brain.subject]))
-        # output.write(u'","')
-        # output.write(to_unicode([ remove_non_ascii(x) for x in brain.genre]))
-        # output.write(u'","')
-        # output.write(brain.image_url)
-        # output.write(u'"\n')
-
-    # contents = output.getvalue()
-    # output.close()
-    # return contents
-        
-        
-        
-        
+def text_to_tuple(text):
+    if type(text) is tuple:
+        return text
+    lines = text.replace(u'\r', u'').split(u'\n')
+    return tuple(lines)
         
         
         
