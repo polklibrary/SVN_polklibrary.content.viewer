@@ -92,7 +92,7 @@
         
         <div id="overlay">
             <div class="title"> </div>
-            <div class="description pat-showmore" data-len="140"> </div>
+            <div class="description pat-showmore pat-limit" data-len="140"> </div>
             <div class="runtime">
                 <label>Runtime: </label>
                 <span></span>

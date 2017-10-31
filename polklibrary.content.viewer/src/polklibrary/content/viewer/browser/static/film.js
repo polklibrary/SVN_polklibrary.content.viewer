@@ -19,10 +19,14 @@ var ShowMore = {
         });
         
         $(element).html(""); // destroy text
-        $(element).append(show).append(toggle).append(hide);
+        if ($(e).is('.pat-limit'))
+            $(element).append(show).append('<span>...</span>');
+        else
+            $(element).append(show).append(toggle).append(hide);
     }
     
 }
+
 
 var Images = {
 
