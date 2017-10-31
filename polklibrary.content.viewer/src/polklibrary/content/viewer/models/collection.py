@@ -89,6 +89,7 @@ class ICollection(model.Schema):
             title=u"List of ID's to include",
             required=False,
             missing_value=u"",
+            default=u"",
         )
     
     series_title = schema.Tuple(
