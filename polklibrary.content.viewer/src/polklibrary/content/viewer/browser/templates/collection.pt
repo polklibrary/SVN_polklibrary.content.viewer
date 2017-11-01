@@ -24,6 +24,8 @@
         <div class="collection" tal:define="container view/get_collection">
             
             <h2 class="vm">
+                <a href="${view/portal/absolute_url}">All Videos</a> 
+                <span class="separater"> &gt; </span>
                 <a href="${container/url}">${container/title}</a> 
                 <img tal:condition="view/shareable" 
                      class="pat-share" 

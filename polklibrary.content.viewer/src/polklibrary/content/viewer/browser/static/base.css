@@ -13,9 +13,11 @@
             user-select: none; /* Non-prefixed version, currently
                                   supported by Chrome and Opera */
 }
-
-
-
+.separater {
+    color: #aaa;
+    font-size: 16px;
+    margin: 0px 2px;
+}
 
 .collection {}
 .collection a.item {

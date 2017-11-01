@@ -69,7 +69,6 @@
                     target="_parent"
                     style="background-image: url(${item/getURL}/++resource++polklibrary.content.viewer/${item/content_type}.png), url(${item/getURL}/${item/image_url});"
                 >    
-                    
                     <div class="title hide">
                         ${item/Title}
                     </div>
@@ -78,6 +77,13 @@
                 <a class="item" 
                    href="${container/url}" 
                    style="background-image: url(), url(${container/url}/++resource++polklibrary.content.viewer/view-more.jpg)"
+                    target="_parent"
+                >
+                </a>
+                
+                <a class="item" 
+                   href="${view/portal/absolute_url}" 
+                   style="background-image: url(), url(${container/url}/++resource++polklibrary.content.viewer/goto.jpg)"
                     target="_parent"
                 >
                 </a>
