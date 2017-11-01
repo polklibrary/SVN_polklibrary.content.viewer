@@ -100,7 +100,7 @@ def BrainsToCSV(brains):
         row.append(brain.Description)
         row.append(to_unicode([ remove_non_ascii(x) for x in brain.associated_entity]))
         row.append(to_unicode([ remove_non_ascii(x) for x in brain.geography]))
-        row.append(to_unicode([ remove_non_ascii(x) for x in brain.subject]))
+        row.append(to_unicode([ remove_non_ascii(x) for x in brain.subject_heading]))
         row.append(to_unicode([ remove_non_ascii(x) for x in brain.genre]))
         writer.writerow(row)
         
