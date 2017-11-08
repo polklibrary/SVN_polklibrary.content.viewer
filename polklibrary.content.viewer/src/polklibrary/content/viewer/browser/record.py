@@ -27,7 +27,7 @@ class RecordView(BrowserView):
         #redirect = self.request.form.get('url', self.context.absolute_url())
         
         if not self.is_oncampus():
-            return self.request.response.redirect(self.context.absolute_url() + '/proxy')
+            return self.request.response.redirect('http://www.remote.uwosh.edu/login?url=' + self.context.absolute_url())
             
         
         alsoProvides(self.request, IDisableCSRFProtection)
