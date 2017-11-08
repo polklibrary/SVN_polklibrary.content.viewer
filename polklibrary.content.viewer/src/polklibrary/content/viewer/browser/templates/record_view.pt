@@ -34,7 +34,7 @@
                     <div class="column-outer">
                     
                         <div class="pat-player" 
-                             tal:condition="view.is_oncampus()" 
+                             tal:condition="python: view.is_oncampus()" 
                              tal:content="structure view/enhanced_data/embed">
                         </div>
                         <div class="pat-player-login" 
