@@ -25,12 +25,11 @@ class RecordView(BrowserView):
     totals = {}
     
     def __call__(self):
-        #redirect = self.request.form.get('url', self.context.absolute_url())
+        self.request.response.setHeader('Cache-Control', 'no-cache, no-store')
         
         #if not self.is_oncampus():
         #    return self.request.response.redirect('http://www.remote.uwosh.edu/login?url=' + self.context.absolute_url())
             
-        
         alsoProvides(self.request, IDisableCSRFProtection)
         like = self.request.form.get('like', None)
         if like:
