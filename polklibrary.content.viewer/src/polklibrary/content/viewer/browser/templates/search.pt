@@ -25,7 +25,7 @@
             <form method="get" class="column">
            
                 <div class="col-30">
-                    <input placeholder="Search here" type="text" name="form.query" tal:attributes="value python:request.form.get('form.query','')" />
+                    <input placeholder="Search here" autofocus="autofocus" type="text" name="form.query" tal:attributes="value python:request.form.get('form.query','')" />
                 </div>
                 <div class="col-30">
                     <label>Sort by: </label>

@@ -49,6 +49,13 @@
         />
         
     <browser:page
+        for="polklibrary.content.viewer.models.contentrecord.IContentRecord"
+        name="proxy"
+        class=".record.ProxyView"
+        permission="zope2.View"
+        />
+        
+    <browser:page
         for="polklibrary.content.viewer.models.collection.ICollection"
         name="collection_view"
         class=".collection.CollectionView"

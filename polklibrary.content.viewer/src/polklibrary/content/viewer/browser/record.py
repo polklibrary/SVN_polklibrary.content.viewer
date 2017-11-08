@@ -10,7 +10,11 @@ from polklibrary.content.viewer.utility import ResourceEnhancer
 
 import random, datetime, time
 
+class ProxyView(BrowserView):
 
+    def __call__(self):
+        return self.request.response.redirect('http://www.remote.uwosh.edu/login?url=' + self.context.absolute_url().replace('/proxy',''))
+            
 
 class RecordView(BrowserView):
 
@@ -20,16 +24,13 @@ class RecordView(BrowserView):
     totals = {}
     
     def __call__(self):
-        redirect = self.request.form.get('url', self.context.absolute_url())
+        #redirect = self.request.form.get('url', self.context.absolute_url())
         
         if not self.is_oncampus():
-            #if api.user.is_anonymous():
-            #    return self.request.response.redirect('http://www.uwosh.edu/streaming-videos/login?came_from=' + redirect)
-            return self.request.response.redirect('http://www.remote.uwosh.edu/login?url=' + redirect)
-            #return self.request.response.redirect('http://www.uwosh.edu/streaming-videos/login?came_from=' + redirect)
+            return self.request.response.redirect('http://www.remote.uwosh.edu/login?url=' + self.context.absolute_url() + '/proxy')
             
-        alsoProvides(self.request, IDisableCSRFProtection)
         
+        alsoProvides(self.request, IDisableCSRFProtection)
         like = self.request.form.get('like', None)
         if like:
             self.context.likes += 1 
@@ -74,7 +75,7 @@ class RecordView(BrowserView):
         elif 'HTTP_HOST' in self.request.environ:
             ip = self.request.environ['REMOTE_ADDR'] # Non-virtualhost
         ipl = ip.split(',')
-        
+        print ipl
         return ipl[0].strip().startswith(ip_restriction) or ipl[0].strip().startswith(dev_restriction)
         
     def get_related(self):
