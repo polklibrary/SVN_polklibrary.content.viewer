@@ -75,7 +75,6 @@ class RecordView(BrowserView):
         elif 'HTTP_HOST' in self.request.environ:
             ip = self.request.environ['REMOTE_ADDR'] # Non-virtualhost
         ipl = ip.split(',')
-        print ipl
         return ipl[0].strip().startswith(ip_restriction) or ipl[0].strip().startswith(dev_restriction)
         
     def get_related(self):
