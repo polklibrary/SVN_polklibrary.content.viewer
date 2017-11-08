@@ -25,10 +25,9 @@ class RecordView(BrowserView):
     totals = {}
     
     def __call__(self):
-        self.request.response.setHeader('Cache-Control', 'no-cache, no-store')
         
-        #if not self.is_oncampus():
-        #    return self.request.response.redirect('http://www.remote.uwosh.edu/login?url=' + self.context.absolute_url())
+        if not self.is_oncampus():
+            return self.request.response.redirect('http://www.remote.uwosh.edu/login?url=' + self.context.absolute_url())
             
         alsoProvides(self.request, IDisableCSRFProtection)
         like = self.request.form.get('like', None)
@@ -42,6 +41,7 @@ class RecordView(BrowserView):
         
             
         self.enhanced_data = ResourceEnhancer(self.context.id,self.context.title)
+        self.request.response.setHeader('Cache-Control', 'no-cache, no-store')
         return self.template()
 
         
@@ -67,7 +67,7 @@ class RecordView(BrowserView):
             return 1
         
     def is_oncampus(self):
-        dev_restriction = '331a1' #'10.0.2.2'
+        dev_restriction = '10.0.2.2'
         ip_restriction = '141.233.'
         ip = ''
         if 'HTTP_X_FORWARDED_FOR' in self.request.environ:

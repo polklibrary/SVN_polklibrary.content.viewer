@@ -34,15 +34,14 @@
                     <div class="column-outer">
                     
                         <div class="pat-player" 
-                             tal:condition="python: view.is_oncampus()" 
                              tal:content="structure view/enhanced_data/embed">
                         </div>
-                        <div class="pat-player-login" 
-                             tal:condition="python: not view.is_oncampus()">
-                            <img tal:condition="context/image" src="${context/absolute_url}/@@download/image/thumb.jpg" alt="Thumbnail" />
-                            <img tal:condition="not: context/image" src="${context/image_url}" alt="Missing Thumbnail" />
-                            <div>You are off campus. <br /> Please click here to view.</div>
-                        </div>
+                        <!-- <div class="pat-player-login"  -->
+                             <!-- tal:condition="python: not view.is_oncampus()"> -->
+                            <!-- <img tal:condition="context/image" src="${context/absolute_url}/@@download/image/thumb.jpg" alt="Thumbnail" /> -->
+                            <!-- <img tal:condition="not: context/image" src="${context/image_url}" alt="Missing Thumbnail" /> -->
+                            <!-- <div>You are off campus. <br /> Please click here to view.</div> -->
+                        <!-- </div> -->
                         
                         <a class="link" 
                            href="${view/enhanced_data/base_url}"
