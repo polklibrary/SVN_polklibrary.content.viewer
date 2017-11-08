@@ -7,6 +7,14 @@
     
        
     <browser:page
+        for="*"
+        name="close_view"
+        class=".record.CloseView"
+        permission="zope.Public"
+        />
+        
+       
+    <browser:page
         for="Products.CMFCore.interfaces.ISiteRoot"
         name="process_thumbnail"
         class=".process_thumbnail.ThumbnailProcess"
@@ -45,13 +53,6 @@
         for="polklibrary.content.viewer.models.contentrecord.IContentRecord"
         name="record_view"
         class=".record.RecordView"
-        permission="zope2.View"
-        />
-        
-    <browser:page
-        for="polklibrary.content.viewer.models.contentrecord.IContentRecord"
-        name="proxy"
-        class=".record.ProxyView"
         permission="zope2.View"
         />
         

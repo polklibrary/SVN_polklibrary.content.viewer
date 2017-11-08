@@ -66,6 +66,9 @@ var Images = {
 
 var Player = {
     
+    Thread : null,
+    LoginWindow : null,
+    
     Pattern : function(){
         var player = $('.pat-player');
         if (player.length > 0)
@@ -87,7 +90,20 @@ var Player = {
             
              $(player).find('iframe').show();
         }
-    }
+    },
+    
+    Pattern2 : function(){
+        $('.pat-player-login').click(function(){
+            Player.LoginWindow = window.open("https://www.remote.uwosh.edu/login?url=" + $('body').attr('data-portal-url') + "/close_view", "Off Campus Login", "");
+            Player.Thread = window.setInterval(function() {
+                if (Player.LoginWindow.closed !== false) {
+                    window.clearInterval(Player.Thread);
+                    document.location.href =  "http://www.remote.uwosh.edu/login?url=" + document.location.href;
+                }
+            }, 500);
+        });
+    },
+    
     
 }
 
@@ -390,6 +406,7 @@ $(document).ready(function(){
     Overlay.Pattern();
     Share.Pattern();
     Player.Pattern();
+    Player.Pattern2();
     Images.Pattern();
 });
 

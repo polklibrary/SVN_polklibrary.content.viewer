@@ -10,11 +10,12 @@ from polklibrary.content.viewer.utility import ResourceEnhancer
 
 import random, datetime, time
 
-class ProxyView(BrowserView):
-
+class CloseView(BrowserView):
+    template = ViewPageTemplateFile("templates/close_view.pt")
     def __call__(self):
-        return self.request.response.redirect('http://www.remote.uwosh.edu/login?url=' + self.context.absolute_url().replace('/proxy',''))
-            
+        return self.template()
+
+
 
 class RecordView(BrowserView):
 
@@ -26,8 +27,8 @@ class RecordView(BrowserView):
     def __call__(self):
         #redirect = self.request.form.get('url', self.context.absolute_url())
         
-        if not self.is_oncampus():
-            return self.request.response.redirect('http://www.remote.uwosh.edu/login?url=' + self.context.absolute_url())
+        #if not self.is_oncampus():
+        #    return self.request.response.redirect('http://www.remote.uwosh.edu/login?url=' + self.context.absolute_url())
             
         
         alsoProvides(self.request, IDisableCSRFProtection)
@@ -67,7 +68,7 @@ class RecordView(BrowserView):
             return 1
         
     def is_oncampus(self):
-        dev_restriction = '10.0.2.2'
+        dev_restriction = '331a1' #'10.0.2.2'
         ip_restriction = '141.233.'
         ip = ''
         if 'HTTP_X_FORWARDED_FOR' in self.request.environ:

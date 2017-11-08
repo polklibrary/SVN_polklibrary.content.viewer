@@ -33,8 +33,8 @@ def ResourceEnhancer(id, title):
         
     elif KANOPY_TARGET in id.lower():
         data['name'] = KANOPY_NAME
-        data['base_url'] = 'https://uwosh.kanopystreaming.com/embed/' + data['id']
-        data['embed'] = '<iframe src="https://uwosh.kanopystreaming.com/embed/' + data['id'] + '" frameborder="0" allowfullscreen webkitallowfullscreen mozallowfullscreen scrolling="no"></iframe>'
+        data['base_url'] = 'https://www.remote.uwosh.edu/login?url=https://uwosh.kanopystreaming.com/embed/' + data['id']
+        data['embed'] = '<iframe src="https://www.remote.uwosh.edu/login?url=https://uwosh.kanopystreaming.com/embed/' + data['id'] + '" frameborder="0" allowfullscreen webkitallowfullscreen mozallowfullscreen scrolling="no"></iframe>'
         
     elif FILMSONDEMAND_TARGET in id.lower():
         data['name'] = FILMSONDEMAND_NAME
