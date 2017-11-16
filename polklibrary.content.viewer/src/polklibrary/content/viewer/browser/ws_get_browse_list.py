@@ -2,7 +2,7 @@ from plone import api
 from plone.memoize import ram
 from Products.Five import BrowserView
 
-import json
+import json, time
 
 class WSView(BrowserView):
 
@@ -18,7 +18,14 @@ class WSView(BrowserView):
         return json.dumps(self._data)
 
         
+    #@ram.cache(lambda *args: time.time() // (60 * 60))
+    def counter(self):
+        records = api.content.find(portal_type='polklibrary.content.viewer.models.contentrecord')
+        print len(records)
+        return len(records)
+        
     def process(self):
+        count = self.counter()
         brains = api.content.find(portal_type='polklibrary.content.viewer.models.collection', 
                                      sort_on="sortable_title", 
                                      enabled_browse=True)
@@ -27,6 +34,7 @@ class WSView(BrowserView):
                 'Title': brain.Title,
                 'Description': brain.Description,
                 'getURL': brain.getURL(),
+                'total': count,
             })
         
 
