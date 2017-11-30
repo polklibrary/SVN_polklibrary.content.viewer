@@ -18,10 +18,9 @@ class WSView(BrowserView):
         return json.dumps(self._data)
 
         
-    #@ram.cache(lambda *args: time.time() // (60 * 60))
+    @ram.cache(lambda *args: time.time() // (60 * 60))
     def counter(self):
         records = api.content.find(portal_type='polklibrary.content.viewer.models.contentrecord')
-        print len(records)
         return len(records)
         
     def process(self):

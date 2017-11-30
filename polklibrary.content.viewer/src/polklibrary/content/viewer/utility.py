@@ -3,7 +3,8 @@ from plone.memoize import ram
 from plone.i18n.normalizer import idnormalizer
 from StringIO import StringIO
 from unidecode import unidecode
-import re, time, ftfy, csv
+#from polklibrary.content.viewer import unicodecsv
+import re, time, ftfy, csv, unicodecsv
 
 # used elsewhere to target
 ALEXANDER_STREET_NAME = 'Alexander Street'
@@ -83,19 +84,19 @@ def to_unicode(text):
 def BrainsToCSV(brains):
     output = StringIO()
     
-    writer = csv.writer(output, delimiter=',', quotechar='"', quoting=csv.QUOTE_ALL)
+    writer = unicodecsv.writer(output, delimiter=',', quotechar='"', quoting=csv.QUOTE_ALL)
     
     #filmID,content_type,creator,title,date_of_publication,runtime,series_title,summary,associated_entity,geography,subject,genre
-    writer.writerow(['filmID','content_type','creator','title','date_of_publication','runtime','series_title','summary','associated_entity','geography','subject','genre'])
+    writer.writerow([u'filmID',u'content_type',u'creator',u'title',u'date_of_publication',u'runtime',u'series_title',u'summary',u'associated_entity',u'geography',u'subject',u'genre'])
     
     for brain in brains:
         row = []
-        row.append(brain.getId)
-        row.append(brain.content_type)
-        row.append(brain.creator)
+        row.append(unicode(brain.getId))
+        row.append(unicode(brain.content_type))
+        row.append(unicode(brain.creator))
         row.append(brain.Title)
-        row.append(brain.date_of_publication)
-        row.append(brain.runtime)
+        row.append(unicode(brain.date_of_publication))
+        row.append(unicode(brain.runtime))
         row.append(to_unicode([ remove_non_ascii(x) for x in brain.series_title]))
         row.append(brain.Description)
         row.append(to_unicode([ remove_non_ascii(x) for x in brain.associated_entity]))

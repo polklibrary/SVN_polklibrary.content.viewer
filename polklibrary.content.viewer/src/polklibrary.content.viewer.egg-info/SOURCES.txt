@@ -22,6 +22,7 @@ src/polklibrary/content/viewer/configure.zcml
 src/polklibrary/content/viewer/interfaces.py
 src/polklibrary/content/viewer/setuphandlers.py
 src/polklibrary/content/viewer/testing.py
+src/polklibrary/content/viewer/unicodecsv.py
 src/polklibrary/content/viewer/utility.py
 src/polklibrary/content/viewer/vocabularies.py
 src/polklibrary/content/viewer/browser/__init__.py
@@ -45,6 +46,7 @@ src/polklibrary/content/viewer/browser/static/dvd.png
 src/polklibrary/content/viewer/browser/static/file.png
 src/polklibrary/content/viewer/browser/static/film.js
 src/polklibrary/content/viewer/browser/static/game.png
+src/polklibrary/content/viewer/browser/static/goto.jpg
 src/polklibrary/content/viewer/browser/static/internal.css
 src/polklibrary/content/viewer/browser/static/jquery.mobile.custom.min.js
 src/polklibrary/content/viewer/browser/static/jquery.mobile.js
@@ -59,6 +61,7 @@ src/polklibrary/content/viewer/browser/static/share.png
 src/polklibrary/content/viewer/browser/static/stream.png
 src/polklibrary/content/viewer/browser/static/view-more.jpg
 src/polklibrary/content/viewer/browser/templates/cache.pt
+src/polklibrary/content/viewer/browser/templates/close_view.pt
 src/polklibrary/content/viewer/browser/templates/collection.pt
 src/polklibrary/content/viewer/browser/templates/group_list.pt
 src/polklibrary/content/viewer/browser/templates/importer.pt
