@@ -15,7 +15,7 @@ class Search(BrowserView):
     template = ViewPageTemplateFile("templates/search.pt")
     
     def __call__(self):        
-        if self.request.form.get('form.csv.submit', None):
+        if self.request.form.get('form.csv.submit', None) or self.request.form.get('csv', None):
             self.request.response.setHeader("Content-Disposition", "attachment;filename=collection.csv")
             return BrainsToCSV(self.get_collection().items)
             
