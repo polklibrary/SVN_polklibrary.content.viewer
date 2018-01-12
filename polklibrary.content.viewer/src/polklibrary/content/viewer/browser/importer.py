@@ -34,6 +34,7 @@ class ImporterView(BrowserView):
                                     'genre']
                                     
     required_delete_headings  = ['filmID']  
+    required_activation_headings  = ['filmID']  
     
     def __call__(self):
                  
@@ -44,6 +45,8 @@ class ImporterView(BrowserView):
         self.records_updated_failed = []
         self.records_deleted = 0
         self.records_deleted_failed = []
+        self.records_activated = 0
+        self.records_activated_failed = []
         
         target_container = self.request.get('form.container.type', '%%%')
         containers = api.content.find(self.portal, portal_type='Folder', id=target_container)
@@ -55,10 +58,39 @@ class ImporterView(BrowserView):
                 self.handle_add_update()
             if self.request.get('form.file.delete', None):
                 self.handle_delete()
+            if self.request.get('form.file.activate', None):
+                self.handle_activations('on')
+            if self.request.get('form.file.deactivate', None):
+                self.handle_activations('off')
             
         return self.template()
 
         
+        
+    def handle_activations(self, workflow):
+        keys = []
+        io = StringIO.StringIO(self.file.read())
+        reader = csv.reader(io, delimiter=',', quotechar='"', dialect=csv.excel_tab)
+        for row in reader:
+            if not keys:
+                keys = [x.strip() for x in row]
+                if keys != self.required_activation_headings:
+                    self.error = 'Mismatch header in Activate/Deactivate CSV'
+                    return
+            else:
+                for rawcontent in row:
+                    id = idnormalizer.normalize(self.universal_string_cleanup(rawcontent))
+                    try:
+                        state = api.content.get_state(obj=self.container[id])
+                        if workflow == 'on' and state != 'published':
+                            api.content.transition(obj=self.container[id], transition='publish')
+                        if workflow == 'off' and state == 'published':
+                            api.content.transition(obj=self.container[id], transition='retract')
+                        self.records_activated += 1
+                    except Exception as e:
+                       self.error = str(e)
+                       self.records_activated_failed.append(id)
+    
 
         
     def handle_add_update(self):

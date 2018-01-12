@@ -48,6 +48,14 @@
                 </div>
             </div>
             
+            <div class="help">
+                <h3>How to activate/deactivate records?</h3>
+                Activate/Deactivate CSV first row must contain exact words and data:
+                <div class="example">
+                    ${view/required_activation_headings}
+                </div>
+            </div>
+            
             <form method="post" enctype="multipart/form-data">
                 <div>
                     <select name="form.container.type">
@@ -58,12 +66,14 @@
                     </select>
                     <label for="file-upload" > Upload: </label>
                     <input type="file" name="form.file.upload" id="file-upload" />
-                    <img id="processing" src="${view/portal/absolute_url}/++resource++polklibrary.content.viewer/processing.gif" alt="Processing" />
                 </div>
                 
                 <div>
                     <input type="submit" name="form.file.submit" value="Add/Overlay Records" />
                     <input type="submit" name="form.file.delete" value="Delete Records" />
+                    <input type="submit" name="form.file.activate" value="Activate Records" />
+                    <input type="submit" name="form.file.deactivate" value="Deactivate Records" />
+                    <img id="processing" src="${view/portal/absolute_url}/++resource++polklibrary.content.viewer/processing.gif" alt="Processing" />
                 </div>
                 
             </form>
@@ -76,6 +86,8 @@
                 <span>~$ Overlay Fails: ${view/records_updated_failed}</span>
                 <span>~$ Deletions: ${view/records_deleted}</span>
                 <span>~$ Deletion Fails: ${view/records_deleted_failed}</span>
+                <span>~$ Activations/Deactivations: ${view/records_activated}</span>
+                <span>~$ Activations/Deactivations Fails: ${view/records_activated_failed}</span>
             </div>
             
             
