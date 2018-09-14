@@ -14,6 +14,8 @@ logger = logging.getLogger("Plone")
 
 class ThumbnailProcess(BrowserView):
 
+    logger_on = False
+
     def __call__(self):
         loginfo = ''
         alsoProvides(self.request, IDisableCSRFProtection)
@@ -82,8 +84,11 @@ class ThumbnailProcess(BrowserView):
             # Reindex catalog    
             with api.env.adopt_roles(roles=['Manager']):
                 obj.reindexObject()
-                
-        logger.info(loginfo)
+        
+        if self.logger_on:
+            logger.info(loginfo)
+            logger.info(error_msg)
+            
         return 'Processed Thumbnail: ' + title + ' Remaining: ' + str((len(brains)-1)) + '  INFO: ' + error_msg
 
         
