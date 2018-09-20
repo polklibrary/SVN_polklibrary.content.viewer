@@ -32,7 +32,7 @@
                      title="Share this collection" 
                      src="++resource++polklibrary.content.viewer/share.png" 
                      alt="Share" />
-                 <a class="pat-csv option-manager" href="${view/request/URL}?${view/request/QUERY_STRING}&csv=1">
+                 <a tal:condition="view/has_editor_permission" class="pat-csv option-manager" href="${view/request/URL}?${view/request/QUERY_STRING}&csv=1">
                      <img 
                          title="Download CSV" 
                          src="++resource++polklibrary.content.viewer/file.png" 

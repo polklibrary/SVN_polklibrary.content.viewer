@@ -391,6 +391,10 @@ class CollectionView(BrowserView):
             return BrainsToCSV(self.get_collection().items)
         return self.template()
         
+    def has_editor_permission(self):
+        membership = api.portal.get_tool('portal_membership')
+        return bool(membership.checkPermission('Portlets: Manage portlets', self.context))
+        
     def get_collection(self):
         start = int(self.request.form.get("start", 0))
         limit = int(self.request.form.get("limit", self.context.limit))
