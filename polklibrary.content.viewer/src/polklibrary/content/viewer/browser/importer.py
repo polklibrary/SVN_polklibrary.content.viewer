@@ -5,7 +5,9 @@ from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from zope.component import getUtility, getMultiAdapter
 from zope.container.interfaces import INameChooser
 import csv, StringIO, re, ast, json
-import pprint, ftfy
+import pprint, ftfy, logging
+
+logger = logging.getLogger("Plone")
 
 
 def unicode_csv_reader(utf8_data, delimiter=',', quotechar='"', dialect=csv.excel):
@@ -163,6 +165,7 @@ class ImporterView(BrowserView):
                 entry = entry.decode('utf-8')
             return ftfy.fix_text(regex.sub(cleanup_replace, entry))
         except Exception as e:
+            logger.info("ERROR: " + str(e) + ' ' + entry
             print "ERROR: " + str(e) + ' ' + entry
             return regex.sub(cleanup_replace, entry)
     
