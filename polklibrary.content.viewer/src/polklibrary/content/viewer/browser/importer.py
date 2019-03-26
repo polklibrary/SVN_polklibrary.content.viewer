@@ -165,7 +165,7 @@ class ImporterView(BrowserView):
                 entry = entry.decode('utf-8')
             return ftfy.fix_text(regex.sub(cleanup_replace, entry))
         except Exception as e:
-            logger.info("ERROR: " + str(e) + ' ' + entry
+            logger.info("ERROR: " + str(e) + ' ' + entry)
             print "ERROR: " + str(e) + ' ' + entry
             return regex.sub(cleanup_replace, entry)
     
