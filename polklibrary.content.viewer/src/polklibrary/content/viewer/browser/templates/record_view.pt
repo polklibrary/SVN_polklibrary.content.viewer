@@ -14,6 +14,25 @@
 	<metal:block fill-slot="javascript_head_slot">
         <script type="text/javascript" src="${view/portal/absolute_url}/++resource++polklibrary.content.viewer/jquery.mobile.custom.min.js"></script>
         <script type="text/javascript" src="${view/portal/absolute_url}/++resource++polklibrary.content.viewer/film.js"></script>
+        <script type="text/javascript">
+            // KANOPY HOT FIX ==================================
+            $(document).ready(function(){
+                var IframeOriginalSrc = $('iframe').attr('src');
+                if (IframeOriginalSrc.indexOf('kanopy') > -1){
+                    var HotFixThread = setInterval(function(){
+                    
+                        var ImageSrc = $('iframe').attr('src');
+                        if (ImageSrc.indexOf('uwosh-kanopy-com.www.remote.uwosh.edu/embed/') > -1){
+                            ImageSrc = ImageSrc.replace('uwosh-kanopy-com.www.remote.uwosh.edu/embed/', 'uwosh.kanopy.com/embed/');
+                            $('iframe').attr('src', ImageSrc);
+                        }
+                        else {
+                            clearInterval(HotFixThread);
+                        }
+                    });
+                }
+            });
+        </script>
 	</metal:block>
     
 	<metal:block fill-slot="style_slot">
