@@ -48,7 +48,7 @@ setup(
         'z3c.jbot',
         'plone.formwidget.autocomplete',
         'plone.app.vocabularies',
-        'requests==2.9.1',
+        'requests==2.20.0',
         'BeautifulSoup==3.2.1',
         'ftfy==4.4.3',  # must be run by ./pip install ftfy==4.4.3
     ],
