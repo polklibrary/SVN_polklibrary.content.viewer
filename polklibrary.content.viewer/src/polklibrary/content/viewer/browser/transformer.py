@@ -28,7 +28,7 @@ class TransformerView(BrowserView):
     def __call__(self):
         self.file = self.request.get('form.file.upload', None)
         if self.file:
-            new_filename = self.file.filename.replace('mrc','') + '.csv'
+            new_filename = self.file.filename.replace('.mrc','') + '.csv'
             if self.request.get('form.file.allcsv', None):
                 csv_data = self.transform_marc_to_csv(False)
                 self.request.response.setHeader("Content-type", "application/csv")
