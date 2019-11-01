@@ -28,7 +28,7 @@
 	<metal:content-core fill-slot="content-core">
 
         <div id="importer">
-            <h2><a href="${view/portal/absolute_url}">Import/Batch Tools</a></h2>
+            <h2><a href="${view/portal/absolute_url}">Utility: Import CSV Files</a></h2>
             
             <div id="error" tal:condition="view/error">ERROR:  ${view/error} </div>
         

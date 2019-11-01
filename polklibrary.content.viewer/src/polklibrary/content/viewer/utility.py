@@ -34,7 +34,7 @@ def ResourceEnhancer(id, title):
         
     elif KANOPY_TARGET in id.lower():
         data['name'] = KANOPY_NAME
-        data['base_url'] = 'https://www.remote.uwosh.edu/login?url=https://uwosh.kanopy.com/embed/' + data['id']
+        data['base_url'] = 'https://uwosh.kanopy.com/embed/' + data['id']
         data['embed'] = '<iframe allow="encrypted-media;" src="https://uwosh.kanopy.com/embed/' + data['id'] + '" frameborder="0" allowfullscreen webkitallowfullscreen mozallowfullscreen scrolling="no"></iframe>'
         
     elif FILMSONDEMAND_TARGET in id.lower():

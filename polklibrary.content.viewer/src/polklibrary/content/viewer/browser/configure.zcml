@@ -23,6 +23,13 @@
         
     <browser:page
         for="Products.CMFCore.interfaces.ISiteRoot"
+        name="transformer"
+        class=".transformer.TransformerView"
+        permission="zope2.View"
+        />
+        
+    <browser:page
+        for="Products.CMFCore.interfaces.ISiteRoot"
         name="importer"
         class=".importer.ImporterView"
         permission="zope2.View"
