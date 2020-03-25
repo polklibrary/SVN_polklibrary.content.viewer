@@ -244,7 +244,6 @@ class ImporterView(BrowserView):
                     id = idnormalizer.normalize(self.universal_string_cleanup(rawcontent))
                     try:
                         api.content.delete(self.container[id])
-                        
                         self.records_deleted += 1
                     except Exception as e:
                        self.error = str(e)

@@ -426,6 +426,7 @@ class ShareView(CollectionView):
     template = ViewPageTemplateFile("templates/share.pt")
     
     def __call__(self):
+        self.request.response.setHeader('X-Frame-Options', 'ALLOWALL')
         return self.template()
         
     def has_editor_permission(self):
