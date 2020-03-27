@@ -60,8 +60,9 @@
                 <div class="arr-left"></div>
             </div>
             <div class="scrollbox" tal:attributes="data-items python:len(container.items)">
+                <!-- removed class .pat-overlay -->
                 <a  tal:repeat="item container/items" 
-                    class="item ${item/content_type} pat-overlay"
+                    class="item ${item/content_type}"
                     data-overlay-title="${item/Title}"
                     data-overlay-description=" ${item/Description}"
                     data-overlay-runtime="${item/runtime}"

@@ -41,6 +41,12 @@ class RecordView(BrowserView):
         
             
         self.enhanced_data = ResourceEnhancer(self.context.id,self.context.title)
+        if self.context.direct_url:
+            self.enhanced_data['base_url'] = self.context.direct_url
+        if self.context.embed_code and len(self.context.embed_code) > 10:
+            self.enhanced_data['embed'] = self.context.embed_code
+        self.enhanced_data['disable_embed'] = self.context.disable_embed == True or self.context.disable_embed == None
+        
         self.request.response.setHeader('Cache-Control', 'no-cache, no-store')
         return self.template()
 

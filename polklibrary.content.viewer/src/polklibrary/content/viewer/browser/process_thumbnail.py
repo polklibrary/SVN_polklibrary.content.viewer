@@ -6,9 +6,9 @@ from zope.interface import alsoProvides
 from plone.namedfile import NamedBlobImage
 import requests, re, json
 
-from polklibrary.content.viewer.utility import ResourceEnhancer, ALEXANDER_STREET_NAME, KANOPY_NAME, FILMSONDEMAND_NAME
+from polklibrary.content.viewer.utility import ResourceEnhancer, ALEXANDER_STREET_NAME, KANOPY_NAME, FILMSONDEMAND_NAME, SWANK_NAME
 from BeautifulSoup import BeautifulSoup
-import logging,transaction
+import logging,transaction,re
 
 logger = logging.getLogger("Plone")
 
@@ -52,6 +52,8 @@ class ThumbnailProcess(BrowserView):
                         thumburl = self.get_kanopy_thumbnail_url(html)
                     elif enchanced_data['name'] == FILMSONDEMAND_NAME:
                         thumburl = self.get_fod_thumbnail_url(html)
+                    elif enchanced_data['name'] == SWANK_NAME:
+                        thumburl = self.get_swank_thumbnail_url(html)
                         
                     loginfo += " -- Thumbnail: " + thumburl
                     #return; # stop execution for testing
@@ -115,6 +117,12 @@ class ThumbnailProcess(BrowserView):
             except Exception as e:
                 print "ERROR: " + str(e)
         return ''
+                
+    def get_swank_thumbnail_url(self, html):
+        print "SWANK PROCESS" #class="embed-responsive embed-responsive-16by9 applauncher-blur"
+        
+        return ''
+
         
         
     def get_alexander_thumbnail_url(self, html):

@@ -10,11 +10,13 @@ import re, time, ftfy, csv, unicodecsv
 ALEXANDER_STREET_NAME = 'Alexander Street'
 KANOPY_NAME = 'Kanopy'
 FILMSONDEMAND_NAME = 'Films on Demand'
+SWANK_NAME = 'Swank'
 ALMA_NAME = 'Catalog'
 
 ALEXANDER_STREET_TARGET = 'asp'
 KANOPY_TARGET = 'kan'
 FILMSONDEMAND_TARGET = 'fod'
+SWANK_TARGET = 'swa'
 ALMA_TARGET = 'uwi'
 
 def ResourceEnhancer(id, title):
@@ -42,6 +44,11 @@ def ResourceEnhancer(id, title):
         data['base_url'] = 'https://www.remote.uwosh.edu/login?url=http://fod.infobase.com/PortalPlaylists.aspx?wID=102638&xtid=' + data['id']
         data['embed'] = '<iframe frameborder="0" scrolling="no" src="https://www.remote.uwosh.edu/login?url=https://fod.infobase.com/OnDemandEmbed.aspx?token=' + data['id'] + '&wID=102638&plt=FOD&loid=0&w={WIDTH}&h={HEIGHT}&fWidth={WIDTH}&fHeight={HEIGHT}" allowfullscreen >&nbsp;</iframe>'
             
+    elif SWANK_TARGET in id.lower():
+        data['name'] = SWANK_NAME
+        data['base_url'] = 'https://digitalcampus-swankmp-net.www.remote.uwosh.edu/uwo280545/#/play/' + data['id'] + '?watch=1'
+        data['embed'] = ''
+        
     elif ALMA_TARGET in id.lower():
         data['name'] = ALMA_NAME
         data['base_url'] = 'https://uw-primo.hosted.exlibrisgroup.com/primo-explore/fulldisplay?docid=' + data['id'] + '&context=L&vid=OSH&search_scope=OSH_ALL&tab=default_tab&lang=en_US'
@@ -51,7 +58,9 @@ def ResourceEnhancer(id, title):
     
         
 def CleanID(id):
-    if ALEXANDER_STREET_TARGET in id.lower():
+    if SWANK_TARGET in id.lower():
+        return id.replace('swa','') # NOTE: it looks base64, so w should not be possible
+    elif ALEXANDER_STREET_TARGET in id.lower():
         return re.sub("\D", "", id)
     elif KANOPY_TARGET in id.lower():
         id = id.split('-').pop()

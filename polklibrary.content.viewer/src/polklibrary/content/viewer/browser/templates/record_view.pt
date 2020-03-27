@@ -52,22 +52,17 @@
                 <div class="col-60">
                     <div class="column-outer">
                     
-                        <div class="pat-player" 
-                             tal:content="structure view/enhanced_data/embed">
+                        <div class="pat-player" tal:condition="not: view/enhanced_data/disable_embed"
+                            tal:content="structure view/enhanced_data/embed">
                         </div>
-                        <!-- <div class="pat-player-login"  -->
-                             <!-- tal:condition="python: not view.is_oncampus()"> -->
-                            <!-- <img tal:condition="context/image" src="${context/absolute_url}/@@download/image/thumb.jpg" alt="Thumbnail" /> -->
-                            <!-- <img tal:condition="not: context/image" src="${context/image_url}" alt="Missing Thumbnail" /> -->
-                            <!-- <div>You are off campus. <br /> Please click here to view.</div> -->
-                        <!-- </div> -->
                         
-                        <a class="link" 
-                           href="${view/enhanced_data/base_url}"
-                           tal:condition="not: view/enhanced_data/embed">
-                            <img tal:condition="context/image" src="${context/absolute_url}/@@download/image/thumb.jpg" alt="Thumbnail" />
-                            <img tal:condition="not: context/image" src="${context/image_url}" alt="Missing Thumbnail" />
-                        </a>
+                        <div class="pat-player-link" tal:condition="view/enhanced_data/disable_embed">
+                            <a class="link" 
+                               href="${view/enhanced_data/base_url}"
+                               title="Click to play"
+                               style="background-image: url(${context/absolute_url}/++resource++polklibrary.content.viewer/play.png),url(${context/absolute_url}/@@download/image/thumb.jpg)">
+                            </a>
+                        </div>
                         <div class="clear"></div>
                         
                         <div class="add-to-list logged-in-visible">

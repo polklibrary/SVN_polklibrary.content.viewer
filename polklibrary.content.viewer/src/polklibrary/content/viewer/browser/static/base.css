@@ -173,6 +173,29 @@
     top: 0px;
 }  
 
+.record .pat-player-link {
+    background-color: #333;
+    border: 1px solid #888;
+    height: 400px;
+    position: relative;
+    max-width: 700px;
+    width: 100%;
+}
+
+.record .pat-player-link a {
+    background-color: #333;
+    background-image: url(++resource++polklibrary.content.viewer/play.png),url(++resource++polklibrary.content.viewer/playerloading.png);
+    background-size: 25%, contain;
+    background-position: center center, center center;
+    background-repeat: no-repeat, no-repeat;
+    display: block;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+}
+
 .record .link {
     margin: 10px 0px;
 }

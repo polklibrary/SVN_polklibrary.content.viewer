@@ -21,6 +21,11 @@ content_types = SimpleVocabulary([
 ])
 
 
+disable_embed_opts = SimpleVocabulary([
+    SimpleTerm(value=u'yes', title=u'Yes'),
+    SimpleTerm(value=u'no', title=u'No'),
+])
+
 @provider(IFormFieldProvider)
 class IContentRecord(model.Schema):
 
@@ -62,6 +67,30 @@ class IContentRecord(model.Schema):
             required=False,
         )  
         
+    direct_url = schema.TextLine(
+            title=u"Direct URL (Override)",
+            required=False,
+        )  
+        
+    embed_code = schema.Text(
+            title=u"Embed Code (Override)",
+            required=False,
+        )  
+        
+    # disable_embed = schema.Choice(
+            # title=u"Disable Embed",
+            # description=u"This will make the embed window a link.",
+            # source=disable_embed_opts,
+            # required=False,
+            # default=u'no',
+            # missing_value=u'no',
+        # )
+    disable_embed = schema.Bool(
+            title=u"Disable Embed",
+            description=u"This will make the embed window a link.",
+            required=False,
+            default=False
+        )
         
     # --- Categorization FieldSet ---
     model.fieldset(
@@ -171,6 +200,7 @@ class IContentRecord(model.Schema):
     
     image_url = schema.TextLine(
             title=u"Image URL",
+            description=u"Looks like: /@@download/image/NAME_OF_IMAGE_YOU_JUST_UPLOADED.jpg",
             required=False,
         )
         
