@@ -50,7 +50,10 @@ setup(
         'plone.app.vocabularies',
         'requests==2.9.1',
         'BeautifulSoup==3.2.1',
+        'pymarc==3.2.0',
+        'geotext==0.4.0',
         'ftfy==4.4.3',  # must be run by ./pip install ftfy==4.4.3
+        'unicodecsv==0.14.1',
     ],
     extras_require={
         'test': [
