@@ -20,8 +20,8 @@
         />
     
     <utility
-        name="polklibrary.content.viewer.vocabularies.SubjectHeadingVocabularyFactory"
-        component="polklibrary.content.viewer.vocabularies.SubjectHeadingVocabularyFactory"
+        name="polklibrary.content.viewer.vocabularies.SubjectGroupVocabularyFactory"
+        component="polklibrary.content.viewer.vocabularies.SubjectGroupVocabularyFactory"
         provides="zope.schema.interfaces.IVocabularyFactory"
         />
 

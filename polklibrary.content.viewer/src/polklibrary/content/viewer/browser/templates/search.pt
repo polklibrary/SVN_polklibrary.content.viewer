@@ -55,12 +55,12 @@
                 </h2>
             
                 <a  tal:repeat="item container/items" 
-                    class="item ${item/content_type} pat-overlay"
+                    class="item ${item/format_type} pat-overlay"
                     data-overlay-title="${item/Title}"
                     data-overlay-description=" ${item/Description}"
                     data-overlay-runtime="${item/runtime}"
                     href="${item/getURL}" 
-                    style="background-image: url(${item/getURL}/++resource++polklibrary.content.viewer/${item/content_type}.png), url(${item/getURL}/${item/image_url});"
+                    style="background-image: url(${item/getURL}/++resource++polklibrary.content.viewer/${item/format_type}.png), url(${item/getURL}/${item/image_url});"
                 >
                     <div class="add-to-list suppress-add-to-list">
                         <span class="pat-film-list" data-id="${item/getId}" />

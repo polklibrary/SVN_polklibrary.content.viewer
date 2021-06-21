@@ -62,13 +62,13 @@
             <div class="scrollbox" tal:attributes="data-items python:len(container.items)">
                 <!-- removed class .pat-overlay -->
                 <a  tal:repeat="item container/items" 
-                    class="item ${item/content_type}"
+                    class="item ${item/format_type}"
                     data-overlay-title="${item/Title}"
                     data-overlay-description=" ${item/Description}"
                     data-overlay-runtime="${item/runtime}"
                     href="${item/getURL}" 
                     target="_parent"
-                    style="background-image: url(${item/getURL}/++resource++polklibrary.content.viewer/${item/content_type}.png), url(${item/getURL}/${item/image_url});"
+                    style="background-image: url(${item/getURL}/++resource++polklibrary.content.viewer/${item/format_type}.png), url(${item/getURL}/${item/image_url});"
                 >    
                     <div class="title hide">
                         ${item/Title}

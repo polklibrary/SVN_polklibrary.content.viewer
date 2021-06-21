@@ -20,6 +20,7 @@ src/polklibrary/content/__init__.py
 src/polklibrary/content/viewer/__init__.py
 src/polklibrary/content/viewer/configure.zcml
 src/polklibrary/content/viewer/interfaces.py
+src/polklibrary/content/viewer/marc_utility.py
 src/polklibrary/content/viewer/setuphandlers.py
 src/polklibrary/content/viewer/testing.py
 src/polklibrary/content/viewer/unicodecsv.py
@@ -34,6 +35,7 @@ src/polklibrary/content/viewer/browser/importer.py
 src/polklibrary/content/viewer/browser/process_thumbnail.py
 src/polklibrary/content/viewer/browser/record.py
 src/polklibrary/content/viewer/browser/search.py
+src/polklibrary/content/viewer/browser/transformer.py
 src/polklibrary/content/viewer/browser/ws_add_to_list.py
 src/polklibrary/content/viewer/browser/ws_get_browse_list.py
 src/polklibrary/content/viewer/browser/overrides/.gitkeep
@@ -54,6 +56,7 @@ src/polklibrary/content/viewer/browser/static/like.png
 src/polklibrary/content/viewer/browser/static/link.png
 src/polklibrary/content/viewer/browser/static/loading.png
 src/polklibrary/content/viewer/browser/static/missing-thumb.png
+src/polklibrary/content/viewer/browser/static/play.png
 src/polklibrary/content/viewer/browser/static/playerloading.png
 src/polklibrary/content/viewer/browser/static/processing.gif
 src/polklibrary/content/viewer/browser/static/remove.png
@@ -68,6 +71,7 @@ src/polklibrary/content/viewer/browser/templates/importer.pt
 src/polklibrary/content/viewer/browser/templates/record_view.pt
 src/polklibrary/content/viewer/browser/templates/search.pt
 src/polklibrary/content/viewer/browser/templates/share.pt
+src/polklibrary/content/viewer/browser/templates/transformer.pt
 src/polklibrary/content/viewer/locales/polklibrary.content.viewer.pot
 src/polklibrary/content/viewer/locales/update.sh
 src/polklibrary/content/viewer/models/__init__.py
@@ -82,7 +86,6 @@ src/polklibrary/content/viewer/profiles/default/metadata.xml
 src/polklibrary/content/viewer/profiles/default/polklibrarycontentviewer_default.txt
 src/polklibrary/content/viewer/profiles/default/types.xml
 src/polklibrary/content/viewer/profiles/default/types/polklibrary.content.viewer.models.collection.xml
-src/polklibrary/content/viewer/profiles/default/types/polklibrary.content.viewer.models.content.xml
 src/polklibrary/content/viewer/profiles/default/types/polklibrary.content.viewer.models.contentrecord.xml
 src/polklibrary/content/viewer/profiles/default/types/polklibrary.content.viewer.models.group_list.xml
 src/polklibrary/content/viewer/profiles/default/types/polklibrary.content.viewer.models.tag_cache.xml

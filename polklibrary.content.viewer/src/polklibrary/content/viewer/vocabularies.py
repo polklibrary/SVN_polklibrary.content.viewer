@@ -9,11 +9,11 @@ from zope.schema.vocabulary import SimpleVocabulary, SimpleTerm
 from zope.site.hooks import getSite
 from Products.CMFPlone.utils import safe_unicode
 from binascii import b2a_qp
-from plone.app.content.browser.vocabulary import _permissions
+from plone.app.content.browser.vocabulary import _permissions, PERMISSIONS
 
 
 def safe_encode(value):
-    if isinstance(value, unicode):
+    if isinstance(value, str):
         # no need to use portal encoding for transitional encoding from
         # unicode to ascii. utf-8 should be fine.
         value = value.encode('utf-8')
@@ -107,19 +107,19 @@ class KeywordsVocabulary(object):
         
 # Set all factory hooks and permissions
 SeriesTitleVocabularyFactory = KeywordsVocabulary('series_title')
-_permissions['polklibrary.content.viewer.vocabularies.SeriesTitleVocabularyFactory'] = 'View'
+PERMISSIONS['polklibrary.content.viewer.vocabularies.SeriesTitleVocabularyFactory'] = 'View'
 
-SubjectHeadingVocabularyFactory = KeywordsVocabulary('subject_heading')
-_permissions['polklibrary.content.viewer.vocabularies.SubjectHeadingVocabularyFactory'] = 'View'
+SubjectGroupVocabularyFactory = KeywordsVocabulary('subject_group')
+PERMISSIONS['polklibrary.content.viewer.vocabularies.SubjectGroupVocabularyFactory'] = 'View'
 
 AssociatedEntityVocabularyFactory = KeywordsVocabulary('associated_entity')
-_permissions['polklibrary.content.viewer.vocabularies.AssociatedEntityVocabularyFactory'] = 'View'
+PERMISSIONS['polklibrary.content.viewer.vocabularies.AssociatedEntityVocabularyFactory'] = 'View'
 
 GeographyVocabularyFactory = KeywordsVocabulary('geography')
-_permissions['polklibrary.content.viewer.vocabularies.GeographyVocabularyFactory'] = 'View'
+PERMISSIONS['polklibrary.content.viewer.vocabularies.GeographyVocabularyFactory'] = 'View'
 
 GenreVocabularyFactory = KeywordsVocabulary('genre')
-_permissions['polklibrary.content.viewer.vocabularies.GenreVocabularyFactory'] = 'View'
+PERMISSIONS['polklibrary.content.viewer.vocabularies.GenreVocabularyFactory'] = 'View'
 
 
 

@@ -4,11 +4,6 @@
       metal:use-macro="here/main_template/macros/master"
       i18n:domain="plone"
 	  lang="en">
-<head>
-    <style>
-         
-    </style>
-</head>
 <body>
 
 	<metal:block fill-slot="javascript_head_slot">
@@ -110,11 +105,11 @@
                     </tal:block>
                     
                     
-                    <tal:block condition="context/subject_heading">
+                    <tal:block condition="context/subject_group">
                     <h4>Subjects</h4>
                     <ul>
-                        <li class="caps" tal:repeat="item context/subject_heading">
-                            <a href="${view/portal/absolute_url}/browse?subject_heading=${item}">${item} (<span tal:replace="python: view.get_totals('subject_heading', item)" />)</a>
+                        <li class="caps" tal:repeat="item context/subject_group">
+                            <a href="${view/portal/absolute_url}/browse?subject_group=${item}">${item} (<span tal:replace="python: view.get_totals('subject_group', item)" />)</a>
                         </li>
                     </ul>
                     </tal:block>
@@ -194,12 +189,12 @@
                         </div>
                         <div class="scrollbox" tal:attributes="data-items python:len(container.items)">
                             <a  tal:repeat="item container/items" 
-                                class="item ${item/content_type} pat-overlay"
+                                class="item ${item/format_type} pat-overlay"
                                 data-overlay-title="${item/Title}"
                                 data-overlay-description=" ${item/Description}"
                                 data-overlay-runtime="${item/runtime}"
                                 href="${item/getURL}" 
-                                style="background-image: url(${item/getURL}/++resource++polklibrary.content.viewer/${item/content_type}.png), url(${item/getURL}/${item/image_url});"
+                                style="background-image: url(${item/getURL}/++resource++polklibrary.content.viewer/${item/format_type}.png), url(${item/getURL}/${item/image_url});"
                             >    
                                 <div class="add-to-list suppress-add-to-list">
                                     <span class="pat-film-list" data-id="${item/getId}" />

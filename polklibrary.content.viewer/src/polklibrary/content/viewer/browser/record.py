@@ -81,23 +81,27 @@ class RecordView(BrowserView):
         elif 'HTTP_HOST' in self.request.environ:
             ip = self.request.environ['REMOTE_ADDR'] # Non-virtualhost
         ipl = ip.split(',')
+        
+        print("IP: " + ipl[0])
         return ipl[0].strip().startswith(ip_restriction) or ipl[0].strip().startswith(dev_restriction)
         
     def get_related(self):
-        type = 'subject_heading'
-        subject_headings = list(self.context.subject_heading)
+        type = 'subject_group'
+        subject_groups = []
+        if self.context.subject_group:
+            subject_groups = list(self.context.subject_group)
         random.seed(datetime.datetime.today().day)
-        random.shuffle(subject_headings)
-        subject_heading = '|'.join(subject_headings[:2])
+        random.shuffle(subject_groups)
+        subject_group = '|'.join(subject_groups[:2])
         series_title = '|'.join(self.context.series_title)
         data = {
             'series_title' : series_title,
-            'subject_heading' : subject_heading,
+            'subject_group' : subject_group,
         }
         
-        suburl = 'subject_heading=' + subject_heading + '&series_title=' + series_title
+        suburl = 'subject_group=' + subject_group + '&series_title=' + series_title
         related = RelatedContent("Similar Films", data, self.portal.absolute_url(), limit=15, sort_by='random', show_query=False)
-        related.items = filter(lambda x: x.getId != self.context.getId(), related.items)
+        related.items = list(filter(lambda x: x.getId != self.context.getId(), related.items))
         
         return suburl,related
         
@@ -107,7 +111,7 @@ class RecordView(BrowserView):
     def Totals(self): 
         data = {
             'series_title' : {},
-            'subject_heading' : {},
+            'subject_group' : {},
             'associated_entity' : {},
             'geography' : {},
             'genre' : {},

@@ -26,9 +26,9 @@ setup(
     classifiers=[
         "Environment :: Web Environment",
         "Framework :: Plone",
-        "Framework :: Plone :: 5.0",
+        "Framework :: Plone :: 5.2",
         "Programming Language :: Python",
-        "Programming Language :: Python :: 2.7",
+        "Programming Language :: Python :: 3.7",
         "Operating System :: OS Independent",
         "License :: OSI Approved :: GNU General Public License v2 (GPLv2)",
     ],
@@ -43,21 +43,29 @@ setup(
     include_package_data=True,
     zip_safe=False,
     install_requires=[
-        'plone.api',
         'setuptools',
+        # -*- Extra requirements: -*-
         'z3c.jbot',
+        'plone.api>=1.8.4',
+        'plone.restapi',
+        'plone.app.dexterity',
+        
         'plone.formwidget.autocomplete',
         'plone.app.vocabularies',
-        'requests==2.9.1',
-        'BeautifulSoup==3.2.1',
-        'pymarc==3.2.0',
+        'requests==2.22.0',
+        'beautifulsoup4==4.8.0',
+        'pymarc==4.0.0',
         'geotext==0.4.0',
-        'ftfy==4.4.3',  # must be run by ./pip install ftfy==4.4.3
+        'ftfy==5.8',  # must be run by ./pip install ftfy==4.4.3
         'unicodecsv==0.14.1',
     ],
     extras_require={
         'test': [
             'plone.app.testing',
+            # Plone KGS does not use this version, because it would break
+            # Remove if your package shall be part of coredev.
+            # plone_coredev tests as of 2016-04-01.
+            'plone.testing>=5.0.0',
             'plone.app.contenttypes',
             'plone.app.robotframework[debug]',
         ],

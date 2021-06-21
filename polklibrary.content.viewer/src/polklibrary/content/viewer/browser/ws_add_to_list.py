@@ -26,9 +26,9 @@ class WSView(BrowserView):
         user = api.user.get_current()
         id = self.request.form.get('id','')
         type = self.request.form.get('type','')
-        films = user.saved_films
                 
         try:
+            films = user.saved_films
             if user:
                 id = idnormalizer.normalize(id) + '|'
                 if type == 'add' and id:
@@ -37,10 +37,10 @@ class WSView(BrowserView):
                 elif type == 'remove' and id:
                     user.saved_films = user.saved_films.replace(id, '')
                     transaction.commit()
+                self._data['data'] = user.saved_films
         except:
             self._data['status'] = 400
             
-        self._data['data'] = user.saved_films
 
     @property
     def portal(self):

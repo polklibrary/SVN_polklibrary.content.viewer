@@ -44,7 +44,7 @@ class IContentRecord(model.Schema):
             required=False,
         )
         
-    content_type = schema.Choice(
+    format_type = schema.Choice(
             title=u"Content Type",
             source=content_types,
             required=False,
@@ -96,7 +96,7 @@ class IContentRecord(model.Schema):
     model.fieldset(
         'categorizing',
         label=u'Categorization', 
-        fields=['series_title', 'subject_heading', 'associated_entity', 'geography', 'genre'],
+        fields=['series_title', 'subject_group', 'associated_entity', 'geography', 'genre'],
     )
     
     series_title = schema.Tuple(
@@ -117,22 +117,22 @@ class IContentRecord(model.Schema):
     directives.no_omit(IAddForm, 'series_title')
         
         
-    subject_heading = schema.Tuple(
+    subject_group = schema.Tuple(
         title=u'Subject Heading',
         required=False,
         value_type=schema.TextLine(),
         missing_value=(),
     )
     directives.widget(
-        'subject_heading',
+        'subject_group',
         AjaxSelectFieldWidget,
-        vocabulary='polklibrary.content.viewer.vocabularies.SubjectHeadingVocabularyFactory'
+        vocabulary='polklibrary.content.viewer.vocabularies.SubjectGroupVocabularyFactory'
     )
-    directives.read_permission(subject_heading='cmf.AddPortalContent')
-    directives.write_permission(subject_heading='cmf.AddPortalContent')
-    directives.omitted('subject_heading')
-    directives.no_omit(IEditForm, 'subject_heading')
-    directives.no_omit(IAddForm, 'subject_heading')
+    directives.read_permission(subject_group='cmf.AddPortalContent')
+    directives.write_permission(subject_group='cmf.AddPortalContent')
+    directives.omitted('subject_group')
+    directives.no_omit(IEditForm, 'subject_group')
+    directives.no_omit(IAddForm, 'subject_group')
     
     
     associated_entity = schema.Tuple(
@@ -202,6 +202,7 @@ class IContentRecord(model.Schema):
             title=u"Image URL",
             description=u"Looks like: /@@download/image/NAME_OF_IMAGE_YOU_JUST_UPLOADED.jpg",
             required=False,
+            default=u"",
         )
         
     image = NamedBlobImage(
@@ -240,17 +241,22 @@ def make_searchable(object, **kwargs):
     try:
         data += object.title.lower().split(' ')
         data += object.description.lower().split(' ')
-        data += [object.content_type.lower()]
+        data += [object.format_type.lower()]
         data += [object.creator.lower()]
         data += [object.date_of_publication.lower()]
-        data += [ x.lower() for x in list(object.series_title)]
-        data += [ x.lower() for x in list(object.subject_heading)]
-        data += [ x.lower() for x in list(object.associated_entity)]
-        data += [ x.lower() for x in list(object.geography)]
-        data += [ x.lower() for x in list(object.genre)]
+        if object.series_title:
+            data += [ x.lower() for x in object.series_title]
+        if object.subject_group:
+            data += [ x.lower() for x in object.subject_group]
+        if object.associated_entity:
+            data += [ x.lower() for x in object.associated_entity]
+        if object.geography:
+            data += [ x.lower() for x in object.geography]
+        if object.genre:
+            data += [ x.lower() for x in object.genre]
     except:
-        print "Error on reindex of content record"
-        return []
+        print("Error on reindex of content record... from models/contentrecord.py")
+        #return []
         
     return data
         

@@ -3,14 +3,15 @@
 
     <!-- Record Model -->
     <column value="query_logic"/>
-    <column value="content_type"/>
     <column value="runtime"/>
+    <column value="format_type"/>
     <column value="creator"/>
     <column value="date_of_publication"/>
     <column value="sort_direction"/>
     <column value="sort_type"/>
     <column value="by_id"/>
     
+	
     <index name="by_id" meta_type="FieldIndex">
         <indexed_attr value="by_id"/>
     </index> 
@@ -26,10 +27,10 @@
     </index> 
     <column value="series_title"/>
     
-    <index name="subject_heading" meta_type="KeywordIndex">
-        <indexed_attr value="subject_heading"/>
+    <index name="subject_group" meta_type="KeywordIndex">
+        <indexed_attr value="subject_group"/>
     </index> 
-    <column value="subject_heading"/>
+    <column value="subject_group"/>
     
     <index name="associated_entity" meta_type="KeywordIndex">
         <indexed_attr value="associated_entity"/>

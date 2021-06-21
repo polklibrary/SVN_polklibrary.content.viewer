@@ -4,7 +4,7 @@ from Products.Five import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from zope.component import getUtility, getMultiAdapter
 from zope.container.interfaces import INameChooser
-import csv, StringIO, re, ast, json
+import csv, io, re, ast, json
 import pprint, ftfy, logging
 
 logger = logging.getLogger("Plone")
@@ -71,8 +71,8 @@ class ImporterView(BrowserView):
         
     def handle_activations(self, workflow):
         keys = []
-        io = StringIO.StringIO(self.file.read())
-        reader = csv.reader(io, delimiter=',', quotechar='"', dialect=csv.excel_tab)
+        sio = io.StringIO(self.file.read().decode("utf-8"))
+        reader = csv.reader(sio, delimiter=',', quotechar='"', dialect=csv.excel_tab)
         for row in reader:
             if not keys:
                 keys = [x.strip() for x in row]
@@ -97,9 +97,9 @@ class ImporterView(BrowserView):
         
     def handle_add_update(self):
         keys = []
-        io = StringIO.StringIO(self.file.read())
-        #reader = csv.reader(io, delimiter=',', quotechar='"', dialect=csv.excel)
-        reader = unicode_csv_reader(io, delimiter=',', quotechar='"', dialect=csv.excel)
+        sio = io.StringIO(self.file.read().decode("utf-8"))
+        reader = csv.reader(sio, delimiter=',', quotechar='"', dialect=csv.excel)
+        #reader = unicode_csv_reader(sio, delimiter=',', quotechar='"', dialect=csv.excel)
         for row in reader:
             if not keys:
                 for key in row:
@@ -161,12 +161,12 @@ class ImporterView(BrowserView):
         entry = entry.strip()
         regex = re.compile(cleanup_regex)
         try:
-            if type(entry) != unicode:
-                entry = entry.decode('utf-8')
+            #if type(entry) != unicode:
+            #entry = entry.decode('utf-8')
             return ftfy.fix_text(regex.sub(cleanup_replace, entry))
         except Exception as e:
             logger.info("ERROR: " + str(e) + ' ' + entry)
-            print "ERROR: " + str(e) + ' ' + entry
+            print("ERROR: " + str(e) + ' ' + entry)
             return regex.sub(cleanup_replace, entry)
     
     def clean_empty(self, text):
@@ -191,7 +191,7 @@ class ImporterView(BrowserView):
                 obj.runtime=entry['runtime']
                 obj.series_title=entry['series_title']
                 obj.description=entry['summary']
-                obj.content_type=entry['content_type']
+                obj.format_type=entry['content_type']
                 obj.associated_entity=entry['associated_entity']
                 obj.geography=entry['geography']
                 obj.subject_heading=entry['subject']
@@ -215,11 +215,12 @@ class ImporterView(BrowserView):
                                    runtime=entry['runtime'], 
                                    series_title=entry['series_title'], 
                                    description=entry['summary'], 
-                                   content_type=entry['content_type'], 
+                                   format_type=entry['content_type'], 
                                    associated_entity=entry['associated_entity'],  
                                    geography=entry['geography'],  
                                    subject_heading=entry['subject'], 
                                    genre=entry['genre'], 
+                                   image_url="",
                 )
                 
                 self.records_created += 1
@@ -231,8 +232,8 @@ class ImporterView(BrowserView):
                
     def handle_delete(self):
         keys = [];
-        io = StringIO.StringIO(self.file.read())
-        reader = csv.reader(io, delimiter=',', quotechar='"', dialect=csv.excel_tab)
+        sio = io.StringIO(self.file.read().decode("utf-8"))
+        reader = csv.reader(sio, delimiter=',', quotechar='"', dialect=csv.excel_tab)
         for row in reader:
             if not keys:
                 keys = [x.strip() for x in row]

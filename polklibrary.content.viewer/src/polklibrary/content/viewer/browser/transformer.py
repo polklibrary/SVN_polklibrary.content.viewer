@@ -6,7 +6,7 @@ from zope.component import getUtility, getMultiAdapter
 from zope.container.interfaces import INameChooser
 from polklibrary.content.viewer.marc_utility import build_rec
 
-import StringIO, re, ast, json
+import io, re, ast, json
 import unicodecsv as csv
 import pprint, ftfy, logging
 
@@ -44,11 +44,13 @@ class TransformerView(BrowserView):
 
 
     def transform_marc_to_csv(self, id_only):
-        input_stream = StringIO.StringIO(self.file.read())
+        #input_stream = io.StringIO(self.file.read())
+        input_stream = io.StringIO(self.file.read().decode("utf-8"))
         subj, geo, topics = build_rec(input_stream)
         name = 'done.csv'
         #with open(name, mode='wb') as f:
-        outputstream = StringIO.StringIO(self.file.read())
+        #outputstream = io.StringIO(self.file.read())
+        outputstream = io.StringIO(self.file.read().decode("utf-8"))
         w = csv.writer(outputstream, encoding='utf-8')
         for row in subj:
             if len(row) > 0:

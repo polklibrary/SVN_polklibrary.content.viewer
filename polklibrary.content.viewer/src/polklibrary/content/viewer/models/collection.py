@@ -4,6 +4,8 @@ from plone.autoform.interfaces import IFormFieldProvider
 from plone.namedfile.field import NamedBlobImage
 from plone.supermodel import model
 
+from plone.indexer.decorator import indexer
+
 from z3c.form.interfaces import IAddForm
 from z3c.form.interfaces import IEditForm
 from zope import schema
@@ -53,7 +55,7 @@ class ICollection(model.Schema):
             required=False,
         )
 
-    content_type = schema.List(
+    format_type = schema.List(
             title=u"Restrict content types in this collection",
             required=False,
             value_type=schema.Choice(source=content_types),
@@ -75,13 +77,13 @@ class ICollection(model.Schema):
     model.fieldset(
         'query',
         label=u'Query', 
-        fields=['query_logic', 'by_id', 'series_title', 'subject_heading', 'associated_entity', 'geography', 'genre', 'sort_type', 'sort_direction'],
+        fields=['query_logic', 'by_id', 'series_title', 'subject_group', 'associated_entity', 'geography', 'genre', 'sort_type', 'sort_direction'],
     )
     
     query_logic = schema.TextLine(
             title=u"Query Logic",
-            description=u"Left to right logic, no parentheses allowed. Select OR or AND in subject_heading[OR|AND] to combine terms. Example: by_id[OR] OR series_title[OR] OR subject_heading[OR] OR associated_entity[OR] OR geography[OR] OR genre[OR]",
-            default=u"series_title[OR] OR subject_heading[OR] OR associated_entity[OR] OR geography[OR] OR genre[OR]",
+            description=u"Left to right logic, no parentheses allowed. Select OR or AND in subject_group[OR|AND] to combine terms. by_id has no operators.  Example: by_id OR series_title[OR] OR subject_group[OR] OR associated_entity[OR] OR geography[OR] OR genre[OR]",
+            default=u"series_title[OR] OR subject_group[OR] OR associated_entity[OR] OR geography[OR] OR genre[OR]",
             required=True,
         )
 
@@ -110,22 +112,22 @@ class ICollection(model.Schema):
     directives.no_omit(IAddForm, 'series_title')
     
     
-    subject_heading = schema.Tuple(
+    subject_group = schema.Tuple(
         title=u'Subject Heading',
         required=False,
         value_type=schema.TextLine(),
         missing_value=(),
     )
     directives.widget(
-        'subject_heading',
+        'subject_group',
         AjaxSelectFieldWidget,
         vocabulary='polklibrary.content.viewer.vocabularies.SubjectHeadingVocabularyFactory'
     )
-    directives.read_permission(subject_heading='cmf.AddPortalContent')
-    directives.write_permission(subject_heading='cmf.AddPortalContent')
-    directives.omitted('subject_heading')
-    directives.no_omit(IEditForm, 'subject_heading')
-    directives.no_omit(IAddForm, 'subject_heading')
+    directives.read_permission(subject_group='cmf.AddPortalContent')
+    directives.write_permission(subject_group='cmf.AddPortalContent')
+    directives.omitted('subject_group')
+    directives.no_omit(IEditForm, 'subject_group')
+    directives.no_omit(IAddForm, 'subject_group')
     
 
     associated_entity = schema.Tuple(
@@ -196,4 +198,5 @@ class ICollection(model.Schema):
             source=directional,
         )
         
-
+        
+        

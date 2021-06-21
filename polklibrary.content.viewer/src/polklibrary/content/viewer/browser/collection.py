@@ -13,9 +13,9 @@ class FakeCollection:
     def __init__(self, 
                  url, 
                  title, 
-                 query='series_title[OR] OR subject_heading[OR] OR associated_entity[OR] OR geography[OR] OR genre[OR]', 
+                 query='series_title[OR] OR subject_group[OR] OR associated_entity[OR] OR geography[OR] OR genre[OR]', 
                  series_title=(),
-                 subject_heading=(), 
+                 subject_group=(), 
                  associated_entity=(), 
                  geography=(), 
                  genre=(),
@@ -25,7 +25,7 @@ class FakeCollection:
         self.Title = title
         self.query_logic = query
         self.series_title = series_title
-        self.subject_heading = subject_heading
+        self.subject_group = subject_group
         self.associated_entity = associated_entity
         self.geography = geography
         self.genre = genre        
@@ -33,6 +33,19 @@ class FakeCollection:
         
     def absolute_url(self):
         return self.url
+        
+        
+    def __str__(self):
+        print('URL: ' + self.url)
+        print('Title: ' + self.Title)
+        print('Query: ' + self.query_logic)
+        print('series_title: ' + str(self.series_title))
+        print('subject_group: ' + str(self.subject_group))
+        print('associated_entity: ' + str(self.associated_entity))
+        print('geography: ' + str(self.geography))
+        print('genre: ' + str(self.genre))
+        print('by_id: ' + str(self.by_id))
+        return 'Fake Collection Obj'
         
 
 class CollectionObject:
@@ -68,21 +81,18 @@ def AdvancedCollectionQuery(collection, limit=10, start=0, sort_by='created', so
         catalog = api.portal.get_tool(name='portal_catalog')
                 
         results = None
-        if collection.by_id or collection.series_title or collection.subject_heading or collection.associated_entity or collection.geography or collection.genre: # IF SET, LIMIT RESULTS
-        
+        if collection.by_id or collection.series_title or collection.subject_group or collection.associated_entity or collection.geography or collection.genre: # IF SET, LIMIT RESULTS
+            
             query = re.sub( '\s+', ' ', collection.query_logic.lower()).strip()
-            byid_andor = 'or'
             series_andor = 'or'
             subject_andor = 'or'
             associated_entity_andor = 'or'
             geography_andor = 'or'
             genre_andor = 'or'
             
-            if 'by_id[and]' in query:
-                byid_andor = 'and'
             if 'series_title[and]' in query:
                 series_andor = 'and'
-            if 'subject_heading[and]' in query:
+            if 'subject_group[and]' in query:
                 subject_andor = 'and'
             if 'associated_entity[and]' in query:
                 associated_entity_andor = 'and'
@@ -90,17 +100,14 @@ def AdvancedCollectionQuery(collection, limit=10, start=0, sort_by='created', so
                 geography_andor = 'and'
             if 'genre[and]' in query:
                 genre_andor = 'and'
-                
-                
+           
+
             byid_brains = catalog.searchResults(
                 portal_type='polklibrary.content.viewer.models.contentrecord',
                 review_state='published',
-                id={
-                    "query":  text_to_tuple(collection.by_id),
-                    "operator" : 'or',
-                },
+                id = text_to_tuple(collection.by_id)
             )
-                
+                    
             series_title_brains = catalog.searchResults(
                 portal_type='polklibrary.content.viewer.models.contentrecord',
                 review_state='published',
@@ -110,11 +117,11 @@ def AdvancedCollectionQuery(collection, limit=10, start=0, sort_by='created', so
                 },
             )
             
-            subject_heading_brains = catalog.searchResults(
+            subject_group_brains = catalog.searchResults(
                 portal_type='polklibrary.content.viewer.models.contentrecord',
                 review_state='published',
-                subject_heading={
-                    "query": collection.subject_heading,
+                subject_group={
+                    "query": collection.subject_group,
                     "operator" : subject_andor,
                 },
             )
@@ -155,8 +162,8 @@ def AdvancedCollectionQuery(collection, limit=10, start=0, sort_by='created', so
                 results = byid_brains
             elif 'series_title' in query_parts[0]:
                 results = series_title_brains
-            elif 'subject_heading' in query_parts[0]:
-                results = subject_heading_brains
+            elif 'subject_group' in query_parts[0]:
+                results = subject_group_brains
             elif 'associated_entity' in query_parts[0]:
                 results = associated_entity_brains
             elif 'geography' in query_parts[0]:
@@ -179,8 +186,8 @@ def AdvancedCollectionQuery(collection, limit=10, start=0, sort_by='created', so
                         result = byid_brains
                     elif 'series_title' in cq:
                         result = series_title_brains
-                    elif 'subject_heading' in cq:
-                        result = subject_heading_brains
+                    elif 'subject_group' in cq:
+                        result = subject_group_brains
                     elif 'associated_entity' in cq:
                         result = associated_entity_brains
                     elif 'geography' in cq:
@@ -224,7 +231,7 @@ def AdvancedCollectionQuery(collection, limit=10, start=0, sort_by='created', so
         
         return CollectionObject(collection.Title, url, results[start:start+limit], len(results), start, limit)
     except Exception as e:
-        print "AdvancedCollectionQuery ERROR: " + str(e)
+        print("AdvancedCollectionQuery ERROR: " + str(e))
         
     return CollectionObject(collection.Title, collection.absolute_url(), [], 0, 0, 0) # catch all
 
@@ -262,13 +269,14 @@ def AndFilter(listone, listtwo):
 
 
 def RelatedContent(label, data, url, limit=10, start=0, sort_by='created', sort_direction='descending', show_query=True):
+    print("RELATED CONTENT")
     subject_query = ()
     associated_query = ()
     geography_query = ()
     genre_query = ()
     series_query = ()
 
-    subject_data = data.get('subject_heading', ())
+    subject_data = data.get('subject_group', ())
     associated_data = data.get('associated_entity', ())
     geography_data = data.get('geography', ())
     genre_data = data.get('genre', ())
@@ -291,16 +299,19 @@ def RelatedContent(label, data, url, limit=10, start=0, sort_by='created', sort_
         query = subject_query + associated_query + geography_query + genre_query + series_query
         title = label  + ': ' + ', '.join([t.capitalize() for t in query])
     
+    print ("MAKE FAKE COLLECTION")
+    
     fc = FakeCollection(
         url,
         title,
         series_title=series_query,
-        subject_heading=subject_query,
+        subject_group=subject_query,
         associated_entity=associated_query,
         geography=geography_query,
         genre=genre_query
     )
 
+    print(str(fc))
     return AdvancedCollectionQuery(fc, limit=limit, start=start, sort_by=sort_by, sort_direction=sort_direction)
 
     
