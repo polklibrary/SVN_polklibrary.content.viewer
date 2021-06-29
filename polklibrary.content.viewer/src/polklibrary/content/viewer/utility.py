@@ -79,7 +79,7 @@ def escape_reserved(text):
         
 def remove_non_ascii(text):
     if text and type(text) != unicode:
-        return text.decode('utf-8') #unidecode(text)
+        return text.decode('utf-8', errors='ignore') #unidecode(text)
     elif text:
         return text
     return u''
