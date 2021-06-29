@@ -34,6 +34,7 @@
         class=".importer.ImporterView"
         permission="cmf.ManagePortal"
         />
+
         
     <browser:page
         for="Products.CMFCore.interfaces.ISiteRoot"
