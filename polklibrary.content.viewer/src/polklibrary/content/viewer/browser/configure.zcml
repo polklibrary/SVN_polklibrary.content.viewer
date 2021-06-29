@@ -34,6 +34,13 @@
         class=".importer.ImporterView"
         permission="zope2.View"
         />
+                
+    <browser:page
+        for="Products.CMFCore.interfaces.ISiteRoot"
+        name="exporter"
+        class=".exporter.ExporterView"
+        permission="cmf.ManagePortal"
+        />
         
     <browser:page
         for="Products.CMFCore.interfaces.ISiteRoot"
