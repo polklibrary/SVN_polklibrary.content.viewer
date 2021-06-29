@@ -4,7 +4,9 @@ from plone.i18n.normalizer import idnormalizer
 from StringIO import StringIO
 from unidecode import unidecode
 #from polklibrary.content.viewer import unicodecsv
-import re, time, ftfy, csv, unicodecsv
+import re, time, ftfy, csv, unicodecsv, logging
+
+logger = logging.getLogger("Plone")
 
 # used elsewhere to target
 ALEXANDER_STREET_NAME = 'Alexander Street'
@@ -91,6 +93,7 @@ def to_unicode(text):
     return u''
 
 def BrainsToCSV(brains):
+    logger.info("BrainsToCSV: " + str(len(brains)))
     output = StringIO()
     
     writer = unicodecsv.writer(output, delimiter=',', quotechar='"', quoting=csv.QUOTE_ALL)
