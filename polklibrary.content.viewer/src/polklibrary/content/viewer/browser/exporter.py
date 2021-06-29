@@ -19,10 +19,12 @@ class ExporterView(BrowserView):
     def __call__(self):
         self.request.response.setHeader("Content-Disposition", "attachment;filename=export.csv")
         catalog = api.portal.get_tool(name='portal_catalog')
-        brains = catalog.searchResults(
-            portal_type='polklibrary.content.viewer.models.contentrecord',
-            review_state='published'
-        )
+        # brains = catalog.searchResults(
+            # portal_type='polklibrary.content.viewer.models.contentrecord',
+            # review_state='published'
+        # )
+        brains = api.content.find(portal_type='polklibrary.content.viewer.models.contentrecord', review_state='published')
+        
         return BrainsToCSV(brains)
 
 
