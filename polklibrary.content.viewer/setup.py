@@ -53,7 +53,7 @@ setup(
         'plone.formwidget.autocomplete',
         'plone.app.vocabularies',
         'requests==2.22.0',
-        'beautifulsoup4==4.8.0',
+        'beautifulsoup4==4.9.3',
         'pymarc==4.0.0',
         'geotext==0.4.0',
         'ftfy==5.8',  # must be run by ./pip install ftfy==4.4.3

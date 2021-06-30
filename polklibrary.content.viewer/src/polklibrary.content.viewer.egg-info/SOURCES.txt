@@ -86,6 +86,7 @@ src/polklibrary/content/viewer/profiles/default/metadata.xml
 src/polklibrary/content/viewer/profiles/default/polklibrarycontentviewer_default.txt
 src/polklibrary/content/viewer/profiles/default/types.xml
 src/polklibrary/content/viewer/profiles/default/types/polklibrary.content.viewer.models.collection.xml
+src/polklibrary/content/viewer/profiles/default/types/polklibrary.content.viewer.models.content.xml
 src/polklibrary/content/viewer/profiles/default/types/polklibrary.content.viewer.models.contentrecord.xml
 src/polklibrary/content/viewer/profiles/default/types/polklibrary.content.viewer.models.group_list.xml
 src/polklibrary/content/viewer/profiles/default/types/polklibrary.content.viewer.models.tag_cache.xml
