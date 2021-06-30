@@ -57,7 +57,7 @@ setup(
         'pymarc==4.0.0',
         'geotext==0.4.0',
         'ftfy==5.8',  # must be run by ./pip install ftfy==4.4.3
-        #'unicodecsv==0.14.1',
+        'unicodecsv==0.14.1',
     ],
     extras_require={
         'test': [
