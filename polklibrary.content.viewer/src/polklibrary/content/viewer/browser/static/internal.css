@@ -18,11 +18,13 @@
 }
 
 #importer form label {
-    color: white;
+    color: #333;
+    display: inline;
     margin-left: 20px;
 }
 #importer form input[type="file"] {
-    color: white;
+    color: #333;
+    display: inline;
 }
 
 #processing {
