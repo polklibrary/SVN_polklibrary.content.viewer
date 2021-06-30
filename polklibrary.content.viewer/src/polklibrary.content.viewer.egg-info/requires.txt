@@ -5,12 +5,11 @@ plone.restapi
 plone.app.dexterity
 plone.formwidget.autocomplete
 plone.app.vocabularies
-requests==2.22.0
-beautifulsoup4==4.8.0
+requests>=2.22.0
+beautifulsoup4>=4.8.0
 pymarc==4.0.0
 geotext==0.4.0
 ftfy==5.8
-unicodecsv==0.14.1
 
 [test]
 plone.app.testing

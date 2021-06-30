@@ -2,7 +2,7 @@ from plone import api
 from plone.memoize import ram
 from plone.i18n.normalizer import idnormalizer
 from unidecode import unidecode
-import re, time, ftfy, csv, unicodecsv, io
+import re, time, ftfy, csv, io
 
 # used elsewhere to target
 ALEXANDER_STREET_NAME = 'Alexander Street'
@@ -91,7 +91,7 @@ def to_unicode(text):
 def BrainsToCSV(brains):
     output = io.StringIO()
     
-    writer = unicodecsv.writer(output, delimiter=',', quotechar='"', quoting=csv.QUOTE_ALL)
+    writer = csv.writer(output, delimiter=',', quotechar='"', quoting=csv.QUOTE_ALL)
     
     #filmID,content_type,creator,title,date_of_publication,runtime,series_title,summary,associated_entity,geography,subject,genre
     writer.writerow([u'filmID',u'content_type',u'creator',u'title',u'date_of_publication',u'runtime',u'series_title',u'summary',u'associated_entity',u'geography',u'subject',u'genre'])

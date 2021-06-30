@@ -7,8 +7,7 @@ from zope.container.interfaces import INameChooser
 from polklibrary.content.viewer.marc_utility import build_rec
 
 import io, re, ast, json
-import unicodecsv as csv
-import pprint, ftfy, logging
+import pprint, ftfy, logging, csv
 
 logger = logging.getLogger("Plone")
 

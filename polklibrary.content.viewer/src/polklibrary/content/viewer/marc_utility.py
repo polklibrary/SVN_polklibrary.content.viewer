@@ -1,7 +1,6 @@
 from pymarc import MARCReader
 from geotext import GeoText
 import sys
-#import unicodecsv as csv
 import csv
 
 #file = sys.argv[1]
