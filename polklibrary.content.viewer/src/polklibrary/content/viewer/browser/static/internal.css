@@ -21,6 +21,7 @@
     color: #333;
     display: inline;
     margin-left: 20px;
+    vertical-align: middle;
 }
 #importer form input[type="file"] {
     color: #333;
