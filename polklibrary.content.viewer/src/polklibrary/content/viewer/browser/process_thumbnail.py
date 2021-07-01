@@ -41,6 +41,7 @@ class ThumbnailProcess(BrowserView):
                 title = obj.Title()
                 obj.image_url = '/++resource++polklibrary.content.viewer/missing-thumb.png'
                 
+                thumburl = ''
                 try:
                     # Get Thumbnail
                     if obj.image == None:
@@ -52,7 +53,6 @@ class ThumbnailProcess(BrowserView):
                         #req = requests.get(enchanced_data['base_url'], verify=False, timeout=15)
                         #html = req.text
                         
-                        thumburl = ''
                         if enchanced_data['name'] == ALEXANDER_STREET_NAME:
                             thumburl = self.get_alexander_thumbnail_url(enchanced_data)
                         elif enchanced_data['name'] == KANOPY_NAME:
@@ -68,7 +68,7 @@ class ThumbnailProcess(BrowserView):
                         #return; # stop execution for testing
                         
                         if thumburl:
-                            reqthumb = requests.get(thumburl, verify=False, timeout=15)
+                            reqthumb = requests.get(thumburl, verify=False, timeout=15, allow_redirects=True)
                             binary = reqthumb.content
                             loginfo += " -- BINARY: " + str(len(binary))
                             if len(binary) > 5000:
@@ -82,7 +82,7 @@ class ThumbnailProcess(BrowserView):
                                     
                             
                 except Exception as e:
-                    error_msg = '!! ERROR: ' + str(e) + ' - ' + brains[0].getPath()
+                    error_msg = '!! RETRIEVE ERROR: ' + str(e) + ' - ' + brains[0].getPath() + '   URL:' + thumburl
                  
                 try:
                     if brain.review_state != 'published' and obj.image != None:
@@ -90,7 +90,7 @@ class ThumbnailProcess(BrowserView):
                             api.content.transition(obj=obj, transition='publish')
                             
                 except Exception as e:
-                    error_msg = '!! ERROR: ' + str(e) + ' - ' + brains[0].getPath()
+                    error_msg = '!! PUBLISH ERROR: ' + str(e) + ' - ' + brains[0].getPath()  + '   URL:' + thumburl
                         
                 # Reindex catalog    
                 with api.env.adopt_roles(roles=['Manager']):
