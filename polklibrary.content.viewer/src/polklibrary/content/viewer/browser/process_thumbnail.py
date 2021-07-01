@@ -68,7 +68,13 @@ class ThumbnailProcess(BrowserView):
                         #return; # stop execution for testing
                         
                         if thumburl:
-                            reqthumb = requests.get(thumburl, verify=False, timeout=15, allow_redirects=True)
+                            headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.77 Safari/537.36'}
+
+                            reqthumb = requests.get(thumburl, headers=headers, timeout=15, allow_redirects=True)
+                            
+                            
+                            
+                            
                             binary = reqthumb.content
                             loginfo += " -- BINARY: " + str(len(binary))
                             if len(binary) > 5000:
