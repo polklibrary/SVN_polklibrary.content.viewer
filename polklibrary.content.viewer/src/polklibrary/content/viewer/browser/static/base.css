@@ -174,16 +174,18 @@
 }  
 
 .record .pat-player-link {
-    background-color: #333;
-    border: 1px solid #888;
+    background-color: #111;
+    border: 2px solid #444;
+    border-radius: 10px;
+    box-shadow: 0 0 5px 5px #000;
     height: 400px;
     position: relative;
-    max-width: 700px;
+    max-width: 600px;
     width: 100%;
 }
 
 .record .pat-player-link a {
-    background-color: #333;
+    background-color: #111;
     background-image: url(++resource++polklibrary.content.viewer/play.png),url(++resource++polklibrary.content.viewer/playerloading.png);
     background-size: 25%, contain;
     background-position: center center, center center;

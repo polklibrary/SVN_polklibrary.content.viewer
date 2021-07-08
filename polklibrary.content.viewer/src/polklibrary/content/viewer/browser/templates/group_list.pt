@@ -30,23 +30,26 @@
                     <div class="arr-left"></div>
                 </div>
                 <div class="scrollbox" tal:attributes="data-items python:len(container.items)">
-                    <a  tal:repeat="item container/items" 
-                        class="item ${item/format_type} pat-overlay pat-images"
-                        data-overlay-title="${item/Title}"
-                        data-overlay-description=" ${item/Description}"
-                        data-overlay-runtime="${item/runtime}"
-                        href="${item/getURL}" 
-                        data-style="background-image: url(${item/getURL}/++resource++polklibrary.content.viewer/${item/format_type}.png), url(${item/getURL}/${item/image_url});"
-                    >    
-                        
-                        <div class="add-to-list suppress-add-to-list">
-                            <span class="pat-film-list" data-id="${item/getId}" />
-                        </div>
-                        
-                        <div class="title">
-                            ${item/Title}
-                        </div>
-                    </a>
+                
+                    <tal:block tal:repeat="item container/items">
+                        <a tal:define="image_url python:view.get_direct_image(item)"
+                            class="item ${item/format_type} pat-overlay pat-images"
+                            data-overlay-title="${item/Title}"
+                            data-overlay-description=" ${item/Description}"
+                            data-overlay-runtime="${item/runtime}"
+                            href="${item/getURL}" 
+                            data-style="background-image: url(${item/getURL}/++resource++polklibrary.content.viewer/${item/format_type}.png), url(${image_url}), url('++resource++polklibrary.content.viewer/missing-thumb.png');"
+                        >       
+                            
+                            <div class="add-to-list suppress-add-to-list">
+                                <span class="pat-film-list" data-id="${item/getId}" />
+                            </div>
+                            
+                            <div class="title">
+                                ${item/Title}
+                            </div>
+                        </a>
+                    </tal:block>
                     
                     <a class="item" 
                        href="${container/url}" 

@@ -4,6 +4,7 @@ from Products.Five import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from zope.component import getUtility, getMultiAdapter
 from zope.container.interfaces import INameChooser
+from polklibrary.content.viewer.utility import CleanID
 import random, time, transaction
 
 from polklibrary.content.viewer.browser.collection import AdvancedCollectionQuery
@@ -37,6 +38,13 @@ class GroupList(BrowserView):
     
         return collections
         
+    def get_direct_image(self, item):
+        if item.id.startswith('fod'):
+            id = CleanID(item.id)
+            return 'https://fod.infobase.com/image/' + str(id)
+        if item.image_url == '' or '++resource++' in item.image_url:
+            return '++resource++polklibrary.content.viewer/missing-thumb.png'
+        return item.getURL() + item.image_url
         
     @property
     def portal(self):

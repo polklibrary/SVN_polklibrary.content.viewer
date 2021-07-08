@@ -15,7 +15,7 @@ class CacheView(BrowserView):
         if self.request.form.get('cache.rebuild', ''):
             data = {
                 'series_title' : {},
-                'subject_heading' : {},
+                'subject_group' : {},
                 'associated_entity' : {},
                 'geography' : {},
                 'genre' : {},

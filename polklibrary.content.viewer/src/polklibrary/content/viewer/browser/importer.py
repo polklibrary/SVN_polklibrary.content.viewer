@@ -29,10 +29,10 @@ class ImporterView(BrowserView):
                                     'runtime', 
                                     'series_title', 
                                     'summary', 
-                                    'content_type',
+                                    'format_type',
                                     'associated_entity', 
                                     'geography', 
-                                    'subject', 
+                                    'subject_group', 
                                     'genre']
                                     
     required_delete_headings  = ['filmID']  
@@ -130,14 +130,14 @@ class ImporterView(BrowserView):
         entry['date_of_publication'] = self.universal_string_cleanup(entry['date_of_publication'])
         entry['runtime'] = self.universal_string_cleanup(entry['runtime'])
         entry['summary'] = self.universal_string_cleanup(entry['summary'])
-        entry['content_type'] = self.universal_string_cleanup(entry['content_type'])
+        entry['format_type'] = self.universal_string_cleanup(entry['format_type'])
         
         entry['series_title'] = self.universal_list_to_tuple_cleanup(entry['series_title'], cleanup_regex=u'[\.]$')
         entry['associated_entity'] = self.universal_list_to_tuple_cleanup(entry['associated_entity'], cleanup_regex=u'[\.\,]$')
         entry['geography'] = self.universal_list_to_tuple_cleanup(entry['geography'], cleanup_regex=u'[\.]$')
         
         
-        entry['subject'] = self.universal_list_to_tuple_cleanup(entry['subject'], cleanup_regex=u'[\.]$')
+        entry['subject_group'] = self.universal_list_to_tuple_cleanup(entry['subject_group'], cleanup_regex=u'[\.]$')
         
         entry['genre'] = self.universal_list_to_tuple_cleanup(entry['genre'], cleanup_regex=u'[\.]$')
         
@@ -191,10 +191,10 @@ class ImporterView(BrowserView):
                 obj.runtime=entry['runtime']
                 obj.series_title=entry['series_title']
                 obj.description=entry['summary']
-                obj.format_type=entry['content_type']
+                obj.format_type=entry['format_type']
                 obj.associated_entity=entry['associated_entity']
                 obj.geography=entry['geography']
-                obj.subject_heading=entry['subject']
+                obj.subject_group=entry['subject_group']
                 obj.reindexObject()
                 
                 self.records_updated += 1
@@ -215,10 +215,10 @@ class ImporterView(BrowserView):
                                    runtime=entry['runtime'], 
                                    series_title=entry['series_title'], 
                                    description=entry['summary'], 
-                                   format_type=entry['content_type'], 
+                                   format_type=entry['format_type'], 
                                    associated_entity=entry['associated_entity'],  
                                    geography=entry['geography'],  
-                                   subject_heading=entry['subject'], 
+                                   subject_group=entry['subject_group'], 
                                    genre=entry['genre'], 
                                    image_url="",
                 )

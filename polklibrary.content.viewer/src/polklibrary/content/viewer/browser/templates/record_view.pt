@@ -9,25 +9,6 @@
 	<metal:block fill-slot="javascript_head_slot">
         <script type="text/javascript" src="${view/portal/absolute_url}/++resource++polklibrary.content.viewer/jquery.mobile.custom.min.js"></script>
         <script type="text/javascript" src="${view/portal/absolute_url}/++resource++polklibrary.content.viewer/film.js"></script>
-        <script type="text/javascript">
-            // KANOPY HOT FIX ==================================
-            $(document).ready(function(){
-                var IframeOriginalSrc = $('iframe').attr('src');
-                if (IframeOriginalSrc.indexOf('kanopy') > -1){
-                    var HotFixThread = setInterval(function(){
-                    
-                        var ImageSrc = $('iframe').attr('src');
-                        if (ImageSrc.indexOf('uwosh-kanopy-com.www.remote.uwosh.edu/embed/') > -1){
-                            ImageSrc = ImageSrc.replace('uwosh-kanopy-com.www.remote.uwosh.edu/embed/', 'uwosh.kanopy.com/embed/');
-                            $('iframe').attr('src', ImageSrc);
-                        }
-                        else {
-                            clearInterval(HotFixThread);
-                        }
-                    });
-                }
-            });
-        </script>
 	</metal:block>
     
 	<metal:block fill-slot="style_slot">
@@ -44,18 +25,17 @@
             
             <div class="column">
             
-                <div class="col-60">
+                <div class="col-50">
                     <div class="column-outer">
                     
-                        <div class="pat-player" tal:condition="not: view/enhanced_data/disable_embed"
-                            tal:content="structure view/enhanced_data/embed">
-                        </div>
-                        
-                        <div class="pat-player-link" tal:condition="view/enhanced_data/disable_embed">
-                            <a class="link" 
-                               href="${view/enhanced_data/base_url}"
+                        <div class="pat-player-link">
+                            <a tal:define="image_url python:view.get_image_by_obj()"
+                               class="link" 
+                               target="_blank"
+                               href="${context/getRemoteUrl}"
                                title="Click to play"
-                               style="background-image: url(${context/absolute_url}/++resource++polklibrary.content.viewer/play.png),url(${context/absolute_url}/@@download/image/thumb.jpg)">
+                               style="background-image: url(${context/absolute_url}/++resource++polklibrary.content.viewer/play.png),url(${image_url})"
+                               >
                             </a>
                         </div>
                         <div class="clear"></div>
@@ -72,7 +52,7 @@
                         
                 </div>
                 
-                <div class="info col-40">
+                <div class="info col-50">
                 
                     <tal:block condition="context/Description">
                     <h4>Description</h4>
@@ -151,22 +131,16 @@
                     </div>
                     </tal:block>
                                  
-                    <tal:block condition="view/enhanced_data/name">
                     <h4>Database</h4>
-                    <div>
-                        ${view/enhanced_data/name}
-                    </div>
-                    </tal:block>
+                    <div>${view/get_vender_name}</div>
                     
-                    <tal:block condition="view/enhanced_data/name">
                     <h4>Direct Link</h4>
                     <div>
-                        <a class="slink" href="${view/enhanced_data/base_url}" target="_blank">
+                        <a class="slink" href="${context/getRemoteUrl}" target="_blank">
                             <img src="++resource++polklibrary.content.viewer/link.png" alt="Link" /> 
-                            ${view/enhanced_data/base_url} 
+                            ${context/getRemoteUrl} 
                         </a>
                     </div>
-                    </tal:block>
                     
                 </div>
                 
@@ -188,22 +162,26 @@
                             <div class="arr-left"></div>
                         </div>
                         <div class="scrollbox" tal:attributes="data-items python:len(container.items)">
-                            <a  tal:repeat="item container/items" 
-                                class="item ${item/format_type} pat-overlay"
-                                data-overlay-title="${item/Title}"
-                                data-overlay-description=" ${item/Description}"
-                                data-overlay-runtime="${item/runtime}"
-                                href="${item/getURL}" 
-                                style="background-image: url(${item/getURL}/++resource++polklibrary.content.viewer/${item/format_type}.png), url(${item/getURL}/${item/image_url});"
-                            >    
-                                <div class="add-to-list suppress-add-to-list">
-                                    <span class="pat-film-list" data-id="${item/getId}" />
-                                </div>
-                                
-                                <div class="title">
-                                    ${item/Title}
-                                </div>
-                            </a>
+                        
+                        
+                            <tal:block tal:repeat="item container/items">
+                                <a tal:define="image_url python:view.get_image_by_brain(item)"
+                                    class="item ${item/format_type} pat-overlay"
+                                    data-overlay-title="${item/Title}"
+                                    data-overlay-description=" ${item/Description}"
+                                    data-overlay-runtime="${item/runtime}"
+                                    href="${item/getURL}" 
+                                    style="background-image: url(${item/getURL}/++resource++polklibrary.content.viewer/${item/format_type}.png), url(${image_url});"
+                                >    
+                                    <div class="add-to-list suppress-add-to-list">
+                                        <span class="pat-film-list" data-id="${item/getId}" />
+                                    </div>
+                                    
+                                    <div class="title">
+                                        ${item/Title}
+                                    </div>
+                                </a>
+                            </tal:block>
                             
                             <a class="item" 
                                href="${view/portal/absolute_url}/browse?${suburl}" 

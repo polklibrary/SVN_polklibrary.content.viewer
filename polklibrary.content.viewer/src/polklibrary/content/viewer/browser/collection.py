@@ -4,7 +4,8 @@ from Products.Five import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from zope.component import getUtility, getMultiAdapter
 from zope.container.interfaces import INameChooser
-from polklibrary.content.viewer.utility import BrainsToCSV, text_to_tuple
+from polklibrary.content.viewer.utility import BrainsToCSV, text_to_tuple, CleanID
+from polklibrary.content.viewer.utility import Tools
 import random, time, re, datetime, operator
 
 
@@ -269,7 +270,7 @@ def AndFilter(listone, listtwo):
 
 
 def RelatedContent(label, data, url, limit=10, start=0, sort_by='created', sort_direction='descending', show_query=True):
-    print("RELATED CONTENT")
+    #print("RELATED CONTENT")
     subject_query = ()
     associated_query = ()
     geography_query = ()
@@ -299,7 +300,7 @@ def RelatedContent(label, data, url, limit=10, start=0, sort_by='created', sort_
         query = subject_query + associated_query + geography_query + genre_query + series_query
         title = label  + ': ' + ', '.join([t.capitalize() for t in query])
     
-    print ("MAKE FAKE COLLECTION")
+    #print ("MAKE FAKE COLLECTION")
     
     fc = FakeCollection(
         url,
@@ -311,12 +312,12 @@ def RelatedContent(label, data, url, limit=10, start=0, sort_by='created', sort_
         genre=genre_query
     )
 
-    print(str(fc))
+    #print(str(fc))
     return AdvancedCollectionQuery(fc, limit=limit, start=start, sort_by=sort_by, sort_direction=sort_direction)
 
     
     
-class BrowseView(BrowserView):
+class BrowseView(BrowserView, Tools):
     """ View collection by GET parameters """
 
     shareable = False
@@ -337,13 +338,13 @@ class BrowseView(BrowserView):
         limit = int(self.request.form.get("limit", 20))
         
         return RelatedContent("Browsing", self.request.form, self.request['URL'] + '?' + self.request["QUERY_STRING"], limit=limit, start=start, sort_by='created', sort_direction='descending')
-            
+                        
     @property
     def portal(self):
         return api.portal.get()
         
     
-class UserListView(BrowserView):
+class UserListView(BrowserView, Tools):
     """ View collection by user saved playlist """
 
     shareable = False
@@ -370,6 +371,7 @@ class UserListView(BrowserView):
             
             user = api.user.get_current()
             films = user.saved_films.split('|')
+
             films.pop()
             catalog = api.portal.get_tool(name='portal_catalog')
             brains = catalog.searchResults(
@@ -384,13 +386,21 @@ class UserListView(BrowserView):
             return CollectionObject("Your Playlist", self.portal.absolute_url() + '/playlist', brains[start:start+limit], len(brains), start, limit)
         
                 
-    def get_image(self):
-        return '++resource++polklibrary.content.viewer/missing-thumb.png'
+    # def get_image(self):
+        # return '++resource++polklibrary.content.viewer/missing-thumb.png'
     
-    def get_image(self, item):
-        if item.image_url == '' or '++resource++' in item.image_url:
-            return '++resource++polklibrary.content.viewer/missing-thumb.png'
-        return item.getURL + '/@@download/image/thumb.jpg'
+    # def get_image(self, item):
+        # if item.image_url == '' or '++resource++' in item.image_url:
+            # return '++resource++polklibrary.content.viewer/missing-thumb.png'
+        # return item.getURL + '/@@download/image/thumb.jpg'
+        
+    # def get_direct_image(self, item):
+        # if item.id.startswith('fod'):
+            # id = CleanID(item.id)
+            # return 'https://fod.infobase.com/image/' + str(id)
+        # if item.image_url == '' or '++resource++' in item.image_url:
+            # return '++resource++polklibrary.content.viewer/missing-thumb.png'
+        # return item.getURL() + item.image_url
         
     @property
     def portal(self):
@@ -398,7 +408,7 @@ class UserListView(BrowserView):
         
     
 
-class CollectionView(BrowserView):
+class CollectionView(BrowserView, Tools):
     """ View collection by saved criteria """
 
     shareable = True
@@ -419,20 +429,12 @@ class CollectionView(BrowserView):
         limit = int(self.request.form.get("limit", self.context.limit))
         return AdvancedCollectionQuery(self.context, limit=limit, start=start, sort_by=self.context.sort_type, sort_direction=self.context.sort_direction)
                 
-    def get_image(self):
-        return '++resource++polklibrary.content.viewer/missing-thumb.png'
-    
-    def get_image(self, item):
-        if item.image_url == '' or '++resource++' in item.image_url:
-            return '++resource++polklibrary.content.viewer/missing-thumb.png'
-        return item.getURL + '/@@download/image/thumb.jpg'
-        
     @property
     def portal(self):
         return api.portal.get()
         
         
-class ShareView(CollectionView):
+class ShareView(CollectionView, Tools):
 
     template = ViewPageTemplateFile("templates/share.pt")
     
@@ -446,4 +448,9 @@ class ShareView(CollectionView):
         
     def get_collection(self):
         return AdvancedCollectionQuery(self.context, limit=25, sort_by=self.context.sort_type, sort_direction=self.context.sort_direction)
+    
+    @property
+    def portal(self):
+        return api.portal.get()
+        
         

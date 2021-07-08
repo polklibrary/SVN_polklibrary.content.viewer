@@ -11,9 +11,9 @@ global country_homophones
 country_homophones = ['Bury','March','Marks','Graham','Bo','Rosenberg','Graham','University','Kansas','Lawrence','Allen','Eugene','Brecht','Bentley','Man','Warren','Most','Regina','Cork','Highland','Flores','Elizabeth','Marshall','Americana','Police','Young','Wilson','Of','Fishers','Darwin','Martin','Bradford','Spring','Pop','Born','Bear','Mary','Bell','Mao','Temple','Along','Sherman','Much','Quincy','Paris','Paradise','Roman','Chor','Guilford','Johnson','Latina','Jackson','Summit','Gay','Male','Federal','Eden','Chekhov','Hayes','Reading','Boom','Barking','Tara','Alice','Harper','Barry','Nigel','Dale','Gary','David','Best','Split','Anna','Fleet','Pen','Carol','Lynn','Alicia','Nikki','Donna','Stuart','George','SIM','Sale','Enterprise','Charlotte','Barking','Tracy','Peer','PISA','Clive','Salt','Roy','Howard','Estelle','Helena','Working','Vic','Euclid','Allende','Normal','Asia','Obama','Iowa','Bronte','Nancy','Lakota','Melville','Rosario','Brad','Union','Liberty','Independence','Asia','Hercules','Wright','Clinton','Roman','Lucas','Savage','Goes','Gap','Jupiter','Taylor','Orion','Natal','Badger','Leatherhead','Roses','Batman','Griffith','Parker','Van','Rogers','Vista','Mustang','Montana','Chelsea','Mission','Dalton','Buy','Toledo','Gilbert','Evans','Oregon','Kansas','ABA','Bay','Tours','Leer','Sunrise','Imperial','Palm','The Valley','Dublin','Fountain','Kant','Plato','Ho','Norman','Bath','Honda','Toyota','Keller','Rye','Walker','Foster','Linda','Pace','Ode','Milton','Moss','Parole','Bar','Holden','Pearl','Lens','Date','Orange','Walnut','Atlantis','Davis','Homestead','Roth','Irving','OSA','UN','Green','Amos','Kyle','Palmer','Mon','Nice','Defiance','Wedding','Tire','Ron','Griffin','AUSA','Arnold','Bradley','Sebastian','Moe','Dome','Lice','Shaping','Bowie','Country Club','Bra','Central','Hull','Murray','Vincent','Anderson','Baron','Brits','Gardner','Ripley','Ariel','Lincoln','Opportunity','Oral','Manage','Sandy','Ramon','Converse','Gallup','Crystal','Humble','Wa','Mobile','Carson','Manga','Oss','Taft','Aloha','Crosby','Boo','Murphy','Gay','Newton','Moore','Inca','Perm','Ada','Metro','Eagle','Swords','Plunge','Derby','Hickory','Antony','Bryan','Cary','Beacon','Pinto','Turbo','Bartlett','Duncan','Vladimir','Mercedes','Bountiful','Dole','Sake','Edison','Stanley']
 
 #returns formatted string from pymarc field 
-def format_pymarc(i):
+def format_pymarc(i, index=0):
     try:
-        text = i[0]
+        text = i[index]
         return text.format_field()
     except AttributeError:
         return ''
@@ -61,6 +61,16 @@ def presence_test(rec, field, subfield):
             return ''
     except TypeError:
         return ''
+#test to see if a particular marc field is in record 
+def fields_exist(rec, field, index):
+    try:
+        val = rec.get_fields(field)[index]
+        if val is not None:
+            return val
+        else:
+            return ''
+    except TypeError:
+        return ''
 #read a text file (not needed) 
 def read_text(f):
     out = []
@@ -91,10 +101,10 @@ def build_rec(stream):
     topics = []
     has_geo = 0
     #header = ['filmID', 'creator', 'title', 'date', 'phys_desc', 'series', 'summary', 'subj_person', 'subj_corp', 'rec_topics', 'rec_geo', 'genre', 'subj_person2']
-    header = ['filmID', 'creator', 'title', 'date_of_publication', 'runtime', 'series_title', 'summary', 'content_type', 'associated_entity', 'geography', 'subject', 'genre']
+    header = ['filmID', 'creator', 'title', 'date_of_publication', 'runtime', 'series_title', 'summary', 'format_type', 'associated_entity', 'geography', 'subject_group', 'genre', 'image_url', 'direct_url']
     out_list.append(header)
     #with open(stream, 'rb') as rf:
-    reader = MARCReader(stream, to_unicode=True)
+    reader = MARCReader(stream)#, to_unicode=True)
     for rec in reader:
         rec_geo = []
         count += 1
@@ -114,7 +124,7 @@ def build_rec(stream):
         phys_desc = format_pymarc(rec.physicaldescription())
         phys_desc = remove_substring(phys_desc, strip_list)
         series = format_pymarc(rec.get_fields('490'))
-        
+       
         if len(number) > 0 and len(series) == 0:
             series = tmp_title
             title.replace(series, '')
@@ -126,7 +136,9 @@ def build_rec(stream):
             series_name = x[0]
             part_num = x[1]
             title = title + ' ' + series_name + ' ' + part_num
-            series = series_name    
+            series = series_name  
+        series = [series.strip()] # make a list
+        
         summary = format_pymarc(rec.get_fields('520'))
         geo_text = GeoText(summary)
         cities = geo_text.cities
@@ -158,19 +170,55 @@ def build_rec(stream):
         subj_person2 = format_pymarc(rec.get_fields('700'))
         rec_geo = list(set(rec_geo))
         
-        url = rec['856']['u']
+        
+        # attempt to retreive direct url and cover image url
+        url = ''
+        image_url = ''
+        if fields_exist(rec, '856', 0):
+            if 'image' in rec.get_fields('856')[0]['z'].lower() or 'thumbnail' in rec.get_fields('856')[0]['z'].lower():
+                image_url = rec.get_fields('856')[0]['u']
+            else:
+                url = rec.get_fields('856')[0]['u']
+        if fields_exist(rec, '856', 1):
+            if 'image' in rec.get_fields('856')[1]['z'].lower() or 'thumbnail' in rec.get_fields('856')[1]['z'].lower():
+                image_url = rec.get_fields('856')[1]['u']
+        
+        
+        
         try:
-            id_test = int(id)
-            id = 'fod' + id 
-        except ValueError:
-            if 'kan' in id:
-                vendor_name = 'kanopy'
+            if 'aspresolver.com' in url:
+                id = 'asp' + id
+                vendor_name = 'astreet'
+            elif 'fod.infobase.com' in url:
+                id = 'fod' + id
+                vendor_name = 'fod'
+            elif 'kanopy.com' in url:
                 id2 = url.split('/')[-1]
-                id = id + '-' + id2 
-            if 'asp' in id:
-                vendor_name = 'astreet'        
+                id = 'kan' + id + '-' + id2 
+                vendor_name = 'kanopy'
+            else:
+                id = 'unknown' + id
+                vendor = 'unknown'
+        except:
+            id = 'unknown' + id
+            vendor = 'unknown'
+            
+        # --- Patrick's ID
+        # try:
+            # id_test = int(id)
+            # id = 'fod' + id 
+        # except ValueError:
+            # if 'kan' in id:
+                # vendor_name = 'kanopy'
+                # id2 = url.split('/')[-1]
+                # id = id + '-' + id2 
+            # if 'asp' in id:
+                # vendor_name = 'astreet'        
+                
+                
+                
         associated_entities = subj_person + subj_corp        
-        tmp = [id, auth, title.strip(), date.strip(), phys_desc.strip(), series.strip(), summary.strip(), 'stream', associated_entities, rec_geo, rec_topics, genre]
+        tmp = [id, auth, title.strip(), date.strip(), phys_desc.strip(), series, summary.strip(), 'stream', associated_entities, rec_geo, rec_topics, genre, image_url, url]
             #['filmID', 'creator', 'title', 'date_of_publication', 'runtime', 'series_title', 'summary', 'content_type', 'associated_entity', 'geography', 'subject', 'genre']
         if '/aamr' not in id:
             out_list.append(tmp)

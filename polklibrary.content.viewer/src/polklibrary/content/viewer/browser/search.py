@@ -4,13 +4,12 @@ from Products.Five import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from zope.component import getUtility, getMultiAdapter
 from zope.container.interfaces import INameChooser
-from polklibrary.content.viewer.utility import BrainsToCSV
+from polklibrary.content.viewer.utility import BrainsToCSV, CleanID, Tools
 import random, time, re
 
 from polklibrary.content.viewer.browser.collection import CollectionObject
-from polklibrary.content.viewer.utility import ResourceEnhancer
 
-class Search(BrowserView):
+class Search(BrowserView, Tools):
 
     template = ViewPageTemplateFile("templates/search.pt")
     
@@ -37,10 +36,7 @@ class Search(BrowserView):
             brains = catalog.searchResults(
                 portal_type='polklibrary.content.viewer.models.contentrecord',
                 review_state='published',
-                SearchableText={
-                    "query": query,
-                    "operator" : 'or',
-                },
+                SearchableText=query,
                 sort_on=sort_on, 
                 sort_order=sort_order
             )
@@ -50,6 +46,7 @@ class Search(BrowserView):
             return CollectionObject("Results Found", self.portal.absolute_url() + '/find' + query_values , brains[start:start+limit], len(brains), start, limit)
         return CollectionObject("Results Found", self.portal.absolute_url() + '/find', [], 0, start, limit)
         
+
     @property
     def portal(self):
         return api.portal.get()

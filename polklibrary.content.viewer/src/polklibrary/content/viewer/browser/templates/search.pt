@@ -54,22 +54,24 @@
                     <a href="${container/url}"><span tal:replace="python: len(container.items)" /> ${container/title} </a> 
                 </h2>
             
-                <a  tal:repeat="item container/items" 
-                    class="item ${item/format_type} pat-overlay"
-                    data-overlay-title="${item/Title}"
-                    data-overlay-description=" ${item/Description}"
-                    data-overlay-runtime="${item/runtime}"
-                    href="${item/getURL}" 
-                    style="background-image: url(${item/getURL}/++resource++polklibrary.content.viewer/${item/format_type}.png), url(${item/getURL}/${item/image_url});"
-                >
-                    <div class="add-to-list suppress-add-to-list">
-                        <span class="pat-film-list" data-id="${item/getId}" />
-                    </div>
-                
-                    <div class="title">
-                        ${item/Title}
-                    </div>
-                </a>
+                <tal:block tal:repeat="item container/items">
+                    <a tal:define="image_url python:view.get_image_by_brain(item)"
+                        class="item ${item/format_type} pat-overlay"
+                        data-overlay-title="${item/Title}"
+                        data-overlay-description=" ${item/Description}"
+                        data-overlay-runtime="${item/runtime}"
+                        href="${item/getURL}" 
+                        style="background-image: url(${item/getURL}/++resource++polklibrary.content.viewer/${item/format_type}.png), url(${image_url});"
+                    >
+                        <div class="add-to-list suppress-add-to-list">
+                            <span class="pat-film-list" data-id="${item/getId}" />
+                        </div>
+                    
+                        <div class="title">
+                            ${item/Title}
+                        </div>
+                    </a>
+                </tal:block>
                 
                 <div class="pagination" tal:condition="python: container.total > container.limit" >
                     ${container/total} Results: 

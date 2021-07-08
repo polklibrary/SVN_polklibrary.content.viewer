@@ -27,14 +27,22 @@
         class=".transformer.TransformerView"
         permission="cmf.ManagePortal"
         />
-        
+
+<!--        
     <browser:page
         for="Products.CMFCore.interfaces.ISiteRoot"
         name="importer"
         class=".importer.ImporterView"
         permission="cmf.ManagePortal"
         />
+-->
 
+    <browser:page
+        for="Products.CMFCore.interfaces.ISiteRoot"
+        name="importer"
+        class=".importer2.Importer2View"
+        permission="cmf.ManagePortal"
+        />
         
     <browser:page
         for="Products.CMFCore.interfaces.ISiteRoot"

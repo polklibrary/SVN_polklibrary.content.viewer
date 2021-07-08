@@ -9,6 +9,12 @@
     font-weight: bold;
 }
 
+#importer div.heading {
+    font-size: 18px;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
 #importer form{
     border: 1px solid #ccc;
     padding: 10px 20px;
@@ -30,9 +36,11 @@
 
 #processing {
     display: none;
-    filter: hue-rotate(250deg);
     height: 60px;
-    position: absolute;
+    top: 0;
+    width: 30px;
+    position: relative;
+    left: 15px;
 }
 
 #importer .help{
@@ -51,12 +59,14 @@
 }
 
 #importer .help div.example {
+    font-size: 12px;
     font-style: italic;
 }
 
 #error {
     background-color: #945353;
     border: 1px solid #821515;
+    color: white !important;
     margin-bottom: 10px;
     padding: 5px 10px;
 }

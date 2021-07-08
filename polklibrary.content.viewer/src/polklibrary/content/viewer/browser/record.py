@@ -6,7 +6,7 @@ from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from plone.protect.interfaces import IDisableCSRFProtection
 
 from polklibrary.content.viewer.browser.collection import RelatedContent
-from polklibrary.content.viewer.utility import ResourceEnhancer
+from polklibrary.content.viewer.utility import Tools
 
 import random, datetime, time
 
@@ -17,18 +17,14 @@ class CloseView(BrowserView):
 
 
 
-class RecordView(BrowserView):
+class RecordView(BrowserView, Tools):
 
     template = ViewPageTemplateFile("templates/record_view.pt")
-    enhanced_data = {}
     
     totals = {}
     
     def __call__(self):
         
-        if not self.is_oncampus():
-            return self.request.response.redirect('http://www.remote.uwosh.edu/login?url=' + self.context.absolute_url())
-            
         alsoProvides(self.request, IDisableCSRFProtection)
         like = self.request.form.get('like', None)
         if like:
@@ -39,15 +35,6 @@ class RecordView(BrowserView):
             
         self.load_facet_totals()
         
-            
-        self.enhanced_data = ResourceEnhancer(self.context.id,self.context.title)
-        if self.context.direct_url:
-            self.enhanced_data['base_url'] = self.context.direct_url
-        if self.context.embed_code and len(self.context.embed_code) > 10:
-            self.enhanced_data['embed'] = self.context.embed_code
-        self.enhanced_data['disable_embed'] = self.context.disable_embed == True or self.context.disable_embed == None
-        
-        self.request.response.setHeader('Cache-Control', 'no-cache, no-store')
         return self.template()
 
         
@@ -64,26 +51,25 @@ class RecordView(BrowserView):
         else:
             self.totals = {}
             
-        
-        
+            
     def get_totals(self, type, name):
         try:
             return self.totals.get(type).get(name, 1)
         except Exception as e:
             return 1
         
-    def is_oncampus(self):
-        dev_restriction = '10.0.2.2'
-        ip_restriction = '141.233.'
-        ip = ''
-        if 'HTTP_X_FORWARDED_FOR' in self.request.environ:
-            ip = self.request.environ['HTTP_X_FORWARDED_FOR'] # Virtual host
-        elif 'HTTP_HOST' in self.request.environ:
-            ip = self.request.environ['REMOTE_ADDR'] # Non-virtualhost
-        ipl = ip.split(',')
+    # def is_oncampus(self):
+        # dev_restriction = '10.0.2.2'
+        # ip_restriction = '141.233.'
+        # ip = ''
+        # if 'HTTP_X_FORWARDED_FOR' in self.request.environ:
+            # ip = self.request.environ['HTTP_X_FORWARDED_FOR'] # Virtual host
+        # elif 'HTTP_HOST' in self.request.environ:
+            # ip = self.request.environ['REMOTE_ADDR'] # Non-virtualhost
+        # ipl = ip.split(',')
         
-        print("IP: " + ipl[0])
-        return ipl[0].strip().startswith(ip_restriction) or ipl[0].strip().startswith(dev_restriction)
+        # print("IP: " + ipl[0])
+        # return ipl[0].strip().startswith(ip_restriction) or ipl[0].strip().startswith(dev_restriction)
         
     def get_related(self):
         type = 'subject_group'
@@ -104,7 +90,6 @@ class RecordView(BrowserView):
         related.items = list(filter(lambda x: x.getId != self.context.getId(), related.items))
         
         return suburl,related
-        
         
         
     @ram.cache(lambda *args: time.time() // (60 * 60 * 24 * 7)) # 1 week
