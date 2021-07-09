@@ -59,7 +59,7 @@ def presence_test(rec, field, subfield):
             return val
         else:
             return ''
-    except TypeError:
+    except:
         return ''
 #test to see if a particular marc field is in record 
 def fields_exist(rec, field, index):
@@ -69,7 +69,7 @@ def fields_exist(rec, field, index):
             return val
         else:
             return ''
-    except TypeError:
+    except:
         return ''
 #read a text file (not needed) 
 def read_text(f):
