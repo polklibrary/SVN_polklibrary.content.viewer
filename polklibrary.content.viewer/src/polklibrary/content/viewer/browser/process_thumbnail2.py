@@ -27,8 +27,13 @@ class ThumbnailProcess2(BrowserView):
         catalog = api.portal.get_tool(name='portal_catalog')
         options = Options()
         options.headless = True
-        driver = webdriver.Chrome('/home/vagrant/Plone/zinstance/chromedriver', options=options)
-                
+        
+        
+        if 'localhost' in self.context.absolute_url():
+            driver = webdriver.Chrome('/home/vagrant/Plone/zinstance/chromedriver', options=options)
+        else:
+            driver = webdriver.Chrome('/opt/plone5.2/zeocluster/chromedriver', options=options)
+            
         with api.env.adopt_roles(roles=['Manager']):
         
             process_index = 1
