@@ -12,27 +12,32 @@ import logging,re,time
 
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.by import By
+from selenium.common.exceptions import TimeoutException
 
 logger = logging.getLogger("Plone")
 
 class ThumbnailProcess2(BrowserView):
 
     logger_on = False
-    GET_WAIT = 15
+    GET_WAIT = 20
 
     def __call__(self):
         output = '\n'
         alsoProvides(self.request, IDisableCSRFProtection)
         catalog = api.portal.get_tool(name='portal_catalog')
-        options = Options()
+        options = webdriver.FirefoxOptions()
         options.headless = True
+        options.add_argument("window-size=1400,600")
+        #options.add_argument("--headless")
         
         
         if 'localhost' in self.context.absolute_url():
-            driver = webdriver.Chrome('/home/vagrant/Plone/zinstance/chromedriver', options=options)
+            driver = webdriver.Firefox(executable_path=r'/home/vagrant/Plone/zinstance/geckodriver', options=options)
         else:
-            driver = webdriver.Chrome('/opt/plone5.2/zeocluster/chromedriver', options=options)
+            driver = webdriver.Firefox(executable_path=r'/opt/plone5.2/zeocluster/geckodriver', options=options)
             
         with api.env.adopt_roles(roles=['Manager']):
         
@@ -61,12 +66,14 @@ class ThumbnailProcess2(BrowserView):
         
     def process_aso(self, driver, brain):
         output = brain.getURL()
-        try:          
-            withoutproxy = brain.getRemoteUrl.replace('https://www.remote.uwosh.edu/login?url=', '')
-            
-            driver.implicitly_wait(self.GET_WAIT) # seconds
-            driver.get(withoutproxy)
-            player_element = driver.find_element_by_css_selector(".nuvo-player--ready")
+        #try:          
+        withoutproxy = brain.getRemoteUrl.replace('https://www.remote.uwosh.edu/login?url=', '')
+        #print(withoutproxy)
+        driver.set_window_size(1920, 1080)
+        driver.get(withoutproxy)
+        time.sleep(10)
+        try:
+            player_element = driver.find_element_by_css_selector(".nuvo-player")
             thumbnail_attr = player_element.get_attribute("style")
             thumbnail_url = re.search("(?P<url>https?://[^\\s'\"]+)", thumbnail_attr).group("url")
             
@@ -80,10 +87,10 @@ class ThumbnailProcess2(BrowserView):
                     with api.env.adopt_roles(roles=['Manager']):
                         api.content.transition(obj=obj, transition='publish')
                     output += ' -- Published'
-                        
+            
         except Exception as e:
             output += ' Error: ' + str(e)
-            
+
         return output + '\n'
         
     def process_fod(self, driver, brain):
