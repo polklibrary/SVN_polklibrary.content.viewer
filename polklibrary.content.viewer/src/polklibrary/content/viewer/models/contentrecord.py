@@ -191,6 +191,7 @@ class IContentRecord(model.Schema):
             description=u"To load image below just add: /@@images/image",
             required=False,
             default=u"",
+            missing_value=u"",
         )
         
     image = NamedBlobImage(

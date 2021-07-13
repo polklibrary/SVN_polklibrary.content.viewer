@@ -44,6 +44,9 @@ class ThumbnailProcess2(BrowserView):
             process_index = 1
             process_limit = 3
             brains = catalog.searchResults(portal_type='polklibrary.content.viewer.models.contentrecord', image_url="")
+            if not brains:
+                brains = catalog.searchResults(portal_type='polklibrary.content.viewer.models.contentrecord', image_url=None)
+                
             for brain in brains:
                 if process_index > process_limit:
                     break;
@@ -66,9 +69,8 @@ class ThumbnailProcess2(BrowserView):
         
     def process_aso(self, driver, brain):
         output = brain.getURL()
-        #try:          
+       
         withoutproxy = brain.getRemoteUrl.replace('https://www.remote.uwosh.edu/login?url=', '')
-        #print(withoutproxy)
         driver.set_window_size(1920, 1080)
         driver.get(withoutproxy)
         time.sleep(10)
@@ -94,7 +96,35 @@ class ThumbnailProcess2(BrowserView):
         return output + '\n'
         
     def process_fod(self, driver, brain):
-        return brain.getURL() + ' FOD not setup \n'
+        output = brain.getURL()       
+        withoutproxy = brain.getRemoteUrl.replace('https://www.remote.uwosh.edu/login?url=', '')
+        driver.set_window_size(1920, 1080)
+        driver.get(withoutproxy)
+        time.sleep(5)
+        
+        try:
+            driver.switch_to.frame(driver.find_element_by_css_selector("iframe.mwEmbedKalturaIframe"))
+            time.sleep(5)
+        
+        
+            player_element = driver.find_element_by_css_selector("img.playerPoster")
+            thumbnail_url = player_element.get_attribute("src")
+            
+            if thumbnail_url:
+                obj = brain.getObject()  
+                obj.image_url = thumbnail_url
+                obj.reindexObject()
+                output += ' Thumbnail saved ' + thumbnail_url
+            
+                if brain.review_state != 'published' and obj.image_url != None and obj.image_url != '':
+                    with api.env.adopt_roles(roles=['Manager']):
+                        api.content.transition(obj=obj, transition='publish')
+                    output += ' -- Published'
+            
+        except Exception as e:
+            output += ' Error: ' + str(e)
+        
+        return output + '\n'
         
     def process_kan(self, driver, brain):
         return brain.getURL() + ' KAN not setup \n'
