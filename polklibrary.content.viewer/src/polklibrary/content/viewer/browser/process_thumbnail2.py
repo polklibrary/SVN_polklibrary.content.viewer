@@ -1,31 +1,95 @@
-# from plone import api
-# from plone.protect.interfaces import IDisableCSRFProtection
-# from Products.Five import BrowserView
-# from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
-# from zope.interface import alsoProvides
-# from plone.namedfile import NamedBlobImage
-# import requests, re, json
+from plone import api
+from plone.protect.interfaces import IDisableCSRFProtection
+from Products.Five import BrowserView
+from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
+from zope.interface import alsoProvides
+from plone.namedfile import NamedBlobImage
+import requests, re, json
 
-# from polklibrary.content.viewer.utility import ResourceEnhancer, ALEXANDER_STREET_NAME, KANOPY_NAME, FILMSONDEMAND_NAME, SWANK_NAME
-# #from BeautifulSoup import BeautifulSoup
-# from bs4 import BeautifulSoup
-# import logging,transaction,re
+from polklibrary.content.viewer.utility import VendorInfo
+from bs4 import BeautifulSoup
+import logging,re,time
 
-# logger = logging.getLogger("Plone")
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.support import expected_conditions as EC
 
-# class ThumbnailProcess(BrowserView):
+logger = logging.getLogger("Plone")
 
-    # logger_on = False
+class ThumbnailProcess2(BrowserView):
 
-    # def __call__(self):
-        # loginfo = ''
-        # alsoProvides(self.request, IDisableCSRFProtection)
-        # title = 'No results'
-        # error_msg = ''    
-        # catalog = api.portal.get_tool(name='portal_catalog')
+    logger_on = False
+    GET_WAIT = 15
+
+    def __call__(self):
+        output = '\n'
+        alsoProvides(self.request, IDisableCSRFProtection)
+        catalog = api.portal.get_tool(name='portal_catalog')
+        options = Options()
+        options.headless = True
+        driver = webdriver.Chrome('/home/vagrant/Plone/zinstance/chromedriver', options=options)
+                
+        with api.env.adopt_roles(roles=['Manager']):
+        
+            process_index = 1
+            process_limit = 3
+            brains = catalog.searchResults(portal_type='polklibrary.content.viewer.models.contentrecord', image_url="")
+            for brain in brains:
+                if process_index > process_limit:
+                    break;
+                process_index += 1
+                    
+                if VendorInfo.ALEXANDER_STREET_TARGET in brain.getId:
+                    output += self.process_aso(driver, brain)
+                if VendorInfo.FILMSONDEMAND_TARGET in brain.getId:
+                    output += self.process_fod(driver, brain)
+                if VendorInfo.KANOPY_TARGET in brain.getId:
+                    output += self.process_kan(driver, brain)
+                time.sleep(2)
+                
+        time.sleep(5)
+        driver.quit()
+                
+        return output
         
         
-        # with api.env.adopt_roles(roles=['Manager']):
+        
+    def process_aso(self, driver, brain):
+        output = brain.getURL()
+        try:          
+            withoutproxy = brain.getRemoteUrl.replace('https://www.remote.uwosh.edu/login?url=', '')
+            
+            driver.implicitly_wait(self.GET_WAIT) # seconds
+            driver.get(withoutproxy)
+            player_element = driver.find_element_by_css_selector(".nuvo-player--ready")
+            thumbnail_attr = player_element.get_attribute("style")
+            thumbnail_url = re.search("(?P<url>https?://[^\\s'\"]+)", thumbnail_attr).group("url")
+            
+            if thumbnail_url:
+                obj = brain.getObject()  
+                obj.image_url = thumbnail_url
+                obj.reindexObject()
+                output += ' Thumbnail saved ' + thumbnail_url
+            
+                if brain.review_state != 'published' and obj.image_url != None and obj.image_url != '':
+                    with api.env.adopt_roles(roles=['Manager']):
+                        api.content.transition(obj=obj, transition='publish')
+                    output += ' -- Published'
+                        
+        except Exception as e:
+            output += ' Error: ' + str(e)
+            
+        return output + '\n'
+        
+    def process_fod(self, driver, brain):
+        return brain.getURL() + ' FOD not setup \n'
+        
+    def process_kan(self, driver, brain):
+        return brain.getURL() + ' KAN not setup \n'
+          
+          
+        
+        
             # recheck = self.request.form.get('recheck', '0')
             # if recheck == '1':
                 # brains = catalog.searchResults(portal_type='polklibrary.content.viewer.models.contentrecord', image_url = '/++resource++polklibrary.content.viewer/missing-thumb.png') # bypass security
@@ -163,8 +227,8 @@
         # return ''
         
         
-    # @property
-    # def portal(self):
-        # return api.portal.get()
+    @property
+    def portal(self):
+        return api.portal.get()
         
         

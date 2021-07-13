@@ -17,7 +17,7 @@
     <browser:page
         for="Products.CMFCore.interfaces.ISiteRoot"
         name="process_thumbnail"
-        class=".process_thumbnail.ThumbnailProcess"
+        class=".process_thumbnail2.ThumbnailProcess2"
         permission="zope.Public"
         />
         

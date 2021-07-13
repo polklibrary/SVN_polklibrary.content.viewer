@@ -32,7 +32,9 @@ src/polklibrary/content/viewer/browser/collection.py
 src/polklibrary/content/viewer/browser/configure.zcml
 src/polklibrary/content/viewer/browser/group_list.py
 src/polklibrary/content/viewer/browser/importer.py
+src/polklibrary/content/viewer/browser/importer2.py
 src/polklibrary/content/viewer/browser/process_thumbnail.py
+src/polklibrary/content/viewer/browser/process_thumbnail2.py
 src/polklibrary/content/viewer/browser/record.py
 src/polklibrary/content/viewer/browser/search.py
 src/polklibrary/content/viewer/browser/transformer.py
@@ -58,6 +60,7 @@ src/polklibrary/content/viewer/browser/static/loading.png
 src/polklibrary/content/viewer/browser/static/missing-thumb.png
 src/polklibrary/content/viewer/browser/static/play.png
 src/polklibrary/content/viewer/browser/static/playerloading.png
+src/polklibrary/content/viewer/browser/static/processing-old.gif
 src/polklibrary/content/viewer/browser/static/processing.gif
 src/polklibrary/content/viewer/browser/static/remove.png
 src/polklibrary/content/viewer/browser/static/share.png
@@ -68,6 +71,7 @@ src/polklibrary/content/viewer/browser/templates/close_view.pt
 src/polklibrary/content/viewer/browser/templates/collection.pt
 src/polklibrary/content/viewer/browser/templates/group_list.pt
 src/polklibrary/content/viewer/browser/templates/importer.pt
+src/polklibrary/content/viewer/browser/templates/importer2.pt
 src/polklibrary/content/viewer/browser/templates/record_view.pt
 src/polklibrary/content/viewer/browser/templates/search.pt
 src/polklibrary/content/viewer/browser/templates/share.pt

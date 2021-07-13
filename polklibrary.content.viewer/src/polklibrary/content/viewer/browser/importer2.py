@@ -4,11 +4,11 @@ from Products.Five import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from zope.component import getUtility, getMultiAdapter
 from zope.container.interfaces import INameChooser
-from polklibrary.content.viewer.marc_utility import build_rec
-from polklibrary.content.viewer.utility import ALEXANDER_STREET_NAME, KANOPY_NAME, FILMSONDEMAND_NAME, SWANK_NAME
+from polklibrary.content.viewer.marc_utility import process_marc
+from polklibrary.content.viewer.utility import VendorInfo
 
 import csv, io, re, ast, json
-import pprint, ftfy, logging
+import pprint, logging
 
 logger = logging.getLogger("Plone")
 
@@ -17,10 +17,10 @@ class Importer2View(BrowserView):
 
     template = ViewPageTemplateFile("templates/importer2.pt")
     
-    ALEXANDER_STREET_NAME = ALEXANDER_STREET_NAME
-    KANOPY_NAME = KANOPY_NAME
-    FILMSONDEMAND_NAME = FILMSONDEMAND_NAME
-    SWANK_NAME = SWANK_NAME
+    ALEXANDER_STREET_NAME = VendorInfo.ALEXANDER_STREET_NAME
+    KANOPY_NAME = VendorInfo.KANOPY_NAME
+    FILMSONDEMAND_NAME = VendorInfo.FILMSONDEMAND_NAME
+    SWANK_NAME = VendorInfo.SWANK_NAME
     
     csv_check_listtypes = ['genre','series_title','associated_entity','subject_group','geography']
     csv_required_add_update_headings = ['filmID', 
@@ -53,6 +53,7 @@ class Importer2View(BrowserView):
         self.records_deleted = 0
         self.records_deleted_failed = []
         self.records_activated = 0
+        self.records_deactivated = 0
         self.records_activated_failed = []
         
         target_container = self.request.get('form.container.type', '%%%')
@@ -83,8 +84,8 @@ class Importer2View(BrowserView):
 
 
     def marc_to_entry(self):
-        a,b,c = build_rec(self.file.read())
-        for row in a[1:]: # skip first row which is column names
+        headerdata, marcdata = process_marc(self.file.read())
+        for row in marcdata: # skip first row which is column names
             entry = self.unify_entry({
                 'filmID': row[0],
                 'creator': row[1],
@@ -231,6 +232,21 @@ class Importer2View(BrowserView):
                    self.error = str(e)
                    self.records_created_failed.append(id)
 
+        
+            if self.request.get('form.autoactivate', None) == 'on':
+                try:
+                    state = api.content.get_state(obj=self.container[id])
+                    if entry['image_url'] and state != 'published':
+                        api.content.transition(obj=self.container[id], transition='publish')
+                        self.records_deactivated += 1
+                    if not entry['image_url'] and state == 'published':
+                        api.content.transition(obj=self.container[id], transition='retract')
+                        self.records_activated += 1
+                except Exception as e:
+                   self.error = str(e)
+                   self.records_activated_failed.append(id)
+
+
 
     def _process_deletions(self):
         for entry in self.entries:
@@ -251,9 +267,10 @@ class Importer2View(BrowserView):
                 state = api.content.get_state(obj=self.container[id])
                 if workflow == 'on' and state != 'published':
                     api.content.transition(obj=self.container[id], transition='publish')
+                    self.records_activated += 1
                 if workflow == 'off' and state == 'published':
                     api.content.transition(obj=self.container[id], transition='retract')
-                self.records_activated += 1
+                    self.records_deactivated += 1
             except Exception as e:
                self.error = str(e)
                self.records_activated_failed.append(id)

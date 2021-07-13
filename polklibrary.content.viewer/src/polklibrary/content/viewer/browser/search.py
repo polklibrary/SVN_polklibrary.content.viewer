@@ -4,7 +4,7 @@ from Products.Five import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from zope.component import getUtility, getMultiAdapter
 from zope.container.interfaces import INameChooser
-from polklibrary.content.viewer.utility import BrainsToCSV, CleanID, Tools
+from polklibrary.content.viewer.utility import BrainsToCSV, Tools
 import random, time, re
 
 from polklibrary.content.viewer.browser.collection import CollectionObject

@@ -4,10 +4,10 @@ from Products.Five import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from zope.component import getUtility, getMultiAdapter
 from zope.container.interfaces import INameChooser
-from polklibrary.content.viewer.marc_utility import build_rec
+from polklibrary.content.viewer.marc_utility import process_marc
 
 import io, re, ast, json
-import pprint, ftfy, logging, csv
+import pprint, logging, csv
 
 logger = logging.getLogger("Plone")
 
@@ -45,14 +45,22 @@ class TransformerView(BrowserView):
     def transform_marc_to_csv(self, id_only):
         #input_stream = io.StringIO(self.file.read())
         #input_stream = io.StringIO(self.file.read().decode("utf-8"))
-        subj, geo, topics = build_rec(self.file.read())
+        header, data = process_marc(self.file.read())
         name = 'done.csv'
         #with open(name, mode='wb') as f:
         #outputstream = io.StringIO(self.file.read())
         
         outputstream = io.StringIO()
         w = csv.writer(outputstream)
-        for row in subj:
+        
+        
+        if len(header) > 0:
+            if id_only:
+                w.writerow([header[0]]) 
+            else:
+                w.writerow(header)
+                    
+        for row in data:
             if len(row) > 0:
                 if id_only:
                     w.writerow([row[0]]) 
@@ -62,8 +70,6 @@ class TransformerView(BrowserView):
     
     
     def purify(self, row):
-        if row[0].lower() == 'filmid':
-            return row
         
         # list fixing
         row[5] = self.marc_list_cleanup(row[5])
@@ -72,14 +78,6 @@ class TransformerView(BrowserView):
         row[10] = self.marc_list_cleanup(row[10])
         row[11] = self.marc_list_cleanup(row[11])
         
-        # image_url
-        if row[12] and 'kaltura.com/' in row[12]:
-            row[12] = row[12].replace('/width/88','/width/320')
-            
-        # direct_url 
-        if row[13] and 'remote.uwosh.edu' not in row[13]:
-            row[13] = 'https://www.remote.uwosh.edu/login?url=' + row[13]
-            
         return row #done
              
     def marc_list_cleanup(self, data):

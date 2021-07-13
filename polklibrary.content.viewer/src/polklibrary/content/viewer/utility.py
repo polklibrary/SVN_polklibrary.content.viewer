@@ -1,28 +1,29 @@
 from plone import api
 from plone.memoize import ram
 from plone.i18n.normalizer import idnormalizer
-from unidecode import unidecode
-import re, time, ftfy, csv, io
+import re, time, csv, io
 
 # used elsewhere to target
-ALEXANDER_STREET_NAME = 'Alexander Street'
-KANOPY_NAME = 'Kanopy'
-FILMSONDEMAND_NAME = 'Films on Demand'
-SWANK_NAME = 'Swank'
-ALMA_NAME = 'Catalog'
-OTHER_NAME = 'Other'
 
-ALEXANDER_STREET_TARGET = 'asp'
-KANOPY_TARGET = 'kan'
-FILMSONDEMAND_TARGET = 'fod'
-SWANK_TARGET = 'swa'
-ALMA_TARGET = 'uwi'
+
+class VendorInfo:
+
+    ALEXANDER_STREET_NAME = 'Alexander Street'
+    KANOPY_NAME = 'Kanopy'
+    FILMSONDEMAND_NAME = 'Films on Demand'
+    SWANK_NAME = 'Swank'
+    ALMA_NAME = 'Catalog'
+    OTHER_NAME = 'Other'
+
+    ALEXANDER_STREET_TARGET = 'asp'
+    KANOPY_TARGET = 'kan'
+    FILMSONDEMAND_TARGET = 'fod'
+    SWANK_TARGET = 'swa'
+    ALMA_TARGET = 'uwi'
 
 
 
 class Tools(object):
-
-
 
     def get_image_by_obj(self, o=None):
         if not o:
@@ -43,18 +44,18 @@ class Tools(object):
     def get_vender_name(self, o=None):
         if not o:
             o = self.context
-        if ALEXANDER_STREET_TARGET in o.id.lower():   
-            return ALEXANDER_STREET_NAME
-        elif FILMSONDEMAND_TARGET in o.id.lower():   
-            return FILMSONDEMAND_NAME
-        elif KANOPY_TARGET in o.id.lower():   
-            return KANOPY_NAME
-        elif SWANK_TARGET in o.id.lower():   
-            return SWANK_NAME
-        elif ALMA_TARGET in o.id.lower():   
-            return ALMA_NAME
+        if VendorInfo.ALEXANDER_STREET_TARGET in o.id.lower():   
+            return VendorInfo.ALEXANDER_STREET_NAME
+        elif VendorInfo.FILMSONDEMAND_TARGET in o.id.lower():   
+            return VendorInfo.FILMSONDEMAND_NAME
+        elif VendorInfo.KANOPY_TARGET in o.id.lower():   
+            return VendorInfo.KANOPY_NAME
+        elif VendorInfo.SWANK_TARGET in o.id.lower():   
+            return VendorInfo.SWANK_NAME
+        elif VendorInfo.ALMA_TARGET in o.id.lower():   
+            return VendorInfo.ALMA_NAME
         else:
-            return OTHER_NAME
+            return VendorInfo.OTHER_NAME
         
     # try:
         # obj = o.getObject()
@@ -64,78 +65,6 @@ class Tools(object):
         
     #https://www.uwosh.edu/streaming-videos/streams/kan5693865-4693866/@@images/image
     
-
-def ResourceEnhancer(id, title):
-
-    data = {
-        'id' : CleanID(id),
-        'full_id' : id,
-        'name' : '',
-        'base_url' : '',
-        'embed' : '',
-    }
-    
-    if ALEXANDER_STREET_TARGET in id.lower():
-        data['name'] = ALEXANDER_STREET_NAME
-        data['base_url'] = 'https://www.remote.uwosh.edu/login?url=https://search.alexanderstreet.com/view/work/' + data['id']
-        data['embed'] = '<iframe src="https://www.remote.uwosh.edu/login?url=https://search.alexanderstreet.com/embed/token/' + data['id'] + '" frameborder="0" allowfullscreen scrolling="no"></iframe>'
-        
-    elif KANOPY_TARGET in id.lower():
-        data['name'] = KANOPY_NAME
-        data['base_url'] = 'https://uwosh.kanopy.com/embed/' + data['id']
-        data['embed'] = '<iframe allow="encrypted-media;" src="https://uwosh.kanopy.com/embed/' + data['id'] + '" frameborder="0" allowfullscreen webkitallowfullscreen mozallowfullscreen scrolling="no"></iframe>'
-        
-    elif FILMSONDEMAND_TARGET in id.lower():
-        data['name'] = FILMSONDEMAND_NAME
-        data['base_url'] = 'https://www.remote.uwosh.edu/login?url=http://fod.infobase.com/PortalPlaylists.aspx?wID=102638&xtid=' + data['id']
-        data['embed'] = '<iframe frameborder="0" scrolling="no" src="https://www.remote.uwosh.edu/login?url=https://fod.infobase.com/OnDemandEmbed.aspx?token=' + data['id'] + '&wID=102638&plt=FOD&loid=0&w={WIDTH}&h={HEIGHT}&fWidth={WIDTH}&fHeight={HEIGHT}" allowfullscreen >&nbsp;</iframe>'
-            
-    elif SWANK_TARGET in id.lower():
-        data['name'] = SWANK_NAME
-        data['base_url'] = 'https://digitalcampus-swankmp-net.www.remote.uwosh.edu/uwo280545/#/play/' + data['id'] + '?watch=1'
-        data['embed'] = ''
-        
-    elif ALMA_TARGET in id.lower():
-        data['name'] = ALMA_NAME
-        data['base_url'] = 'https://uw-primo.hosted.exlibrisgroup.com/primo-explore/fulldisplay?docid=' + data['id'] + '&context=L&vid=OSH&search_scope=OSH_ALL&tab=default_tab&lang=en_US'
-        data['embed'] = ''
-        
-    return data
-    
-        
-def CleanID(id):
-    if SWANK_TARGET in id.lower():
-        return id.replace('swa','') # NOTE: it looks base64, so w should not be possible
-    elif ALEXANDER_STREET_TARGET in id.lower():
-        return re.sub("\D", "", id)
-    elif KANOPY_TARGET in id.lower():
-        id = id.split('-').pop()
-        return re.sub("\D", "", id)
-    elif FILMSONDEMAND_TARGET in id.lower():
-        return re.sub("\D", "", id).lstrip('1').lstrip('0')
-    elif ALMA_TARGET in id.lower():
-        return id
-        
-        
-def escape_reserved(text):
-    if text:
-        return text.replace(u'"', u'\\\\"')
-    return text
-        
-        
-def remove_non_ascii(text):
-    if text and type(text) != unicode:
-        return text.decode('utf-8') #unidecode(text)
-    elif text:
-        return text
-    return u''
-    
-    
-def to_unicode(text):
-    if text:
-        return ftfy.fix_text(str(text).decode('utf-8')) #unidecode(text)
-    return u''
-
 def BrainsToCSV(brains):
     output = io.StringIO()
     

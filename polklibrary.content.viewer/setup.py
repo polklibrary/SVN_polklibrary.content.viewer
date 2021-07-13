@@ -55,8 +55,7 @@ setup(
         'requests>=2.22.0',
         'beautifulsoup4>=4.8.0',
         'pymarc==4.0.0',
-        'geotext==0.4.0',
-        'ftfy==5.8',  # must be run by ./pip install ftfy==4.4.3
+        'selenium',
     ],
     extras_require={
         'test': [

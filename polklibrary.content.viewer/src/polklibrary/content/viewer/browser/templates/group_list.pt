@@ -32,7 +32,7 @@
                 <div class="scrollbox" tal:attributes="data-items python:len(container.items)">
                 
                     <tal:block tal:repeat="item container/items">
-                        <a tal:define="image_url python:view.get_direct_image(item)"
+                        <a tal:define="image_url python:view.get_image_by_brain(item)"
                             class="item ${item/format_type} pat-overlay pat-images"
                             data-overlay-title="${item/Title}"
                             data-overlay-description=" ${item/Description}"

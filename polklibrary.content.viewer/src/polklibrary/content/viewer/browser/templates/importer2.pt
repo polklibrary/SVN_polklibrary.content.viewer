@@ -82,6 +82,8 @@
                     <label for="file-upload" >Upload (.CSV or .MRC only): </label>
                     <input type="file" name="form.file.upload" id="file-upload" />
                     
+                    <input type="checkbox" name="form.autoactivate" id="auto-activate" />
+                    <label for="auto-activate" >Auto-activate on upload (if thumbnail exists)? </label>
                 </div>
                 
                 <div>
@@ -102,7 +104,8 @@
                 <span>~$ Overlay Fails: ${view/records_updated_failed}</span>
                 <span>~$ Deletions: ${view/records_deleted}</span>
                 <span>~$ Deletion Fails: ${view/records_deleted_failed}</span>
-                <span>~$ Activations/Deactivations: ${view/records_activated}</span>
+                <span>~$ Activations: ${view/records_activated}</span>
+                <span>~$ Deactivations: ${view/records_deactivated}</span>
                 <span>~$ Activations/Deactivations Fails: ${view/records_activated_failed}</span>
             </div>
             

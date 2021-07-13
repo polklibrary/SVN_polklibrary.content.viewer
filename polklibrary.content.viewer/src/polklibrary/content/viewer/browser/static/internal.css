@@ -31,9 +31,17 @@
 }
 #importer form input[type="file"] {
     color: #333;
-    display: inline;
+    display: inline;   
+    border: 1px solid #ccc;
+    padding: 3px;
 }
-
+#importer form input[type="checkbox"] {
+    margin-left: 20px;
+    vertical-align: middle;
+}
+#importer form label[for="auto-activate"] {
+    margin-left: 5px;
+}
 #processing {
     display: none;
     height: 60px;
