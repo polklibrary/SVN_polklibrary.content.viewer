@@ -100,7 +100,7 @@ class ThumbnailProcess2(BrowserView):
         withoutproxy = brain.getRemoteUrl.replace('https://www.remote.uwosh.edu/login?url=', '')
         driver.set_window_size(1920, 1080)
         driver.get(withoutproxy)
-        time.sleep(5)
+        time.sleep(10)
         
         try:
             driver.switch_to.frame(driver.find_element_by_css_selector("iframe.mwEmbedKalturaIframe"))
