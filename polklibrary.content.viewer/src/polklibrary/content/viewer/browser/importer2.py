@@ -238,10 +238,10 @@ class Importer2View(BrowserView):
                     state = api.content.get_state(obj=self.container[id])
                     if entry['image_url'] and state != 'published':
                         api.content.transition(obj=self.container[id], transition='publish')
-                        self.records_deactivated += 1
+                        self.records_activated += 1
                     if not entry['image_url'] and state == 'published':
                         api.content.transition(obj=self.container[id], transition='retract')
-                        self.records_activated += 1
+                        self.records_deactivated += 1
                 except Exception as e:
                    self.error = str(e)
                    self.records_activated_failed.append(id)

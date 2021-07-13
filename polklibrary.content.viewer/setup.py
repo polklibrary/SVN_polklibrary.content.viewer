@@ -55,7 +55,7 @@ setup(
         'requests>=2.22.0',
         'beautifulsoup4>=4.8.0',
         'pymarc==4.0.0',
-        'selenium',
+        'selenium==3.141.0',
     ],
     extras_require={
         'test': [
