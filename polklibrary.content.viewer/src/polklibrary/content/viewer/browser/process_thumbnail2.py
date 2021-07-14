@@ -27,6 +27,7 @@ class ThumbnailProcess2(BrowserView):
     def __call__(self):
         output = '\n'
         alsoProvides(self.request, IDisableCSRFProtection)
+        self.request.response.setHeader('Cache-Control', 'no-cache, no-store')
         catalog = api.portal.get_tool(name='portal_catalog')
         options = webdriver.FirefoxOptions()
         options.headless = True
@@ -50,9 +51,9 @@ class ThumbnailProcess2(BrowserView):
         
             process_index = 1
             process_limit = 3
-            brains = catalog.searchResults(portal_type='polklibrary.content.viewer.models.contentrecord', image_url="")
+            brains = catalog.unrestrictedSearchResults(portal_type='polklibrary.content.viewer.models.contentrecord', image_url="")
             if not brains:
-                brains = catalog.searchResults(portal_type='polklibrary.content.viewer.models.contentrecord', image_url=None)
+                brains = catalog.unrestrictedSearchResults(portal_type='polklibrary.content.viewer.models.contentrecord', image_url=None)
             
             logger.info('Thumbnail Process Left: ' + str(len(brains)))
             for brain in brains:
