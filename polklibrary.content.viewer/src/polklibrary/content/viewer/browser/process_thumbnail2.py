@@ -42,7 +42,7 @@ class ThumbnailProcess2(BrowserView):
         #options.add_argument("--headless")
         
         
-        if 'localhost' in self.context.absolute_url():
+        if 'localhost:8080' in self.context.absolute_url(): # local testing server only
             driver = webdriver.Firefox(executable_path=r'/home/vagrant/Plone/zinstance/geckodriver', firefox_profile=profile, options=options)
         else:
             driver = webdriver.Firefox(executable_path=r'/opt/plone5.2/zeocluster/geckodriver', firefox_profile=profile, options=options)

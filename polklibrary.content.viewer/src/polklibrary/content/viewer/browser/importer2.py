@@ -208,7 +208,7 @@ class Importer2View(BrowserView):
             # Create
             else:
                 try:
-                    api.content.create(container=self.container, 
+                    obj = api.content.create(container=self.container, 
                                        type='polklibrary.content.viewer.models.contentrecord', 
                                        safe_id=False, 
                                        id=id, 
@@ -226,6 +226,9 @@ class Importer2View(BrowserView):
                                        image_url=entry['image_url'],
                                        getRemoteUrl=entry['direct_url'],
                     )
+                    
+                    if obj:
+                        obj.reindexObject()                            
                     
                     self.records_created += 1
                 except Exception as e:
