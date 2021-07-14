@@ -216,7 +216,7 @@ def process_marc(marc_stream):
         elif 'fod.infobase.com' in record_direct_url:
             record_vendor_id = VendorInfo.FILMSONDEMAND_TARGET + str(record_id)
         elif 'kanopy.com' in record_direct_url:
-            record_vendor_id = VendorInfo.KANOPY_TARGET + str(record_id)
+            record_vendor_id = VendorInfo.KANOPY_TARGET + str(record_id.replace('kan',''))
         
             
         output.append([
