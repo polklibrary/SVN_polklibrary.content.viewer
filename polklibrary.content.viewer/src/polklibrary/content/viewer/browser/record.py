@@ -31,7 +31,7 @@ class RecordView(BrowserView, Tools):
             self.context.likes += 1 
             
         self.context.visits += 1 
-        self.context.reindexObject()
+        #self.context.reindexObject()
             
         self.load_facet_totals()
         

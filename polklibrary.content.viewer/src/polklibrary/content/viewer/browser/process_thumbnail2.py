@@ -31,13 +31,20 @@ class ThumbnailProcess2(BrowserView):
         options = webdriver.FirefoxOptions()
         options.headless = True
         options.add_argument("window-size=1400,600")
+        #user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101 Firefox/78.0'
+        #options.add_argument('user-agent={0}'.format(user_agent))
+        
+        profile = webdriver.FirefoxProfile()
+        profile.set_preference("general.useragent.override", 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101 Firefox/78.0')
+
+
         #options.add_argument("--headless")
         
         
         if 'localhost' in self.context.absolute_url():
-            driver = webdriver.Firefox(executable_path=r'/home/vagrant/Plone/zinstance/geckodriver', options=options)
+            driver = webdriver.Firefox(executable_path=r'/home/vagrant/Plone/zinstance/geckodriver', firefox_profile=profile, options=options)
         else:
-            driver = webdriver.Firefox(executable_path=r'/opt/plone5.2/zeocluster/geckodriver', options=options)
+            driver = webdriver.Firefox(executable_path=r'/opt/plone5.2/zeocluster/geckodriver', firefox_profile=profile, options=options)
             
         with api.env.adopt_roles(roles=['Manager']):
         
