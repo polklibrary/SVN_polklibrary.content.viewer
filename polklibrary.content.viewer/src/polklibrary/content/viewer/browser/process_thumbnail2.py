@@ -110,11 +110,15 @@ class ThumbnailProcess2(BrowserView):
         time.sleep(10)
         
         try:
-            driver.switch_to.frame(driver.find_element_by_css_selector("iframe.mwEmbedKalturaIframe"))
-            time.sleep(5)
-        
-        
-            player_element = driver.find_element_by_css_selector("img.playerPoster")
+            #v1 attempt
+            try:
+                driver.switch_to.frame(driver.find_element_by_css_selector("iframe.mwEmbedKalturaIframe"))
+                time.sleep(5)
+                player_element = driver.find_element_by_css_selector("img.playerPoster")
+            except:
+                #v2 attempt
+                player_element = driver.find_element_by_css_selector("#ctl00_BodyContent_fpImg")
+                
             thumbnail_url = player_element.get_attribute("src")
             
             if thumbnail_url:
