@@ -53,7 +53,8 @@ class ThumbnailProcess2(BrowserView):
             brains = catalog.searchResults(portal_type='polklibrary.content.viewer.models.contentrecord', image_url="")
             if not brains:
                 brains = catalog.searchResults(portal_type='polklibrary.content.viewer.models.contentrecord', image_url=None)
-                
+            
+            logger.info('Thumbnail Process Left: ' + str(len(brains)))
             for brain in brains:
                 if process_index > process_limit:
                     break;
