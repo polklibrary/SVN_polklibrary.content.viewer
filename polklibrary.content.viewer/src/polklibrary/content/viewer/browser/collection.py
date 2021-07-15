@@ -444,7 +444,6 @@ class ShareView(CollectionView, Tools):
         
     @ram.cache(_fiveminutes_cachekey)
     def get_collection(self):
-        print("Cachekey: " + self.request.ACTUAL_URL + "?" + self.request.QUERY_STRING)
         return AdvancedCollectionQuery(self.context, limit=25, sort_by=self.context.sort_type, sort_direction=self.context.sort_direction)
     
     @property
