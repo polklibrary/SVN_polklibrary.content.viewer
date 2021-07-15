@@ -17,7 +17,7 @@ class GroupList(BrowserView, Tools):
     def __call__(self):
         return self.template()
 
-    @ram.cache(lambda *args: time() // (60 * 10))
+    @ram.cache(lambda *args: time.time() // (60 * 10))
     def get_collections(self):
     
         catalog = api.portal.get_tool(name='portal_catalog')
