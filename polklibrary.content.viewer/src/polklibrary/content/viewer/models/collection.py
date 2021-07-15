@@ -47,6 +47,7 @@ class ICollection(model.Schema):
 
     title = schema.TextLine(
             title=u"Title",
+            description=u"WARNING: Cached for 5 minutes.  Changes may take 5 minutes to appear.",
             required=True,
         )
 

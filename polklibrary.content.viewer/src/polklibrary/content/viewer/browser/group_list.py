@@ -1,4 +1,5 @@
 from plone import api
+from plone.memoize import ram
 from plone.i18n.normalizer import idnormalizer
 from Products.Five import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
@@ -9,8 +10,6 @@ import random, time, transaction
 
 from polklibrary.content.viewer.browser.collection import AdvancedCollectionQuery
 
-
-
 class GroupList(BrowserView, Tools):
 
     template = ViewPageTemplateFile("templates/group_list.pt")
@@ -18,7 +17,7 @@ class GroupList(BrowserView, Tools):
     def __call__(self):
         return self.template()
 
-    # Cache later?
+    @ram.cache(lambda *args: time() // (60 * 10))
     def get_collections(self):
     
         catalog = api.portal.get_tool(name='portal_catalog')

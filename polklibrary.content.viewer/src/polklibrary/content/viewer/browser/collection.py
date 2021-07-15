@@ -1,4 +1,5 @@
 from plone import api
+from plone.memoize import ram
 from plone.i18n.normalizer import idnormalizer
 from Products.Five import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
@@ -8,6 +9,15 @@ from polklibrary.content.viewer.utility import BrainsToCSV, text_to_tuple
 from polklibrary.content.viewer.utility import Tools
 import random, time, re, datetime, operator
 
+
+def _modified_cachekey(method, self):
+    return (self.context.absolute_url(), self.context.modified())
+
+def _twominutes_cachekey(method, self):
+    return (self.request.ACTUAL_URL + "?" + self.request.QUERY_STRING, time.time() // (60 * 2))
+
+def _fiveminutes_cachekey(method, self):
+    return (self.request.ACTUAL_URL + "?" + self.request.QUERY_STRING, time.time() // (60 * 5))
 
 class FakeCollection:
     
@@ -386,21 +396,6 @@ class UserListView(BrowserView, Tools):
             return CollectionObject("Your Playlist", self.portal.absolute_url() + '/playlist', brains[start:start+limit], len(brains), start, limit)
         
                 
-    # def get_image(self):
-        # return '++resource++polklibrary.content.viewer/missing-thumb.png'
-    
-    # def get_image(self, item):
-        # if item.image_url == '' or '++resource++' in item.image_url:
-            # return '++resource++polklibrary.content.viewer/missing-thumb.png'
-        # return item.getURL + '/@@download/image/thumb.jpg'
-        
-    # def get_direct_image(self, item):
-        # if item.id.startswith('fod'):
-            # id = CleanID(item.id)
-            # return 'https://fod.infobase.com/image/' + str(id)
-        # if item.image_url == '' or '++resource++' in item.image_url:
-            # return '++resource++polklibrary.content.viewer/missing-thumb.png'
-        # return item.getURL() + item.image_url
         
     @property
     def portal(self):
@@ -424,6 +419,7 @@ class CollectionView(BrowserView, Tools):
         membership = api.portal.get_tool('portal_membership')
         return bool(membership.checkPermission('Portlets: Manage portlets', self.context))
         
+    @ram.cache(_fiveminutes_cachekey)
     def get_collection(self):
         start = int(self.request.form.get("start", 0))
         limit = int(self.request.form.get("limit", self.context.limit))
@@ -446,7 +442,9 @@ class ShareView(CollectionView, Tools):
         membership = api.portal.get_tool('portal_membership')
         return bool(membership.checkPermission('Portlets: Manage portlets', self.context))
         
+    @ram.cache(_fiveminutes_cachekey)
     def get_collection(self):
+        print("Cachekey: " + self.request.ACTUAL_URL + "?" + self.request.QUERY_STRING)
         return AdvancedCollectionQuery(self.context, limit=25, sort_by=self.context.sort_type, sort_direction=self.context.sort_direction)
     
     @property

@@ -21,6 +21,7 @@ class IGroupList(model.Schema):
 
     title = schema.TextLine(
             title=u"Title",
+            description=u"WARNING: Cached for 10 minutes.  Changes may take 10 minutes to appear.",
             required=True,
         )
 
