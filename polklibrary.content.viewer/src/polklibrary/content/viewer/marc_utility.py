@@ -212,9 +212,9 @@ def process_marc(marc_stream):
         
         record_vendor_id = 'unknown- ' + str(record_id)
         if 'aspresolver.com' in record_direct_url:
-            record_vendor_id = VendorInfo.ALEXANDER_STREET_TARGET + str(record_id)
+            record_vendor_id = VendorInfo.ALEXANDER_STREET_TARGET + (str(record_id).replace('asp',''))
         elif 'fod.infobase.com' in record_direct_url:
-            record_vendor_id = VendorInfo.FILMSONDEMAND_TARGET + str(record_id)
+            record_vendor_id = VendorInfo.FILMSONDEMAND_TARGET + (str(record_id).replace('fod',''))
         elif 'kanopy.com' in record_direct_url:
             record_vendor_id = VendorInfo.KANOPY_TARGET + str(re.sub("[^0-9]", "", record_id)) # strip kan form original id
         
