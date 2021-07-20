@@ -15,7 +15,12 @@ class WSView(BrowserView):
         alsoProvides(self.request, IDisableCSRFProtection)
     
         found = 0
-        brains = api.content.find(portal_type='polklibrary.content.viewer.models.contentrecord')
+        
+        #brains = api.content.find(portal_type='polklibrary.content.viewer.models.contentrecord')
+        
+        portal_catalog = api.portal.get_tool('portal_catalog')
+        brains = portal_catalog()
+        
         logger.info("WS Patcher Query Brains: " + str(len(brains)))
         for brain in brains:
         
@@ -24,21 +29,21 @@ class WSView(BrowserView):
                 api.content.rename(obj=brain.getObject(), new_id=newid)
                 found+=1
                 transaction.commit()
-                logger.info("Renamed and committed: " + brain.getId)
+                logger.info("Renamed and committed: " + str(found) + ' ' + brain.getId)
                 
             elif brain.getId.startswith('kankan'):
                 newid = brain.getId.replace('kankan','kan')
                 api.content.rename(obj=brain.getObject(), new_id=newid)
                 found+=1
                 transaction.commit()
-                logger.info("Renamed and committed: " + brain.getId)
+                logger.info("Renamed and committed: " + str(found) + ' ' + brain.getId)
                 
             elif brain.getId.startswith('fodfod'):
                 newid = brain.getId.replace('fodfod','fod')
                 api.content.rename(obj=brain.getObject(), new_id=newid)
                 found+=1
                 transaction.commit()
-                logger.info("Renamed and committed: " + brain.getId)
+                logger.info("Renamed and committed: " + str(found) + ' ' + brain.getId)
             
         return 'Done: ' + str(found)
             
