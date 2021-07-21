@@ -35,7 +35,7 @@ class WSView(BrowserView):
                 newid = brain.getId.replace(sw, replacewith)
                 api.content.rename(obj=brain.getObject(), new_id=newid)
                 found+=1
-                logger.info("Renamed: " + str(found) + ' ' + brain.getId)
+                #logger.info("Renamed: " + str(found) + ' ' + brain.getId)
                 
                 if found % commitat == 0:        
                     logger.info("Commit: " + str(found))            
