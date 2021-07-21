@@ -13,39 +13,40 @@ class WSView(BrowserView):
 
     def __call__(self):
         alsoProvides(self.request, IDisableCSRFProtection)
+        
+        execute = self.request.get('execute','0')
+        sw = self.request.get('startswith','&$%#*')
+        replacewith = self.request.get('replace','')
+        stopat = int(self.request.get('stop','500'))
+        commitat = int(self.request.get('commit','500'))
     
         found = 0
         
-        #brains = api.content.find(portal_type='polklibrary.content.viewer.models.contentrecord')
-        
         portal_catalog = api.portal.get_tool('portal_catalog')
-        brains = portal_catalog()
+        allbrains = portal_catalog()
         
-        logger.info("WS Patcher Query Brains: " + str(len(brains)))
-        for brain in brains:
+        brains = list(filter(lambda x: x.getId.startswith(sw), allbrains))
+        logger.info("WS Patcher Found Brains: " + str(len(brains)))
         
-            if brain.getId.startswith('aspasp'):
-                newid = brain.getId.replace('aspasp','asp')
+        if execute == '1' and replacewith:
+        
+            for brain in brains:
+        
+                newid = brain.getId.replace(sw, replacewith)
                 api.content.rename(obj=brain.getObject(), new_id=newid)
                 found+=1
-                transaction.commit()
-                logger.info("Renamed and committed: " + str(found) + ' ' + brain.getId)
+                logger.info("Renamed: " + str(found) + ' ' + brain.getId)
                 
-            elif brain.getId.startswith('kankan'):
-                newid = brain.getId.replace('kankan','kan')
-                api.content.rename(obj=brain.getObject(), new_id=newid)
-                found+=1
-                transaction.commit()
-                logger.info("Renamed and committed: " + str(found) + ' ' + brain.getId)
+                if found % commitat == 0:        
+                    logger.info("Commit: " + str(found))            
+                    transaction.commit()
                 
-            elif brain.getId.startswith('fodfod'):
-                newid = brain.getId.replace('fodfod','fod')
-                api.content.rename(obj=brain.getObject(), new_id=newid)
-                found+=1
-                transaction.commit()
-                logger.info("Renamed and committed: " + str(found) + ' ' + brain.getId)
-            
-        return 'Done: ' + str(found)
+                if found > stopat:
+                    logger.info("Commit: " + str(found))
+                    transaction.commit()
+                    break
+                
+        return 'Found: ' + str(found) + ' Stop at: ' + str(stopat)
             
 
     @property
