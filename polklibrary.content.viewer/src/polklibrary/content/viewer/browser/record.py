@@ -92,30 +92,30 @@ class RecordView(BrowserView, Tools):
         return suburl,related
         
         
-    @ram.cache(lambda *args: time.time() // (60 * 60 * 24 * 7)) # 1 week
-    def Totals(self): 
-        data = {
-            'series_title' : {},
-            'subject_group' : {},
-            'associated_entity' : {},
-            'geography' : {},
-            'genre' : {},
-        }
+    # @ram.cache(lambda *args: time.time() // (60 * 60 * 24 * 7)) # 1 week
+    # def Totals(self): 
+        # data = {
+            # 'series_title' : {},
+            # 'subject_group' : {},
+            # 'associated_entity' : {},
+            # 'geography' : {},
+            # 'genre' : {},
+        # }
         
-        catalog = api.portal.get_tool(name='portal_catalog')
+        # catalog = api.portal.get_tool(name='portal_catalog')
         
-        for key,value in data.items():
-            index = catalog._catalog.indexes[key]
+        # for key,value in data.items():
+            # index = catalog._catalog.indexes[key]
             
-            for k in index.uniqueValues():
+            # for k in index.uniqueValues():
             
-                t = index._index.get(k)
-                if type(t) is not int:
-                    data[key][k] = len(t)
-                else:
-                    data[key][k] = 1
+                # t = index._index.get(k)
+                # if type(t) is not int:
+                    # data[key][k] = len(t)
+                # else:
+                    # data[key][k] = 1
         
-        return data
+        # return data
             
         
     @property

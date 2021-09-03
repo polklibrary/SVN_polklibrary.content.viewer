@@ -419,7 +419,7 @@ class CollectionView(BrowserView, Tools):
         membership = api.portal.get_tool('portal_membership')
         return bool(membership.checkPermission('Portlets: Manage portlets', self.context))
         
-    @ram.cache(_fiveminutes_cachekey)
+    #@ram.cache(_fiveminutes_cachekey)
     def get_collection(self):
         start = int(self.request.form.get("start", 0))
         limit = int(self.request.form.get("limit", self.context.limit))
@@ -442,7 +442,7 @@ class ShareView(CollectionView, Tools):
         membership = api.portal.get_tool('portal_membership')
         return bool(membership.checkPermission('Portlets: Manage portlets', self.context))
         
-    @ram.cache(_fiveminutes_cachekey)
+    #@ram.cache(_fiveminutes_cachekey)
     def get_collection(self):
         return AdvancedCollectionQuery(self.context, limit=25, sort_by=self.context.sort_type, sort_direction=self.context.sort_direction)
     

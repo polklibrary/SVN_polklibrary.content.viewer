@@ -23,7 +23,7 @@
 
         <div class="pat-scroll group-list no-select">
         
-            <div class="collection" tal:repeat="container view/get_collections">
+            <div class="collection" tal:repeat="container view/group_collections">
                 
                 <h2><a href="${container/url}">${container/title}</a></h2>
                 <div class="scroll-left">

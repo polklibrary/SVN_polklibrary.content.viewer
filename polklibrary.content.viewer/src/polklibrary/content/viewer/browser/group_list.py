@@ -15,6 +15,7 @@ class GroupList(BrowserView, Tools):
     template = ViewPageTemplateFile("templates/group_list.pt")
     
     def __call__(self):
+        self.group_collections = self.get_collections()
         return self.template()
 
     @ram.cache(lambda *args: time.time() // (60 * 10))

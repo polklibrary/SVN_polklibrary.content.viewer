@@ -8,7 +8,6 @@ class WSView(BrowserView):
 
     _data = {}
     
-    #@ram.cache(lambda *args: time() // (60 * 10))
     def __call__(self):
         self._data = []
         self.process()
@@ -18,13 +17,7 @@ class WSView(BrowserView):
         return json.dumps(self._data)
 
         
-    @ram.cache(lambda *args: time.time() // (60 * 60))
-    def counter(self):
-        records = api.content.find(portal_type='polklibrary.content.viewer.models.contentrecord', review_state='published')
-        return len(records)
-        
     def process(self):
-        count = self.counter()
         brains = api.content.find(portal_type='polklibrary.content.viewer.models.collection', 
                                      sort_on="sortable_title", 
                                      enabled_browse=True)
@@ -33,7 +26,6 @@ class WSView(BrowserView):
                 'Title': brain.Title,
                 'Description': brain.Description,
                 'getURL': brain.getURL(),
-                'total': count,
             })
         
 
