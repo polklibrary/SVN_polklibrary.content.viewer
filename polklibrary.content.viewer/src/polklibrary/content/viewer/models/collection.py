@@ -122,7 +122,7 @@ class ICollection(model.Schema):
     directives.widget(
         'subject_group',
         AjaxSelectFieldWidget,
-        vocabulary='polklibrary.content.viewer.vocabularies.SubjectHeadingVocabularyFactory'
+        vocabulary='polklibrary.content.viewer.vocabularies.SubjectGroupVocabularyFactory'
     )
     directives.read_permission(subject_group='cmf.AddPortalContent')
     directives.write_permission(subject_group='cmf.AddPortalContent')

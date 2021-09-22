@@ -28,17 +28,22 @@ class WSView(BrowserView):
         type = self.request.form.get('type','')
                 
         try:
-            films = user.saved_films
+            films = user.getProperty('saved_films','')
             if user:
                 id = idnormalizer.normalize(id) + '|'
                 if type == 'add' and id:
-                    user.saved_films += id
+                    films += id
+                    #user.setProperty('saved_films', films)
+                    user.setMemberProperties(mapping={"saved_films":films})
                     transaction.commit()
                 elif type == 'remove' and id:
-                    user.saved_films = user.saved_films.replace(id, '')
+                    films = films.replace(id, '')
+                    #user.setProperty('saved_films', films)
+                    user.setMemberProperties(mapping={"saved_films":films})
                     transaction.commit()
-                self._data['data'] = user.saved_films
-        except:
+                self._data['data'] = films
+        except Exception as e:
+            print(e)
             self._data['status'] = 400
             
 

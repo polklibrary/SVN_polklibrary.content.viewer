@@ -380,18 +380,20 @@ class UserListView(BrowserView, Tools):
             limit = int(self.request.form.get("limit", 250))
             
             user = api.user.get_current()
-            films = user.saved_films.split('|')
-
+            films = user.getProperty('saved_films','').split('|')
             films.pop()
+            
             catalog = api.portal.get_tool(name='portal_catalog')
-            brains = catalog.searchResults(
-                portal_type='polklibrary.content.viewer.models.contentrecord',
-                review_state='published',
-                id={
-                    "query": films,
-                    "operator" : 'or',
-                },
-            )
+            
+            brains = []
+            for film in films:
+                tmpbrains = catalog.searchResults(
+                    portal_type='polklibrary.content.viewer.models.contentrecord',
+                    review_state='published',
+                    id=film
+                )
+                if tmpbrains:
+                    brains.append(tmpbrains[0])
             #results[start:start+limit], len(results), start, limit
             return CollectionObject("Your Playlist", self.portal.absolute_url() + '/playlist', brains[start:start+limit], len(brains), start, limit)
         
