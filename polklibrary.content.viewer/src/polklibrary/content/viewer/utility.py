@@ -12,6 +12,7 @@ class VendorInfo:
     KANOPY_NAME = 'Kanopy'
     FILMSONDEMAND_NAME = 'Films on Demand'
     SWANK_NAME = 'Swank'
+    DOCUSEEK_NAME = 'Docuseek'
     ALMA_NAME = 'Catalog'
     OTHER_NAME = 'Other'
 
@@ -19,7 +20,9 @@ class VendorInfo:
     KANOPY_TARGET = 'kan'
     FILMSONDEMAND_TARGET = 'fod'
     SWANK_TARGET = 'swa'
+    DOCUSEEK_TARGET = 'doc'
     ALMA_TARGET = 'uwi'
+    OTHER_TARGET = 'oth'
 
 
 
@@ -54,6 +57,8 @@ class Tools(object):
             return VendorInfo.SWANK_NAME
         elif VendorInfo.ALMA_TARGET in o.id.lower():   
             return VendorInfo.ALMA_NAME
+        elif VendorInfo.DOCUSEEK_TARGET in o.id.lower():   
+            return VendorInfo.DOCUSEEK_NAME
         else:
             return VendorInfo.OTHER_NAME
         

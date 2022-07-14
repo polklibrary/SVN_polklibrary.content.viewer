@@ -39,8 +39,10 @@
     margin-left: 20px;
     vertical-align: middle;
 }
-#importer form label[for="auto-activate"] {
-    margin-left: 5px;
+#importer form label[for] {
+    margin: 2px 0px 0px 5px;
+    display: inline-block;
+    vertical-align: middle;
 }
 #processing {
     display: none;

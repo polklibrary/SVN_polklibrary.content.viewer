@@ -217,6 +217,8 @@ def process_marc(marc_stream):
             record_vendor_id = VendorInfo.FILMSONDEMAND_TARGET + (str(record_id).replace('fod',''))
         elif 'kanopy.com' in record_direct_url:
             record_vendor_id = VendorInfo.KANOPY_TARGET + str(re.sub("[^0-9]", "", record_id)) # strip kan form original id
+        elif 'docuseek2.com' in record_direct_url:
+            record_vendor_id = VendorInfo.DOCUSEEK_TARGET + (str(record_id).replace('doc',''))
         
             
         output.append([

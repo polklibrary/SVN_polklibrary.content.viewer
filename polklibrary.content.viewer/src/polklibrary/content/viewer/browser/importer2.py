@@ -102,6 +102,11 @@ class Importer2View(BrowserView):
                 'image_url': row[12],
                 'direct_url': row[13],
             })
+            
+            print("---------------------------")
+            print(entry)
+            
+            
             self.entries.append(entry)
             
     def csv_to_entry(self):

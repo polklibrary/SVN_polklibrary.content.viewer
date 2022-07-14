@@ -19,6 +19,8 @@ from selenium.common.exceptions import TimeoutException
 
 logger = logging.getLogger("Plone")
 
+import random
+
 class ThumbnailProcess2(BrowserView):
 
     logger_on = False
@@ -55,6 +57,10 @@ class ThumbnailProcess2(BrowserView):
             if not brains:
                 brains = catalog.unrestrictedSearchResults(portal_type='polklibrary.content.viewer.models.contentrecord', image_url=None)
             
+
+            brains = list(brains)
+            random.shuffle(brains)
+            
             logger.info('Thumbnail Process Left: ' + str(len(brains)))
             for brain in brains:
                 if process_index > process_limit:
@@ -67,8 +73,13 @@ class ThumbnailProcess2(BrowserView):
                     output += self.process_fod(driver, brain)
                 if VendorInfo.KANOPY_TARGET in brain.getId:
                     output += self.process_kan(driver, brain)
+                if VendorInfo.DOCUSEEK_TARGET in brain.getId:
+                    output += self.process_doc(driver, brain)
                 time.sleep(2)
                 
+            output += '\n\n Thumbnails Left: ' + str(len(brains)) + '\n'
+            output += ' Deletion Option: ' + self.request.get('deletes', '0') + '\n\n'
+            
         time.sleep(5)
         driver.quit()
                 
@@ -77,19 +88,20 @@ class ThumbnailProcess2(BrowserView):
         
         
     def process_aso(self, driver, brain):
-        output = brain.getURL()
+        do_deletes = self.request.get('deletes', '0')
+        output = 'Process ASO: ' + brain.getURL()
        
         withoutproxy = brain.getRemoteUrl.replace('https://www.remote.uwosh.edu/login?url=', '')
         driver.set_window_size(1920, 1080)
         driver.get(withoutproxy)
         time.sleep(10)
+        obj = brain.getObject()  
         try:
             player_element = driver.find_element_by_css_selector(".nuvo-player")
             thumbnail_attr = player_element.get_attribute("style")
             thumbnail_url = re.search("(?P<url>https?://[^\\s'\"]+)", thumbnail_attr).group("url")
             
             if thumbnail_url:
-                obj = brain.getObject()  
                 obj.image_url = thumbnail_url
                 obj.reindexObject()
                 output += ' Thumbnail saved ' + thumbnail_url
@@ -100,12 +112,17 @@ class ThumbnailProcess2(BrowserView):
                     output += ' -- Published'
             
         except Exception as e:
-            output += ' Error: ' + str(e)
+            if do_deletes == '1':
+                api.content.delete(obj=obj)
+                output += ' -- Deleting -- Error: ' + str(e)
+            else:
+                output += ' -- Error: ' + str(e)
 
         return output + '\n'
         
     def process_fod(self, driver, brain):
-        output = brain.getURL()       
+        do_deletes = self.request.get('deletes', '0')
+        output = 'Process FOD: ' + brain.getURL()       
         withoutproxy = brain.getRemoteUrl.replace('https://www.remote.uwosh.edu/login?url=', '')
         driver.set_window_size(1920, 1080)
         driver.get(withoutproxy)
@@ -135,13 +152,51 @@ class ThumbnailProcess2(BrowserView):
                     output += ' -- Published'
             
         except Exception as e:
-            output += ' Error: ' + str(e)
+            if do_deletes == '1':
+                api.content.delete(obj=obj)
+                output += ' -- Deleting -- Error: ' + str(e)
+            else:
+                output += ' -- Error: ' + str(e)
         
         return output + '\n'
         
     def process_kan(self, driver, brain):
         return brain.getURL() + ' KAN not setup \n'
           
+          
+    def process_doc(self, driver, brain):
+        do_deletes = self.request.get('deletes', '0')
+        output = 'Process DOC: ' + brain.getURL()
+       
+        withoutproxy = brain.getRemoteUrl.replace('https://www.remote.uwosh.edu/login?url=', '')
+        driver.set_window_size(1920, 1080)
+        driver.get(withoutproxy)
+        time.sleep(10)
+        obj = brain.getObject()  
+        try:
+            player_element = driver.find_element_by_css_selector("video[poster]")
+            #print(player_element)
+            thumbnail_url = player_element.get_attribute("poster")
+            #print(thumbnail_url)
+            
+            if thumbnail_url:
+                obj.image_url = thumbnail_url
+                obj.reindexObject()
+                output += ' Thumbnail saved ' + thumbnail_url
+            
+                if brain.review_state != 'published' and obj.image_url != None and obj.image_url != '':
+                    with api.env.adopt_roles(roles=['Manager']):
+                        api.content.transition(obj=obj, transition='publish')
+                    output += ' -- Published'
+            
+        except Exception as e:
+            if do_deletes == '1':
+                api.content.delete(obj=obj)
+                output += ' -- Deleting -- Error: ' + str(e)
+            else:
+                output += ' -- Error: ' + str(e)
+
+        return output + '\n'
           
         
         

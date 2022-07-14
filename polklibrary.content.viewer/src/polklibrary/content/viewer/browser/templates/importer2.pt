@@ -19,6 +19,7 @@
     
 	<metal:block fill-slot="style_slot">
         <link type="text/css" rel="stylesheet" href="${view/portal/absolute_url}/++resource++polklibrary.content.viewer/internal.css" />
+        
     </metal:block>
 
 	<metal:content-title fill-slot="content-title">
@@ -82,8 +83,14 @@
                     <label for="file-upload" >Upload (.CSV or .MRC only): </label>
                     <input type="file" name="form.file.upload" id="file-upload" />
                     
+                </div>
+                
+                <div>
                     <input type="checkbox" name="form.autoactivate" id="auto-activate" />
-                    <label for="auto-activate" >Auto-activate on upload (if thumbnail exists)? </label>
+                    <label for="auto-activate" >Auto-activate on upload? (Only if thumbnail exists)</label>
+                    <br/>
+                    <!--<input type="checkbox" name="form.testrun" id="test-run" />
+                    <label for="test-run" >Test run? (Will not save anything. For test imports)</label>-->
                 </div>
                 
                 <div>
