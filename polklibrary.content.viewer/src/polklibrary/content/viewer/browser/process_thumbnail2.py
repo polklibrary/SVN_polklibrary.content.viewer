@@ -94,13 +94,21 @@ class ThumbnailProcess2(BrowserView):
         withoutproxy = brain.getRemoteUrl.replace('https://www.remote.uwosh.edu/login?url=', '')
         driver.set_window_size(1920, 1080)
         driver.get(withoutproxy)
+        output += ' -- Retreive: ' + withoutproxy
         time.sleep(int(self.request.get('wait', '10')))
         obj = brain.getObject()  
+        
+        
         try:
-            player_element = driver.find_element_by_css_selector(".nuvo-player")
+            player_element = None
+            
+            try:
+                player_element = driver.find_element_by_css_selector(".nuvo-player")
+            except:
+                player_element = driver.find_element_by_css_selector(".nvplyr-video-splash__screenshot")
+                
             thumbnail_attr = player_element.get_attribute("style")
             thumbnail_url = re.search("(?P<url>https?://[^\\s'\"]+)", thumbnail_attr).group("url")
-            
             if thumbnail_url:
                 obj.image_url = thumbnail_url
                 obj.reindexObject()
@@ -114,9 +122,8 @@ class ThumbnailProcess2(BrowserView):
         except Exception as e:
             if do_deletes == '1':
                 api.content.delete(obj=obj)
-                output += ' -- Deleting -- Error: ' + str(e)
-            else:
-                output += ' -- Error: ' + str(e)
+                output += ' -- Deleting'
+            output += ' -- Error: ' + str(e)
 
         return output + '\n'
         
@@ -126,6 +133,7 @@ class ThumbnailProcess2(BrowserView):
         withoutproxy = brain.getRemoteUrl.replace('https://www.remote.uwosh.edu/login?url=', '')
         driver.set_window_size(1920, 1080)
         driver.get(withoutproxy)
+        output += ' -- Retreive: ' + withoutproxy
         time.sleep(int(self.request.get('wait', '10')))
         
         try:
@@ -154,9 +162,8 @@ class ThumbnailProcess2(BrowserView):
         except Exception as e:
             if do_deletes == '1':
                 api.content.delete(obj=obj)
-                output += ' -- Deleting -- Error: ' + str(e)
-            else:
-                output += ' -- Error: ' + str(e)
+                output += ' -- Deleting'
+            output += ' -- Error: ' + str(e)
         
         return output + '\n'
         
@@ -171,6 +178,7 @@ class ThumbnailProcess2(BrowserView):
         withoutproxy = brain.getRemoteUrl.replace('https://www.remote.uwosh.edu/login?url=', '')
         driver.set_window_size(1920, 1080)
         driver.get(withoutproxy)
+        output += ' -- Retreive: ' + withoutproxy
         time.sleep(int(self.request.get('wait', '10')))
         obj = brain.getObject()  
         try:
@@ -192,9 +200,8 @@ class ThumbnailProcess2(BrowserView):
         except Exception as e:
             if do_deletes == '1':
                 api.content.delete(obj=obj)
-                output += ' -- Deleting -- Error: ' + str(e)
-            else:
-                output += ' -- Error: ' + str(e)
+                output += ' -- Deleting'
+            output += ' -- Error: ' + str(e)
 
         return output + '\n'
           
