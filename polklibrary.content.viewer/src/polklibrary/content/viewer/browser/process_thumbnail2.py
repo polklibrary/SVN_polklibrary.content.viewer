@@ -52,14 +52,14 @@ class ThumbnailProcess2(BrowserView):
         with api.env.adopt_roles(roles=['Manager']):
         
             process_index = 1
-            process_limit = 3
+            process_limit = int(self.request.get('limit', '3'))
             brains = catalog.unrestrictedSearchResults(portal_type='polklibrary.content.viewer.models.contentrecord', image_url="")
             if not brains:
                 brains = catalog.unrestrictedSearchResults(portal_type='polklibrary.content.viewer.models.contentrecord', image_url=None)
             
-
-            brains = list(brains)
-            random.shuffle(brains)
+            if self.request.get('random', '1') == '1':
+                brains = list(brains)
+                random.shuffle(brains)
             
             logger.info('Thumbnail Process Left: ' + str(len(brains)))
             for brain in brains:
@@ -94,7 +94,7 @@ class ThumbnailProcess2(BrowserView):
         withoutproxy = brain.getRemoteUrl.replace('https://www.remote.uwosh.edu/login?url=', '')
         driver.set_window_size(1920, 1080)
         driver.get(withoutproxy)
-        time.sleep(10)
+        time.sleep(int(self.request.get('wait', '10')))
         obj = brain.getObject()  
         try:
             player_element = driver.find_element_by_css_selector(".nuvo-player")
@@ -126,7 +126,7 @@ class ThumbnailProcess2(BrowserView):
         withoutproxy = brain.getRemoteUrl.replace('https://www.remote.uwosh.edu/login?url=', '')
         driver.set_window_size(1920, 1080)
         driver.get(withoutproxy)
-        time.sleep(10)
+        time.sleep(int(self.request.get('wait', '10')))
         
         try:
             #v1 attempt
@@ -171,7 +171,7 @@ class ThumbnailProcess2(BrowserView):
         withoutproxy = brain.getRemoteUrl.replace('https://www.remote.uwosh.edu/login?url=', '')
         driver.set_window_size(1920, 1080)
         driver.get(withoutproxy)
-        time.sleep(10)
+        time.sleep(int(self.request.get('wait', '10')))
         obj = brain.getObject()  
         try:
             player_element = driver.find_element_by_css_selector("video[poster]")
