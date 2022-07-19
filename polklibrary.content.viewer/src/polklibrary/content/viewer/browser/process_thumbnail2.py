@@ -52,7 +52,7 @@ class ThumbnailProcess2(BrowserView):
         with api.env.adopt_roles(roles=['Manager']):
         
             process_index = 1
-            process_limit = int(self.request.get('limit', '3'))
+            process_limit = int(self.request.get('process_limit', '3'))
             brains = catalog.unrestrictedSearchResults(portal_type='polklibrary.content.viewer.models.contentrecord', image_url="")
             if not brains:
                 brains = catalog.unrestrictedSearchResults(portal_type='polklibrary.content.viewer.models.contentrecord', image_url=None)
