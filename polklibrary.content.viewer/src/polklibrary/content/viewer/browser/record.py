@@ -25,6 +25,10 @@ class RecordView(BrowserView, Tools):
     
     def __call__(self):
         
+        if self.is_login_required():
+            return self.request.response.redirect(self.portal.absolute_url() + '/login?came_from=' + self.context.absolute_url())
+            
+        
         alsoProvides(self.request, IDisableCSRFProtection)
         like = self.request.form.get('like', None)
         if like:
@@ -36,7 +40,9 @@ class RecordView(BrowserView, Tools):
         self.load_facet_totals()
         
         return self.template()
-
+        
+    def is_login_required(self):
+        return api.user.is_anonymous() and self.context.login_required
         
     def load_facet_totals(self):
         catalog = api.portal.get_tool(name='portal_catalog')

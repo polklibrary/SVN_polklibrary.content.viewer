@@ -73,7 +73,13 @@ class IContentRecord(model.Schema):
             required=False,
         )  
         
-
+    login_required = schema.Bool(
+            title=u"Bypass EZproxy and require local NetID login",
+            description=u"Used for locally hosted files.",
+            required=False,
+            default=False,
+            missing_value=False,
+        )
         
     # --- Categorization FieldSet ---
     model.fieldset(
