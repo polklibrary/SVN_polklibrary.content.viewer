@@ -61,6 +61,7 @@ class Exporter2View(BrowserView):
         return output
 
         return output
+        
     @property
     def portal(self):
         return api.portal.get()
