@@ -49,7 +49,6 @@ class Exporter2View(BrowserView):
         found = 0
         output = ''
         for brain in brains:
-            print(brain.review_state)
             if brain.review_state == 'private':
                 output += brain.getId + ',' + brain.getURL() + '\n'
                 found += 1
