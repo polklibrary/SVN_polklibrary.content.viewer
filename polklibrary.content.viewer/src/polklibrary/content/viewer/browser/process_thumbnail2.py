@@ -33,12 +33,13 @@ class ThumbnailProcess2(BrowserView):
         catalog = api.portal.get_tool(name='portal_catalog')
         options = webdriver.FirefoxOptions()
         options.headless = True
-        options.add_argument("window-size=1400,600")
+        options.add_argument("window-size=1920,1200")
         #user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101 Firefox/78.0'
         #options.add_argument('user-agent={0}'.format(user_agent))
         
         profile = webdriver.FirefoxProfile()
-        profile.set_preference("general.useragent.override", 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101 Firefox/78.0')
+        #profile.set_preference("general.useragent.override", 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101 Firefox/78.0')
+        profile.set_preference("general.useragent.override", 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/114.0')
 
 
         #options.add_argument("--headless")
@@ -177,16 +178,13 @@ class ThumbnailProcess2(BrowserView):
        
         withoutproxy = brain.getRemoteUrl.replace('https://www.remote.uwosh.edu/login?url=', '')
         driver.set_window_size(1920, 1080)
-        print('start wait')
-        driver.implicitly_wait(int(self.request.get('wait', '10')))
         driver.get(withoutproxy)
         output += ' -- Retreive: ' + withoutproxy
-        #time.sleep(int(self.request.get('wait', '10')))
-        print('end wait')
+        time.sleep(int(self.request.get('wait', '10')))
         obj = brain.getObject()  
         
         try:
-            driver.implicitly_wait(int(self.request.get('wait', '10')))
+            time.sleep(5)
             picture_element = driver.find_element_by_css_selector("picture.vjs-poster > img")
             print('picture element')
             print(picture_element)
@@ -207,8 +205,7 @@ class ThumbnailProcess2(BrowserView):
             output += ' -- Failed first attempt: ' + str(e)
 
             try:
-                
-                driver.implicitly_wait(int(self.request.get('wait', '10')))
+                time.sleep(5)
                 player_element = driver.find_element_by_css_selector("video[poster]")
                 print('player element')
                 print(player_element)
