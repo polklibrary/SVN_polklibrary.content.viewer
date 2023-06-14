@@ -177,12 +177,16 @@ class ThumbnailProcess2(BrowserView):
        
         withoutproxy = brain.getRemoteUrl.replace('https://www.remote.uwosh.edu/login?url=', '')
         driver.set_window_size(1920, 1080)
+        print('start wait')
+        driver.implicitly_wait(int(self.request.get('wait', '10')))
         driver.get(withoutproxy)
         output += ' -- Retreive: ' + withoutproxy
-        time.sleep(int(self.request.get('wait', '10')))
+        #time.sleep(int(self.request.get('wait', '10')))
+        print('end wait')
         obj = brain.getObject()  
         
         try:
+            driver.implicitly_wait(int(self.request.get('wait', '10')))
             picture_element = driver.find_element_by_css_selector("picture.vjs-poster > img")
             print('picture element')
             print(picture_element)
@@ -203,6 +207,8 @@ class ThumbnailProcess2(BrowserView):
             output += ' -- Failed first attempt: ' + str(e)
 
             try:
+                
+                driver.implicitly_wait(int(self.request.get('wait', '10')))
                 player_element = driver.find_element_by_css_selector("video[poster]")
                 print('player element')
                 print(player_element)
