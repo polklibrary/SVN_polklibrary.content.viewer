@@ -30,6 +30,7 @@ src/polklibrary/content/viewer/browser/__init__.py
 src/polklibrary/content/viewer/browser/cache.py
 src/polklibrary/content/viewer/browser/collection.py
 src/polklibrary/content/viewer/browser/configure.zcml
+src/polklibrary/content/viewer/browser/exporter.py
 src/polklibrary/content/viewer/browser/group_list.py
 src/polklibrary/content/viewer/browser/importer.py
 src/polklibrary/content/viewer/browser/importer2.py
@@ -40,6 +41,7 @@ src/polklibrary/content/viewer/browser/search.py
 src/polklibrary/content/viewer/browser/transformer.py
 src/polklibrary/content/viewer/browser/ws_add_to_list.py
 src/polklibrary/content/viewer/browser/ws_get_browse_list.py
+src/polklibrary/content/viewer/browser/ws_patcher.py
 src/polklibrary/content/viewer/browser/overrides/.gitkeep
 src/polklibrary/content/viewer/browser/static/.gitkeep
 src/polklibrary/content/viewer/browser/static/add.png
@@ -69,6 +71,7 @@ src/polklibrary/content/viewer/browser/static/view-more.jpg
 src/polklibrary/content/viewer/browser/templates/cache.pt
 src/polklibrary/content/viewer/browser/templates/close_view.pt
 src/polklibrary/content/viewer/browser/templates/collection.pt
+src/polklibrary/content/viewer/browser/templates/exporter.pt
 src/polklibrary/content/viewer/browser/templates/group_list.pt
 src/polklibrary/content/viewer/browser/templates/importer.pt
 src/polklibrary/content/viewer/browser/templates/importer2.pt

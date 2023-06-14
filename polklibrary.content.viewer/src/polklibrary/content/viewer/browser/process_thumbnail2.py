@@ -181,11 +181,13 @@ class ThumbnailProcess2(BrowserView):
         output += ' -- Retreive: ' + withoutproxy
         time.sleep(int(self.request.get('wait', '10')))
         obj = brain.getObject()  
+        
         try:
-            player_element = driver.find_element_by_css_selector("video[poster]")
-            #print(player_element)
-            thumbnail_url = player_element.get_attribute("poster")
-            #print(thumbnail_url)
+            picture_element = driver.find_element_by_css_selector("picture.vjs-poster > img")
+            print('picture element')
+            print(picture_element)
+            thumbnail_url = picture_element.get_attribute("src")
+            print(thumbnail_url)
             
             if thumbnail_url:
                 obj.image_url = thumbnail_url
@@ -198,10 +200,30 @@ class ThumbnailProcess2(BrowserView):
                     output += ' -- Published'
             
         except Exception as e:
-            if do_deletes == '1':
-                api.content.delete(obj=obj)
-                output += ' -- Deleting'
-            output += ' -- Error: ' + str(e)
+            output += ' -- Failed first attempt: ' + str(e)
+
+            try:
+                player_element = driver.find_element_by_css_selector("video[poster]")
+                print('player element')
+                print(player_element)
+                thumbnail_url = player_element.get_attribute("poster")
+                print(thumbnail_url)
+                
+                if thumbnail_url:
+                    obj.image_url = thumbnail_url
+                    obj.reindexObject()
+                    output += ' Thumbnail saved ' + thumbnail_url
+                
+                    if brain.review_state != 'published' and obj.image_url != None and obj.image_url != '':
+                        with api.env.adopt_roles(roles=['Manager']):
+                            api.content.transition(obj=obj, transition='publish')
+                        output += ' -- Published'
+                
+            except Exception as ee:
+                if do_deletes == '1':
+                    api.content.delete(obj=obj)
+                    output += ' -- Deleting'
+                output += ' -- Error: ' + str(ee)
 
         return output + '\n'
           
