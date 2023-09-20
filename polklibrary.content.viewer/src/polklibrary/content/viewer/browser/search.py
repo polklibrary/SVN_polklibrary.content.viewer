@@ -30,6 +30,10 @@ class Search(BrowserView, Tools):
         
         if queryraw:
             query = queryraw.replace(' and ', ',').replace(' or ', ',').replace(';', ',')
+            query = query.replace(' not ', ' "not" ')
+            if query.endswith('not'):
+                query = query.replace(' not', ' "not"')
+
             query = query.split(',')
             
             catalog = api.portal.get_tool(name='portal_catalog')
